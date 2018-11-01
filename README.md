@@ -160,3 +160,7 @@ cosnt hello string = "wovert"
 - string
 - array slice
 - map
+
+## map
+
+make 用于内建类型(map, slice, channel)的内存分配
