@@ -43,11 +43,32 @@
 
 [下载安装](https://studygolang.com/dl)
 
-## LiteIDE
+- http://idea.iblue.me
 
+- LiteIDE
 > Go 语言开发的跨平台轻量级继承开发环境(IDE)
 
 - GoLand(类似Pycharm), Eclipse, Intelli Idea等
+
+### gopath 环境变量
+
+> Go 语言依赖一个重要的环境变量：`$GOPATH`，不是安装目录
+
+- $GOPATH 目录约定有三个子目录
+  - src 存放源代码（比如：.go, .c, .h, .s等）
+  - pkg 编译后生成的文件（比如：.a）
+  - bin 编译后生成的可执行文件（为了方便，可以把此目录加入到 $PATH 变量中）
+
+- 当前进程设置 GOPATH 环境变量
+
+``` cmd
+> set GOPATH=c:/go_package
+> echo %GOPATH%
+> go get github.com/astaxie/beego
+```
+
+- `go ge`t 的本质就 `git` + `go install`
+- go get github.com/beego/bee 映射至 $GOPATH/src/github.com/beego/bee
 
 ## helloworld.go
 
@@ -95,3 +116,47 @@
 - 上课氛围：积极听讲，有问题就问
 - 课后练习：按时做完并提交
 - 个人态度：主动学习并教授他人
+
+## 基础语法
+
+### 常用关键字
+
+`break default func interface select case defer go map struct chan else goto package switch const fallthrought if range type continue for import return var`
+
+### 包管理
+
+`package <pkgName>`
+
+`package main`
+
+main.main() 函数是每一个独立的课运行程序的入口点
+
+### var关键字
+
+``` go
+var num int
+
+// 简写形式只能在函数体内使用
+y,z := 100, "world"
+fmt.Printf("%d, %s", y, z)
+```
+
+### const 常量
+
+``` go
+const PI = 3.14
+cosnt hello string = "wovert"
+```
+
+### 数据类型
+
+- bool
+- rune
+- int8 int16 int32 int64
+- byte
+- unit8 unit12 unit32 unit64
+- float32 float 64
+- complex64 complex128
+- string
+- array slice
+- map
