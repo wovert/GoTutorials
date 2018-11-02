@@ -43,7 +43,7 @@
 
 [下载安装](https://studygolang.com/dl)
 
-- http://idea.iblue.me
+- IntelliJ IDEA 注册码：http://idea.lanyus.com/
 
 - LiteIDE
 > Go 语言开发的跨平台轻量级继承开发环境(IDE)
@@ -161,6 +161,12 @@ cosnt hello string = "wovert"
 - array slice
 - map
 
-## map
+#### map
 
 make 用于内建类型(map, slice, channel)的内存分配
+
+## 流程控制语句
+
+- if
+- for 
+- switch
