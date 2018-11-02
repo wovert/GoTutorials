@@ -151,16 +151,36 @@ cosnt hello string = "wovert"
 ### 数据类型
 
 - bool
-- rune
-- int8 int16 int32 int64
+- rune (符文，32bit,char类型)
+- (u)int8 (u)int16 (u)int32 (u)int64 uintptr
 - byte
-- unit8 unit12 unit32 unit64
 - float32 float 64
 - complex64 complex128
 - string
 - array slice
 - map
 
-## map
+### 变量定义
+
+- 变量类型写在变量名之后
+- 编译器可推测变量类型
+- 没有 char, 只有 rune
+- 原生支持复数类型
+
+### map
 
 make 用于内建类型(map, slice, channel)的内存分配
+
+## file
+
+资源关闭
+```cgo
+file.Open("file")
+defer file.close()
+```
+
+
+## 异常处理
+
+`panic("抛出异常")`
+
