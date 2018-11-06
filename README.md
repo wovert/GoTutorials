@@ -50,7 +50,7 @@
 
 [下载安装](https://studygolang.com/dl)
 
-- http://idea.iblue.me
+- IntelliJ IDEA 注册码：http://idea.lanyus.com/
 
 - LiteIDE
 > Go 语言开发的跨平台轻量级继承开发环境(IDE)
@@ -192,8 +192,6 @@ file.Open("file")
 defer file.close()
 ```
 
-
 ## 异常处理
 
 `panic("抛出异常")`
-
