@@ -13,8 +13,15 @@
 
 ## Go feathers
 
+- 垃圾回收
+  - 内存自动回收，不需要developer管理内存
+  - 专注业务实现
+  - 只需要new分配内存，不需要释放
 - 简洁、快速(开发效率和运行速度)、安全
 - 并行(并发处理能力)、有趣、开源
+  从语言层面支持并发，非常简单
+  - goroute, 轻量级线程，创建成千上万个goroute成为可能
+  - 基于 CSP (Communicating Sequential Process) 模型实现
 - 内存管理、数组安全、编译迅速
 
 ## Go 目前的应用
@@ -67,8 +74,14 @@
 > go get github.com/astaxie/beego
 ```
 
-- `go ge`t 的本质就 `git` + `go install`
+- `go get` 的本质就 `git` + `go install`
 - go get github.com/beego/bee 映射至 $GOPATH/src/github.com/beego/bee
+
+- 调试工具delve 安装
+  - mac : `brew install go-delve/delve/delve`
+  - linux&windows: `go get github.com/derekparker/delve/cmd/dlv`
+
+- 可执行文件只有一个main 函数
 
 ## helloworld.go
 
