@@ -22,6 +22,13 @@
   从语言层面支持并发，非常简单
   - goroute, 轻量级线程，创建成千上万个goroute成为可能
   - 基于 CSP (Communicating Sequential Process) 模型实现
+- channel
+  - 管道，雷士 类Unix pipe
+  - 多个goroute 之间通过 channel 进行通信
+  - 支持任何类型
+  - `pipe := make(chan int, 3)` 定义3个int型管道
+  - `pipe <- 1` 1 放到管理 pipe
+  - `pipe <- 2` 2 放到管道 pipe
 - 内存管理、数组安全、编译迅速
 
 ## Go 目前的应用
@@ -156,7 +163,7 @@ fmt.Printf("%d, %s", y, z)
 
 ### const 常量
 
-``` go
+``` cgo
 const PI = 3.14
 cosnt hello string = "wovert"
 ```
@@ -187,6 +194,7 @@ make 用于内建类型(map, slice, channel)的内存分配
 ## file
 
 资源关闭
+
 ```cgo
 file.Open("file")
 defer file.close()
