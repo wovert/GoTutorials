@@ -219,3 +219,13 @@ defer file.close()
 ## init函数
 
 > 每个源文件都可以包含一个 init 函数，这个init函数自动被 go 运行框架调用，main 函数调用之前执行
+
+## 常量
+
+``` go
+const (
+  a = 0
+  b //1
+  c //2
+)
+```
