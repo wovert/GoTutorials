@@ -143,6 +143,12 @@
 
 `break default func interface select case defer go map struct chan else goto package switch const fallthrought if range type continue for import return var`
 
+### 标识符
+
+> 字母和下划线开头，大小写敏感，后跟字母和数字和下划线
+
+`_` 是特殊标识符，用来忽略结果
+
 ### 包管理
 
 > 把相同功能的代码放到一个目录，称之为包
@@ -152,10 +158,6 @@
 - 包的主要用途是提高代码的可复用性
 
 `package <pkgName>`
-
-`package main`
-
-main.main() 函数是每一个独立的课运行程序的入口点
 
 ### var关键字
 
@@ -169,9 +171,9 @@ fmt.Printf("%d, %s", y, z)
 
 ### const 常量
 
-``` cgo
+``` go
 const PI = 3.14
-cosnt hello string = "wovert"
+const hello string = "wovert"
 ```
 
 ### 数据类型
@@ -213,3 +215,7 @@ defer file.close()
 ## 在线编辑 go语言
 
 - golang.org
+
+## init函数
+
+> 每个源文件都可以包含一个 init 函数，这个init函数自动被 go 运行框架调用，main 函数调用之前执行
