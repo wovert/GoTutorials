@@ -21,5 +21,7 @@ func main() {
 	for _,v := range arr3 {
 		fmt.Println(v)
 	}
+
+	slice()
 }
 
