@@ -195,6 +195,11 @@ const hello string = "wovert"
 - 没有 char, 只有 rune
 - 原生支持复数类型
 
+var (
+  name ="wovert"
+  age = 30
+)
+
 ### map
 
 make 用于内建类型(map, slice, channel)的内存分配
@@ -229,3 +234,8 @@ const (
   c //2
 )
 ```
+
+## 值类型和引用类型
+
+- 值类型：int, float, bool, string, array, struct
+- 引用类型：pointer, slice, map, chan
