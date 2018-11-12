@@ -228,6 +228,7 @@ defer file.close()
 ## 常量
 
 ``` go
+const idenfifier [type] = value
 const (
   a = 0
   b //1
@@ -239,3 +240,10 @@ const (
 
 - 值类型：int, float, bool, string, array, struct
 - 引用类型：pointer, slice, map, chan
+
+``` go
+import (
+  _ "add" // 会执行add包的init函数
+)
+```
+
