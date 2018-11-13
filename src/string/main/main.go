@@ -1,6 +1,26 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+	"strconv"
+)
+
+func urlProcess(url string) string {
+	result := strings.HasPrefix(url, "http://")
+	if !result {
+		url = fmt.Sprintf("http://%s", url)
+	}
+	return url
+}
+
+func pathProcess(path string) string {
+	result := strings.HasSuffix(path, "/")
+	if !result {
+		path = fmt.Sprintf("%s/", path)
+	}
+	return path
+}
 
 func main() {
 	var str = "hello world\n"
@@ -34,4 +54,40 @@ func main() {
 	s2 := " world"
 	fmt.Println(s1 + s2)
 	fmt.Printf("len(str1+str2)=%d\n", len(s1+s2))
+	
+
+
+	var (
+		url string
+		path string
+	)
+	fmt.Scanf("%s,%s", &url, &path)
+	var ss1 string = urlProcess(url)
+	var ss2 string = pathProcess(path)
+	fmt.Printf("ss1=%s, ss2=%s\n", ss1, ss2)
+
+	// -1 strings.Index(s, str) int
+	fmt.Printf("%d\n", strings.Index(url, "w"))
+	fmt.Printf("%d\n", strings.LastIndex(url, "w"))
+
+	sss1 := strconv.Itoa(1000)
+	fmt.Println("itoa:", sss1)
+
+	number, err := strconv.Atoi(sss1)
+	if err != nil {
+		fmt.Println("can not conver to int", err )
+	}
+
+	fmt.Println("number:", number)
+
+	i, err := strconv.Atoi("-42")
+	if err != nil {
+		fmt.Println("can not conver to int", err )
+	}
+	fmt.Printf("i=%d\n", i) // -42
+
+
+
 }
+
+
