@@ -247,3 +247,11 @@ import (
 )
 ```
 
+## time
+
+- time.Duration 纳秒1000 = 1 Millisecond => Second => Minute => Hour => 
+- time.Now()
+- time.Now().Format("02/1/2006 15:04:05")
+- time.Now().Format("2006/1/02 15:04")
+- time.Now().Format("2006/1/02")
+
