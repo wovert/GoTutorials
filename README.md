@@ -255,3 +255,51 @@ import (
 - time.Now().Format("2006/1/02 15:04")
 - time.Now().Format("2006/1/02")
 
+## 函数
+
+### 函数的特点
+
+- 不支持重载
+- 函数是一等公民，函数可以赋值给变量
+- 匿名函数
+- 多返回值
+
+无论是值传递，还是引用传递，传递给函数的都是变量的副本，不过，值传递是值的拷贝。引用传递是地址的拷贝，一般来说，地址拷贝更为高效，而值拷贝取决于拷贝的对象大小，对象越大，则性能越低。
+
+- map, slice, chan, 指针，interface 默认以引用方式传递
+
+- 命令返回值的名字
+
+### 可变参数
+
+``` go
+// 0个货多个参数
+func add(arg... int) int {}
+
+// 1个货多个参数
+func add(a int, arg... int) int {
+}
+
+// 2个货多个参数
+func add(a int, b int, arg... int) int {}
+```
+
+其中arg是一个`slice`, 通过`arg[index]`一次访问所有参数通过`len(arg)`来判断传递参数的个数
+
+``` go
+func read() {
+  mc.Lock()
+  defer mc.Unlock()
+}
+
+func read2() {
+  conn, err := openConn()
+
+  defer func() {
+    if err != nil {
+      conn.Close()
+    }
+  }()
+
+}
+```
