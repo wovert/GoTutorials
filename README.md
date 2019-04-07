@@ -2,7 +2,10 @@
 
 ## 什么是 Go 语言
 
-> 2009年由Google公司开发出的开源编程语言
+> 2009年11月10日，由Google公司开发出的开源编程语言
+
+- 高性能
+- 开发效率
 
 ## 为什么使用 Go 语言
 
@@ -13,15 +16,19 @@
 
 ## Go feathers
 
+- 不需要依赖库
+  - C 依赖库：`ldd hello_c`列出hello_c文件依赖哭
+- 静态类型语言
 - 垃圾回收
   - 内存自动回收，不需要developer管理内存
   - 专注业务实现
   - 只需要new分配内存，不需要释放
+- 丰富的标准库（网络库非常强大）
 - 简洁、快速(开发效率和运行速度)、安全
 - 并行(并发处理能力)、有趣、开源
-  从语言层面支持并发，非常简单
+  - 从语言层面支持并发，非常简单
   - goroute, 轻量级线程，创建成千上万个goroute成为可能
-  - 基于 CSP (Communicating Sequential Process) 模型实现
+  - 基于 **CSP** (Communicating Sequential Process) 模型实现
 - channel
   - 管道，雷士 类Unix pipe
   - 多个goroute 之间通过 channel 进行通信
@@ -66,13 +73,35 @@
 
 ### gopath 环境变量
 
-> Go 语言依赖一个重要的环境变量：`$GOPATH`，不是安装目录
+> GOPATH：为我们开发常用的目录，建议不要和Go的安装目录一致
 
 - $GOPATH 目录约定有三个子目录
   - src 存放源代码（比如：.go, .c, .h, .s等）
-  - pkg 编译后生成的文件（比如：.a）
-  - bin 编译后生成的可执行文件（为了方便，可以把此目录加入到 $PATH 变量中）
+  - pkg 编译后生成的文件(.a文件)（非main函数的文件在go install后生成）
+  - bin 存放编译后生成的可执行文件（为了方便，可以把此目录加入到 $PATH 变量中）
 
+`GOBIN`：是`GOPATH`下的`bin`目录`PATH`：环境变量，需要go-bin目录加入到path路径下，生成可执行文件就可以直接运行了
+
+可执行文件只有一个main 函数
+
+### mac 安装及配置
+
+```sh
+$ brew install go
+$ go version
+$ vim ~/.bash_profile
+  我的源码库没有跟安装目录放在一起
+  1）单源码库环境变量配置
+  export GOPATH=/Applications/MAMP/htdocs/go
+  export GOBIN=$GOPATH/bin
+  export PATH=$PATH:$GOBIN
+  2）多源码库环境变量配置
+  export GOPATH=/Applications/MAMP/htdocs/go(:自由添加目录，其他不变)
+  export GOBIN=$GOPATH/bin
+  export PATH=$PATH:${GOPATH//://bin:}/bin
+$ source ~/.bash_profile
+```
+### windows 配置 GOPATH 环境变量
 - 当前进程设置 GOPATH 环境变量
 
 ``` cmd
@@ -84,14 +113,16 @@
 - `go get` 的本质就 `git` + `go install`
 - go get github.com/beego/bee 映射至 $GOPATH/src/github.com/beego/bee
 
-- 调试工具delve 安装
-  - mac : `brew install go-delve/delve/delve`
-  - linux&windows: `go get github.com/derekparker/delve/cmd/dlv`
+### 调试工具delve 安装
 
-- 可执行文件只有一个main 函数
+- mac : `brew install go-delve/delve/delve`
+- linux&windows: `go get github.com/derekparker/delve/cmd/dlv`
+
+
 
 ## helloworld.go
 
+文件编码必须是`utf-8`
 ``` go
 编译
 # go build hello.go
@@ -164,7 +195,7 @@
 ``` go
 var num int
 
-// 简写形式只能在函数体内使用
+// 简写形式只能在函数体内使用: 自动推到类型（同一个变量只是使用一次，用于初始化那次）
 y,z := 100, "world"
 fmt.Printf("%d, %s", y, z)
 ```
@@ -178,15 +209,15 @@ const hello string = "wovert"
 
 ### 数据类型
 
-- bool
-- rune (符文，32bit,char类型)
-- (u)int8 (u)int16 (u)int32 (u)int64 uintptr
-- byte
-- float32 float 64
-- complex64 complex128
-- string
-- array slice
-- map
+- `bool`
+- `rune` (符文，32bit,char类型)
+- `(u)int8 (u)int16 (u)int32 (u)int64 uintptr`
+- `byte`
+- `float32 float64`
+- `complex64 complex128`
+- `string`
+- `array slice`
+- `map`
 
 ### 变量定义
 
@@ -312,3 +343,47 @@ func read2() {
 - make: 分配内存，主要分配引用类型，比如chan, map, slice
 - append: 追加元素到数组，slice中
 - panic和recover, 用来做错误处理
+
+## 流程控制语句
+
+- `if a := 1; a < 100 {`
+- `switch num := 100; num {`
+  - `fallthrough` 与 `break` 相反
+```go
+switch num :=1; num {
+  case 1:
+    ...
+  case 2, 3, 4:
+    ...
+  default:
+    ...
+}
+
+score := 85
+switch {
+  case socre > 90:
+    ...
+  case score > 80:
+    ...
+  default:
+    ...
+}
+```
+
+- range str: 元素索引，元素值
+
+```go
+str := "abc"
+for i, data := range str {
+  // i 元素索引
+  // data 元素值
+}
+// 值返回原素值
+for _, data := range str {
+  ...
+}
+// 仅返回元素索引
+for i := range str {
+  ...
+}
+```

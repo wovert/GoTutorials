@@ -10,5 +10,5 @@ func main(){
 	var x int
 	x = 100
 	y := "wovert"
-	fmt.Printf("%d %s %d %d", x, y, g)
+	fmt.Printf("%d %s %d %d", x, y, g, g)
 }
