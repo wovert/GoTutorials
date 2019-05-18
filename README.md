@@ -6,6 +6,9 @@
 
 > 2009年由 Google 公司开发出的开源编程语言 GoLang。金花鼠(gordon)
 
+- 高性能
+- 开发效率
+
 ### 为什么使用 Go 语言
 
 - 脚本语言开发速度
@@ -15,6 +18,9 @@
 
 ### Go feathers
 
+- 不需要依赖库
+  - C 依赖库：`ldd hello_c`列出hello_c文件依赖哭
+- 静态类型语言
 - 垃圾回收
   - 内存自动回收，不需要 developer 管理内存
   - 专注业务实现
@@ -131,13 +137,35 @@
 
 ### gopath 环境变量
 
-> Go 语言依赖一个重要的环境变量：`$GOPATH`，不是安装目录
+> GOPATH：为我们开发常用的目录，建议不要和Go的安装目录一致
 
 - $GOPATH 目录约定有三个子目录
   - src 存放源代码（比如：.go, .c, .h, .s等）
-  - pkg 编译后生成的文件（比如：.a）
-  - bin 编译后生成的可执行文件（为了方便，可以把此目录加入到 $PATH 变量中）
+  - pkg 编译后生成的文件(.a文件)（非main函数的文件在go install后生成）
+  - bin 存放编译后生成的可执行文件（为了方便，可以把此目录加入到 $PATH 变量中）
 
+`GOBIN`：是`GOPATH`下的`bin`目录`PATH`：环境变量，需要go-bin目录加入到path路径下，生成可执行文件就可以直接运行了
+
+可执行文件只有一个main 函数
+
+### mac 安装及配置
+
+```sh
+$ brew install go
+$ go version
+$ vim ~/.bash_profile
+  我的源码库没有跟安装目录放在一起
+  1）单源码库环境变量配置
+  export GOPATH=/Applications/MAMP/htdocs/go
+  export GOBIN=$GOPATH/bin
+  export PATH=$PATH:$GOBIN
+  2）多源码库环境变量配置
+  export GOPATH=/Applications/MAMP/htdocs/go(:自由添加目录，其他不变)
+  export GOBIN=$GOPATH/bin
+  export PATH=$PATH:${GOPATH//://bin:}/bin
+$ source ~/.bash_profile
+```
+### windows 配置 GOPATH 环境变量
 - 当前进程设置 GOPATH 环境变量
 
 ``` cmd
@@ -149,16 +177,18 @@
 - `go get` 的本质就 `git` + `go install`
 - go get github.com/beego/bee 映射至 $GOPATH/src/github.com/beego/bee
 
-- 调试工具delve 安装
-  - mac : `brew install go-delve/delve/delve`
-  - linux&windows: `go get github.com/derekparker/delve/cmd/dlv`
+### 调试工具delve 安装
 
-- 可执行文件只有一个main 函数
+- mac : `brew install go-delve/delve/delve`
+- linux&windows: `go get github.com/derekparker/delve/cmd/dlv`
+
+
 
 ## 程序
 
 > 指令的集合
 
+文件编码必须是`utf-8`
 ``` go
 编译
 # go build hello.go
@@ -231,7 +261,7 @@
 ``` go
 var num int
 
-// 简写形式只能在函数体内使用
+// 简写形式只能在函数体内使用: 自动推到类型（同一个变量只是使用一次，用于初始化那次）
 y,z := 100, "world"
 fmt.Printf("%d, %s", y, z)
 ```
@@ -245,15 +275,15 @@ const hello string = "wovert"
 
 ### 数据类型
 
-- bool
-- rune (符文，32bit,char类型)
-- (u)int8 (u)int16 (u)int32 (u)int64 uintptr
-- byte
-- float32 float 64
-- complex64 complex128
-- string
-- array slice
-- map
+- `bool`
+- `rune` (符文，32bit,char类型)
+- `(u)int8 (u)int16 (u)int32 (u)int64 uintptr`
+- `byte`
+- `float32 float64`
+- `complex64 complex128`
+- `string`
+- `array slice`
+- `map`
 
 ### 变量定义
 
@@ -261,6 +291,11 @@ const hello string = "wovert"
 - 编译器可推测变量类型
 - 没有 char, 只有 rune
 - 原生支持复数类型
+
+var (
+  name ="wovert"
+  age = 30
+)
 
 ### map
 
@@ -290,11 +325,133 @@ defer file.close()
 ## 常量
 
 ``` go
+const idenfifier [type] = value
 const (
   a = 0
   b //1
   c //2
 )
+```
+
+## 值类型和引用类型
+
+- 值类型：int, float, bool, string, array, struct
+- 引用类型：pointer, slice, map, chan
+
+``` go
+import (
+  _ "add" // 会执行add包的init函数
+)
+```
+
+## time
+
+- time.Duration 纳秒1000 = 1 Millisecond => Second => Minute => Hour => 
+- time.Now()
+- time.Now().Format("02/1/2006 15:04:05")
+- time.Now().Format("2006/1/02 15:04")
+- time.Now().Format("2006/1/02")
+
+## 函数
+
+### 函数的特点
+
+- 不支持重载
+- 函数是一等公民，函数可以赋值给变量
+- 匿名函数
+- 多返回值
+
+无论是值传递，还是引用传递，传递给函数的都是变量的副本，不过，值传递是值的拷贝。引用传递是地址的拷贝，一般来说，地址拷贝更为高效，而值拷贝取决于拷贝的对象大小，对象越大，则性能越低。
+
+- map, slice, chan, 指针，interface 默认以引用方式传递
+
+- 命令返回值的名字
+
+### 可变参数
+
+``` go
+// 0个货多个参数
+func add(arg... int) int {}
+
+// 1个货多个参数
+func add(a int, arg... int) int {
+}
+
+// 2个货多个参数
+func add(a int, b int, arg... int) int {}
+```
+
+其中arg是一个`slice`, 通过`arg[index]`一次访问所有参数通过`len(arg)`来判断传递参数的个数
+
+``` go
+func read() {
+  mc.Lock()
+  defer mc.Unlock()
+}
+
+func read2() {
+  conn, err := openConn()
+
+  defer func() {
+    if err != nil {
+      conn.Close()
+    }
+  }()
+
+}
+```
+
+### 内置函数
+
+- close: 关闭channel
+- len: 长度，比如 string, array, slice, map, channel
+- new: 分配内存，主要用来分配值类型，比如int, struct, 返回的是指针
+- make: 分配内存，主要分配引用类型，比如chan, map, slice
+- append: 追加元素到数组，slice中
+- panic和recover, 用来做错误处理
+
+## 流程控制语句
+
+- `if a := 1; a < 100 {`
+- `switch num := 100; num {`
+  - `fallthrough` 与 `break` 相反
+```go
+switch num :=1; num {
+  case 1:
+    ...
+  case 2, 3, 4:
+    ...
+  default:
+    ...
+}
+
+score := 85
+switch {
+  case socre > 90:
+    ...
+  case score > 80:
+    ...
+  default:
+    ...
+}
+```
+
+- range str: 元素索引，元素值
+
+```go
+str := "abc"
+for i, data := range str {
+  // i 元素索引
+  // data 元素值
+}
+// 值返回原素值
+for _, data := range str {
+  ...
+}
+// 仅返回元素索引
+for i := range str {
+  ...
+}
 ```
 
 ## 指针
