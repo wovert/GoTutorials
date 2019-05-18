@@ -2,9 +2,30 @@
 
 ## Go 介绍
 
+### Go 语言的背景
+
+- **Ken Tompsom** (B/Unix/C 发明人)
+- **Rob Pike**(罗布·派克) Unix退队，Plan 9 OS 成员，创造 UTF-8 字符编码, 1980奥运会 射箭银牌，天文学家，演讲家
+- **Rober Griesemer**: 协助 Java的 HotSpot 编译器，Chrome 浏览器的 JavaScript 引擎 V8
+
+### 为什么创造 Go 语言
+
+- 计算机硬件技术更新频繁，性能提高很快。目前主流的编程语言发展明显落后于硬件，不能合理利用**多核多CPU**的优势提升软件系统性能。现有的编程语言：1. 风格不统一；2.计算能力不够；3.处理大并发不够好
+- **软件复杂度越来越高，维护成本越来越高**，目前缺乏一个足够简洁高效的编程语言
+- 企业运行维护很多 C/C++ 项目，C/C++ 程序运行速度虽然很快，但是**编译速度很慢**，同时还存在**内存泄露**的一系列困扰需要解决
+
+### Go 语言发展史
+
+- 2007，三大牛人开始设计
+- 2009-11-10, 开源 Go 语言源码
+- 2015-9-19, Go 1.5 版发布，移除了最后参与的C代码
+- 2017-2-17，Go 1.8
+- 2017-8-24, Go 1.9
+- 2018-2-16, Go 1.10
+
 ### 什么是 Go 语言
 
-> 2009年由 Google 公司开发出的开源编程语言 GoLang。金花鼠(gordon)
+> 2009年由 Google 公司开发出的开源编程语言 GoLang。金花鼠(gordon, Rob Pike老婆设计的)
 
 - 高性能
 - 开发效率
@@ -16,28 +37,31 @@
 - 支持并发编程
 - 为大数据、微服务，并发而生的通用编程语言
 
-### Go feathers
+### Go 特性
 
-- 不需要依赖库
-  - C 依赖库：`ldd hello_c`列出hello_c文件依赖哭
-- 静态类型语言
-- 垃圾回收
+- 静态类型语言的**安全和性能**，又是动态语言**开发维护**的高效率
+  - Go = C + Python
+  - C 静态语言编程的**运行速度**，又能达到 Python 动态语言的**快速开发**
+  - 继承 C 语言的理念：**表达式语法，控制结构，基本数据类型，调用参数值，指针**等等，也保留了和 C 语言一样的编译执行方式及弱化的指针。
+  - 引入包的概念，用于组织程序结构，Go 语言的**一个文件都要归属于一个包**，而不能单独存在
+- **垃圾回收**
   - 内存自动回收，不需要 developer 管理内存
   - 专注业务实现
   - 只需要 `new` 分配内存，不需要释放
-- 简洁、快速(开发效率和运行速度)、安全
-- 并行(并发处理能力)、有趣、开源
-  从语言层面支持并发，非常简单
-  - `goroute`, 轻量级线程，创建成千上万个goroute成为可能
+- **不需要依赖库**
+  - C 依赖库：`ldd hello_c`列出hello_c文件依赖哭
+- **并行**(并发处理能力)、**开源**
+  - 从语言层面支持并发，非常简单
+  - `goroute`, 轻量级线程，创建成千上万个 `goroute` 成为可能
   - 基于 `CSP` (Communicating Sequential Process) 模型实现
-- channel
-  - 管道，雷士 类 `Unix pipe`
+- 管理通信机制，形成 Go 语言特有的管道 **channel**
+  - 管道，类似 `Unix pipe`
   - 多个 `goroute` 之间通过 `channel` 进行通信
   - 支持任何类型
   - `pipe := make(chan int, 3)` 定义3个int型管道
   - `pipe <- 1` 1 放到管理 pipe
   - `pipe <- 2` 2 放到管道 pipe
-- 内存管理、数组安全、编译迅速
+- 内存管理、**数组安全、编译迅速**
 
 ### GoLang 学习方向
 
@@ -120,35 +144,107 @@
 
 ## Go 语言环境搭建
 
-### 安装方式
+### Go SDK
+
+> Go SDK: Go 语言开发工具包。包括编译、运行和API等
+
+[下载安装 Go SDK](https://studygolang.com/dl)
+
+- go1.9.2 darwin-amd64.pkg: Mac 下的 SDK 图像化安装包
+- go1.9.2 darwin-amd64.pkg
+
+- go1.9.2.freebsd-amd64.tar.gz: Unix 下的 SDK
+
+- go1.9.2.linux-amd64.tar.gz: Linux 下的 SDK
+- go1.9.2.src.tar.gz: 源码
+
+- go1.9.2.windows-amd64.zip: Windows 下的 SDK
 
 1. 源码安装
 2. `Go` 标准包安装
-3. 第三方工具安装 比如 `GVM`
-
-[下载安装](https://studygolang.com/dl)
-
-- IntelliJ IDEA 注册码：http://idea.lanyus.com/
-- LiteIDE
-
-> Go 语言开发的跨平台轻量级继承开发环境(IDE)
-
-- GoLand(类似Pycharm), Eclipse, Intelli Idea等
+3. 第三方工具安装，比如 `GVM`
 
 ### gopath 环境变量
 
-> GOPATH：为我们开发常用的目录，建议不要和Go的安装目录一致
+> GOPATH：为我们开发常用的目录，建议不要和 Go 的安装目录一致
 
-- $GOPATH 目录约定有三个子目录
-  - src 存放源代码（比如：.go, .c, .h, .s等）
-  - pkg 编译后生成的文件(.a文件)（非main函数的文件在go install后生成）
-  - bin 存放编译后生成的可执行文件（为了方便，可以把此目录加入到 $PATH 变量中）
+- `GOROOT`: SDK 安装目录
+- `Path`: 添加 SDK 的 `/bin` 目录
+- `$GOPATH` 工作目录（Go项目的工作路径）：目录约定有三个子目录
+  - `src` 存放源代码（比如：.go, .c, .h, .s等）
+  - `pkg` 编译后生成的文件(.a文件)（非main函数的文件在go install后生成）
+  - `bin` 存放编译后生成的可执行文件（为了方便，可以把此目录加入到 `$PATH` 变量中）
 
-`GOBIN`：是`GOPATH`下的`bin`目录`PATH`：环境变量，需要go-bin目录加入到path路径下，生成可执行文件就可以直接运行了
+- `GOBIN`：是 `GOPATH` 下的 `bin` 目录
+- `Path`：环境变量，需要 `go-bin` 目录加入到 `path` 路径下，生成可执行文件就可以直接运行了
 
-可执行文件只有一个main 函数
+**可执行文件只有一个`main` 函数的文件**
+
+### windows 安装及配置
+
+1. 下载 go1.9.2.windows-amd64.zip
+2. 安装路径不要有中文或者特殊符号如空格等
+3. SDK 安装目录建议：`E:/usr_local`
+4. 安装时，基本上是傻瓜式安装，解压就可以使用
+
+- go
+  - bin
+    - go.exe 编译和运行 go 源码
+    - godoc.exe
+    - gofmt.exe
+
+```cmd
+检测 SDK 是否安装成功
+E:usr_local\go\bin> go version
+```
+
+#### Windows 下配置环境变量
+
+> 当前进程设置 GOPATH 环境变量
+
+```cmd
+d:\> go version
+'go' 不是内部或外部命令，也不是可运行的程序或批处理文件
+```
+
+错误分析：当前执行的程序在当前目录下不存在，Windows OS 会在系统中已有的一个名 `path` 环境变量指定的目录中查找。如果仍未找到，会出现以上的错误提示。所以进入到 `go` 安装路径 `\bin` 目录下，执行 `go`，会看到 `go` 参数的提示信息
+
+1. 我的电脑 -> 属性 -> 高级系统设置 -> 环境变量 -> 系统变量 -> 编辑 Path
+2. 拷贝 Go SDK 安装目录 `E:\usr_local\go` 到 `GOROOT` 环境变量中
+2. `%GOROOT%\bin`添加到 `PATH` 环境变量中
+3. go 工作目录 `E:\goProject` 添加到 `GOPATH` 环境变量中
+
+测试环境变量
+``` cmd
+> echo %GOPATH%
+> go get github.com/astaxie/beego
+```
+
+- `go get` 的本质就 `git` + `go install`
+- `go get github.com/beego/bee` 映射至 `$GOPATH/src/github.com/beego/bee`
+
+### Linux 安装及配置
+
+1. 查看 Linux 位数版本 `uname -a`
+2. 下载 SDK go1.9.2.linux-adm64.tar.gz
+3. 复制到 `/opt` 目录下
+4. 解压文件 `tar -zxvf go1.9.2.linux-adm64.tar.gz`
+5. 配置环境变量
+
+```sh
+# vim /etc/proile.d/go.sh
+  export GOPATH=/opt/go
+  export PATH=$PATH:$GOPATH/bin
+  export GOPATH=$HOME/goProjects/
+# source /etc/profile.d/go.sh
+# go version
+```
 
 ### mac 安装及配置
+
+1. 下载 go1.9.2.darwin-amd64.tar.gz
+2. 复制到 `用户目录/go_dev/go`
+3. 剩下与 Linux 安装方式一样
 
 ```sh
 $ brew install go
@@ -165,58 +261,57 @@ $ vim ~/.bash_profile
   export PATH=$PATH:${GOPATH//://bin:}/bin
 $ source ~/.bash_profile
 ```
-### windows 配置 GOPATH 环境变量
-- 当前进程设置 GOPATH 环境变量
 
-``` cmd
-> set GOPATH=c:/go_package
-> echo %GOPATH%
-> go get github.com/astaxie/beego
+### Go 语言的开发工具
+
+- VS Code
+- IntelliJ IDEA 注册码：http://idea.lanyus.com/
+- LiteIDE
+  - Go 语言开发的跨平台轻量级继承开发环境(IDE)
+- GoLand (类似 Pycharm), Eclipse, Intelli Idea等
+
+#### 在 Linux OS 安装 vscode
+
+1. 下載 code-stable-codexxxx.amd64.tar.gz
+2. 文件复制到 `/opt` 目录下
+3. 解压文件 `tar -zxvf code-stable-codexxxx.amd64.tar.gz`
+4. 进入解压后的目录运行vscode 程序 `./code`
+
+#### 在 Mac OS 安装 vscode
+
+```sh
+启动 sshd 服务
+sudo launchctl loadl -w /System/Library/LaunchDaemons/ssh.plist
+
+停止 sshd 服务
+sudo launchctl unload -w /System/Library/LaunchDaemons/ssh.plist
+
+查看是否启动
+sudo launchctl list | grep ssh
+显示 0 com.openssh.sshd 代表启动成功了
+
+解压
+$ unzip VScode-darwin-stable.zip
 ```
-
-- `go get` 的本质就 `git` + `go install`
-- go get github.com/beego/bee 映射至 $GOPATH/src/github.com/beego/bee
 
 ### 调试工具delve 安装
 
 - mac : `brew install go-delve/delve/delve`
 - linux&windows: `go get github.com/derekparker/delve/cmd/dlv`
 
-
-
 ## 程序
 
 > 指令的集合
 
-文件编码必须是`utf-8`
+文件编码必须是 `utf-8`
+
 ``` go
 编译
-# go build hello.go
+go build hello.go
+
 编译运行
-# go run hello.go
+go run hello.go
 ```
-
-## 课程概览
-
-- 基本语法
-  - 变量
-  - 选择/循环
-  - 指针、数组、容器
-- 面向接口
-  - 结构体
-  - duck typing的概念
-  - 组合的思想
-- 函数式编程
-  - 闭包
-  - 多样的例题
-- 工程化
-  - 资源管理、错误处理
-  - 测试和文档
-  - 性能调优
-- 并发编程
-  - goroutine 和 channel
-  - 理解调度器
-  - 多样的例题
 
 ## 班主任
 
@@ -233,6 +328,89 @@ $ source ~/.bash_profile
 - 上课氛围：积极听讲，有问题就问
 - 课后练习：按时做完并提交
 - 个人态度：主动学习并教授他人
+
+## 快速入门
+
+### 开发步骤
+
+1. 目录结构
+
+- E:\goProject 工作目录
+  - src 源码
+    - go_code
+      - project1
+        - main
+        - package
+      - project1
+
+2. 创建 demo 文件 `vim project1/main/hello.go`
+
+```go
+package main // 文件归属 main 包
+import "ftm"
+func main() {
+  fmt.Println("hello World")
+}
+```
+
+3. 通过 `go build hello.go` 命令对 go 文件进行编译，生成 .exe 文件
+
+**生产环境必须先编译**
+
+```sh
+# cd project1/main
+# go build hello.go
+# hello.exe
+```
+
+4. 通过 `go run hello.go` 命令编译执行程序
+
+**用于开发环境**
+
+```sh
+# cd project1/main
+# go run hello.go
+```
+
+### GoLang 执行流程分析
+
+- 源码编译，在执行，Go执行流程
+  - .go文件 ---- go build(编译) ---> 可执行文件 ---- 运行 ----> 结果
+
+- 源码直接执行 `go run`
+  - .go文件 ---- go run(编译和运行) -----> 结果
+
+#### 执行流程区别
+
+1. 先编译生成可执行文件，可以将可执行文件复制到没有 go 开发环境的机器上可以运行
+2. 直接 `go run 源码文件`，如果在另外一个机器上运行，需要 go 开发环境，否则无法执行
+3. 在编译时，编译器会将程序运行依赖的库文件包含在可执行文件中，所以可执行文件变大了很多
+
+### 什么是编译
+
+1. 通过编译器将其编译成机器(CPU指令)可以识别的二进制码文件
+2. 指定编译输出的文件：`go build -o hi.exe hello.go`
+
+### go 开发注意事项
+
+- 源文件必须以`.go` 扩展名
+- 应用程序的执行入口是 `main()`方法
+- 严格区分大小写
+- 每个语句后不需要分好（自动加分好）
+- Go 编译器逐行进行编译的，因为每行写一条语句，不能把多条语句写在同一个，否则报错
+- 定义的变量或者 `import` 的包没有使用，那么代码不能编译通过
+- 大括号都是成对儿出现的，缺一不可
+
+### 注释
+
+- `// 行注释`
+- `/* 块注释 */`
+
+### 规范代码风格
+
+- Shifrt + Tab
+- gofmt 进行格式化
+  - `gofmt -w hello.go`
 
 ## 基础语法
 
@@ -251,12 +429,12 @@ $ source ~/.bash_profile
 > 把相同功能的代码放到一个目录，称之为包
 
 - 包可以别其他包引用
-- main 包是用来生成可执行文件，每个程序只有一个 main包
+- `main` 包是用来生成可执行文件，每个程序只有一个 `main` 包
 - 包的主要用途是提高代码的可复用性
 
 `package <pkgName>`
 
-### var关键字
+### var 关键字
 
 ``` go
 var num int
@@ -273,39 +451,99 @@ const PI = 3.14
 const hello string = "wovert"
 ```
 
-### 数据类型
+### 变量
 
-- `bool`
-- `rune` (符文，32bit,char类型)
-- `(u)int8 (u)int16 (u)int32 (u)int64 uintptr`
-- `byte`
-- `float32 float64`
-- `complex64 complex128`
-- `string`
-- `array slice`
-- `map`
+> 内存中一个数据存储空间
 
-### 变量定义
+1. 声明变量
+2. 变量赋值
+3. 使用变量
 
+- 声明变量之后，没有赋值会使用默认值(int=0, string="")
 - 变量类型写在变量名之后
 - 编译器可推测变量类型
-- 没有 char, 只有 rune
+- 没有 `char`, 只有 `rune`
 - 原生支持复数类型
+- 该数据内类的值可以在同一类型范围内不断变化
+- 变量在同一个作用域内不能重名
+- 变量=变量名+值+数据类型
 
+```go
 var (
-  name ="wovert"
+  name = "wovert"
   age = 30
 )
+```
+
+### 数据类型
+
+- 基本数据类型
+  - 数值型
+    - 整数类型={`int, (u)int8, (u)int16, (u)int32, (u)int64, uintptr, byte,}`
+      - `rune` = `(u)int32` (符文，32bit,char类型)
+      - `byte = uint8`
+    - 浮点类型={`float32, float64`}
+  - 字符型(没有专门的字符型，使用 byte 保存单个字母字符)
+  - 布尔型=`bool`
+  - 字符串=`string`
+- 派生/复杂数据类型
+  - 指针
+  - 数组
+  - 结构体
+  - 管道
+  - 函数
+  - 切片
+  - 接口
+  - map
+
+#### 整数值
+
+- 默认声明未 int 类型
+
+#### 浮点型
+
+- 浮点数=符号位+指数位+尾数位
+- 有固定的范围和字段长度，不受具体 OS 的影响
+- 默认声明未 float64类型
+
+#### 字符类型
+
+- 字符型存储到计算机中，需要将字符对应的码值（整数）找出来
+  - 存储：字符->对应码值->二进制->存储
+  - 读取：二进制->码值->字符->读取
+- Go 语言的编码都统一使用 `utf-8`
+
+#### 布尔类型
+
+- 占一个字节
+- bool取值范围：`true | false`，不能使用0或非0
+
+#### 字符串类型
+
+- 使用 UTF-8 编码标识 Unicode 文本
+- 字符串一旦赋值，就不能修改。字符串是不可变的
+- "会识别转义字符"
+- `反引号，已字符串的原生形式输出，包括换行和特殊字符，可以实现防止攻击、输出源代码等效果`
+- 字符串拼接换行时，`+` 保留在行尾
+
+#### 基本数据类型默认值
+
+- 整型：0
+- 浮点型：0
+- 字符串：""
+- 布尔类型：false
+
+- `%v` 变量的值输出
 
 ### map
 
-make 用于内建类型(map, slice, channel)的内存分配
+`make` 用于内建类型(`map, slice, channel`)的内存分配
 
 ## file
 
 资源关闭
 
-```cgo
+``` go
 file.Open("file")
 defer file.close()
 ```
@@ -314,7 +552,7 @@ defer file.close()
 
 `panic("抛出异常")`
 
-## 在线编辑 go语言
+## 在线编辑 go 语言
 
 - golang.org
 
@@ -335,8 +573,8 @@ const (
 
 ## 值类型和引用类型
 
-- 值类型：int, float, bool, string, array, struct
-- 引用类型：pointer, slice, map, chan
+- 值类型：`int, float, bool, string, array, struct`
+- 引用类型：`pointer, slice, map, chan`
 
 ``` go
 import (
