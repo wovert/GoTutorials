@@ -160,6 +160,8 @@
 
 - go1.9.2.windows-amd64.zip: Windows 下的 SDK
 
+### 安装方式 
+
 1. 源码安装
 2. `Go` 标准包安装
 3. 第三方工具安装，比如 `GVM`
@@ -221,7 +223,8 @@ d:\> go version
 ```
 
 - `go get` 的本质就 `git` + `go install`
-- `go get github.com/beego/bee` 映射至 `$GOPATH/src/github.com/beego/bee`
+- `go get github.com/beego/bee`
+  - `go get github.com/beego/bee` 映射至 `$GOPATH/src/github.com/beego/bee`
 
 ### Linux 安装及配置
 
