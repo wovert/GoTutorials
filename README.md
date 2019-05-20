@@ -538,6 +538,24 @@ var (
 
 - `%v` 变量的值输出
 
+#### 基本数据类型转换
+
+- 必须显示转换，不能自动转换
+T(v)
+```go
+var i int32 = 257
+var n1 float32 = float32(i)
+var n2 int8 = int8(i)
+var n3 int64 = int64(i)
+var n4 byte = byte(i)
+fmt.Printf("i=%v n1=%v n2=%v n3=%v n4=%v\n", i, n1, n2, n3, n4)
+fmt.Printf("i=%T \n", i)
+```
+
+- 范围小的可以转换为范围大的，也可以范围大的转换为范围小的
+- 被转换的是变量存储的数据，变量本身的数据类型并没有变化
+- `int64` 转换成 `int8`，编译时不会拨错，只是转换的结果是按**溢出**处理
+
 ### map
 
 `make` 用于内建类型(`map, slice, channel`)的内存分配
