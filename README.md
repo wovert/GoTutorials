@@ -783,12 +783,12 @@ func read2() {
 
 ### 内置函数
 
-- close: 关闭 `channel`
-- len: 长度，比如 `string, array, slice, map, channel`
-- new: 分配内存，主要用来分配值类型，比如 `int, struct`, 返回的是指针
-- make: 分配内存，主要分配引用类型，比如 `chan, map, slice`
-- append: 追加元素到数组，`slice` 中
-- panic 和 recover, 用来做错误处理
+- `close`: 关闭 `channel`
+- `len`: 长度，比如 `string, array, slice, map, channel`
+- `new`: 分配内存，主要用来分配值类型，比如 `int, struct`, 返回的是指针
+- `make`: 分配内存，主要分配引用类型，比如 `chan, map, slice`
+- `append`: 追加元素到数组，`slice` 中
+- `panic` 和 `recover`, 用来做错误处理
 
 ## 包
 
@@ -801,6 +801,10 @@ import (
   util "go/tools/utils"
 )
 ```
+
+编译后生成一个有默认名的可执行文件，在 $GOPATH 目录下，可以指定名字和目录 `go build -o bin/my.exe go_code/project/main`
+
+- `pkg/windows_amd64/go_code/project/function/utils.a` 库文件
 
 ## 指针
 
