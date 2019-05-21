@@ -26,4 +26,5 @@ func main() {
 	fmt.Scanf("%s %d %f %t", &name, &age, &sal, &isPass)
 
 	fmt.Printf("name is %v\n age is %v\n salary is %v\n pass %v", name, age, sal, isPass)
+	
 }
