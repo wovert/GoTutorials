@@ -790,6 +790,23 @@ func read2() {
 - `append`: 追加元素到数组，`slice` 中
 - `panic` 和 `recover`, 用来做错误处理
 
+### 函数是数据类型
+
+- 自定义数据类型
+  - `type 自定义数据类型名 数据类型`
+  - `type myInt int` 给int取了别名，myInt和int都是 int类型，但是go认为是两个不同类型
+  - `type mySum func(int, int) int`
+
+- 支持返回值命名
+
+```go
+func getSumAndSub(n1 int, n2 int) (sum int, sub int) {
+	sum = n1 + n2
+	sub = n1 - n2
+	return
+}
+```
+
 ## 包
 
 - `import` 包时，路径从 `$GOPATH` 环境变量的 `src` 目录开始，编译器自动从 `src` 下开始引入
