@@ -801,11 +801,27 @@ func read2() {
 
 ```go
 func getSumAndSub(n1 int, n2 int) (sum int, sub int) {
-	sum = n1 + n2
-	sub = n1 - n2
-	return
+  sum = n1 + n2
+  sub = n1 - n2
+  return
 }
 ```
+
+### 匿名函数和闭包
+
+```go
+sum := func (a int, b int) func () int {
+  a *= a
+  b *= b
+  return func () int {
+    return a + b
+  }
+}
+```
+
+### defer
+
+在函数中需要创建资源（数据库连接、文件句柄、锁等），为了在函数执行完毕后，及时的释放资源，Go 的设计者提供defer(延时机制)
 
 ## 包
 

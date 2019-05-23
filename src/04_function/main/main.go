@@ -40,4 +40,16 @@ func main() {
 
 	a, b := getSumAndSub(100, 50)
 	fmt.Printf("a=%v, b=%v\n", a, b)
+
+	// 匿名函数
+	sum := func (a int, b int) func () int {
+		a *= a
+		b *= b
+		return func () int {
+			
+			return a + b
+		}
+	}
+	result := sum(10, 5)()
+	fmt.Println("闭包匿名函数:", result)
 }
