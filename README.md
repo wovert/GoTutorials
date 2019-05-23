@@ -725,6 +725,22 @@ for ...
     break label
 ```
 
+## 包
+
+- `import` 包时，路径从 `$GOPATH` 环境变量的 `src` 目录开始，编译器自动从 `src` 下开始引入
+- 同一个包下，不能有相同的函数名，否则报重复定义
+
+```go
+import (
+  // 别名
+  util "go/tools/utils"
+)
+```
+
+编译后生成一个有默认名的可执行文件，在 $GOPATH 目录下，可以指定名字和目录 `go build -o bin/my.exe go_code/project/main`
+
+- `pkg/windows_amd64/go_code/project/function/utils.a` 库文件
+
 ## 函数
 
 ```go
@@ -746,6 +762,13 @@ func 函数名(形参列表)(返回值列表) {
 - map, slice, chan, 指针，interface 默认以引用方式传递
 
 - 命令返回值的名字
+
+### 参数的传递
+
+- 值传递：基本数据类型 int系列, float系列， bool, string, 数组和结构体
+- 引用传递: 指针，slice 切片, map, 管道 chan, interface 等都是引用类型
+
+不管是值传递还是引用传递，传递给函数的都是变量的副本，不同的是，值传递的是值的拷贝，引用传递的是地址的拷贝。地址拷贝效率高，因为数据量小，而值拷贝决定拷贝的数据大小，数据越大，效率越低
 
 ### 可变参数
 
@@ -823,21 +846,26 @@ sum := func (a int, b int) func () int {
 
 在函数中需要创建资源（数据库连接、文件句柄、锁等），为了在函数执行完毕后，及时的释放资源，Go 的设计者提供defer(延时机制)
 
-## 包
-
-- `import` 包时，路径从 `$GOPATH` 环境变量的 `src` 目录开始，编译器自动从 `src` 下开始引入
-- 同一个包下，不能有相同的函数名，否则报重复定义
-
 ```go
-import (
-  // 别名
-  util "go/tools/utils"
-)
+func sum(n1 int, n2 int) int {
+  defer fmt.Println("n1=", n1) // 压栈
+  defer fmt.Println("n2=", n2) // 压栈
+  res := n1 + n2
+  fmt.Println("res=", res)
+  return res
+}
 ```
 
-编译后生成一个有默认名的可执行文件，在 $GOPATH 目录下，可以指定名字和目录 `go build -o bin/my.exe go_code/project/main`
+- 遇到defer 语句时，不会立即执行 defer 后的语句，而是将 defer 后的语句压入到一个栈中
+- 当函数执行完毕之后，再从 defer 栈，**先入后出**的方式出栈（一次从栈顶去除语句执行）
+- 在 defer 将语句放入到栈时，也会将相关的值拷贝同时入栈
 
-- `pkg/windows_amd64/go_code/project/function/utils.a` 库文件
+### 变量作用域
+
+- 局部变量：函数内声明/定义的变量，作用域**仅限于函数内部**
+- 全局变量：函数外声明/定义的变量，作用域在**整个包**都有效，如果其**首字母为大写**，则作用域在**整个程序有效**
+- 代码块：在 for/if 中，作用域在该代码块中
+
 
 ## 指针
 
