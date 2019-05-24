@@ -962,3 +962,17 @@ pStr = new(string)
   - 传地址（传引用）：将形参的地址值作为函数参数传递
   - 传值（数据值）：将实参的值拷贝一份给西形参
   - 传引用：在A栈帧内部，修改B栈帧中的变量值
+
+## 字符串函数
+
+- 字符串长度(字节): `len(str)`
+  - 一个 ascii 占用一个字节
+  - 一个汉字占用3个字节
+- `str1 := []rune(str)`
+- 字符串转整数：`n, err = strconv.Atoi("12")`
+- 整数转字符串：`str = strconv.Itoa(1234)`
+- 字符串转 []byte: `var bytes = []byte("hello World")`
+- []byte转字符串：`str = string([]byte{97,98,99})`
+- 10进制转2,8,16进制：`str = strconv.FormatInt(123, 2) // 2->8,16`
+- 查找子串是否在指定的字符串中：`bool strings.Contains("seafood", "foo")`
+
