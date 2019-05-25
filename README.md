@@ -975,4 +975,7 @@ pStr = new(string)
 - []byte转字符串：`str = string([]byte{97,98,99})`
 - 10进制转2,8,16进制：`str = strconv.FormatInt(123, 2) // 2->8,16`
 - 查找子串是否在指定的字符串中：`bool strings.Contains("seafood", "foo")`
-
+- 统计一个字符串有几个指定的子串：`strings.Count('ceheese', 'e')`
+- 字符串比较（不区分大小写）: `bool strings.EqualFold("abc", "Abc")`
+  - 区分大小写：`abc == Abc`
+- 返回子串在字符串第一次出现的 `index` 值，没有返回 -1: `strings.Index("NLT_abc", "abc")`
