@@ -979,3 +979,29 @@ pStr = new(string)
 - 字符串比较（不区分大小写）: `bool strings.EqualFold("abc", "Abc")`
   - 区分大小写：`abc == Abc`
 - 返回子串在字符串第一次出现的 `index` 值，没有返回 -1: `strings.Index("NLT_abc", "abc")`
+- 返回子串在字符串最后一次出现的 `index` 值，没有返回 -1: `strings.LastIndex("NLT_abc", "abc")`
+- 子串替换成另外一个子串(n:替换几个,-1替换所有)： `strings.Replace("go go hello", "go", "go 语言", -n)`
+- 大小写转换：`strings.ToLower/ToUpper()`
+- 字符串分割成字符串数组: `int strings.Split("hello World", ",")`
+- 字符串左右两边空格去掉：`strings.TrimSpace(" tn a lone sss...  ")`
+- 字符串左右两边指定的字符去掉：`strings.Trim("!Hello!", "!")`
+- 字符串左边指定的字符去掉：`strings.TrimLeft("!Hello!", "!")`
+- 字符串右边指定的字符去掉：`strings.TrimRight("!Hello!", "!")`
+- 是否以某个字符串开头：`strings.HasPrefix("http://www.wovert.com", "http")`
+- 是否以某个字符串结尾：`strings.HasSuffix("http://www.wovert.com", ".com")`
+
+## 日期时间相关函数
+
+> time 包
+
+- now := time.Now()
+- now.Year()
+- now.Month()
+- int(now.Day())
+- now.Hour()
+- now.Minute()
+- now.Second()
+
+- 格式化日期时间
+  - `dateStr := fmt.Sprintf("%d-%02d-%02d %02d:%02d:%02d \n", now.Year(),now.Month(), now.Day(), now.Hour(), now.Minute(), now.Second())`
+  - `fmt.Println(now.Format("2006/01/02 15:04:05"))`
