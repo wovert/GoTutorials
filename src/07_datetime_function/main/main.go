@@ -3,7 +3,15 @@ package main
 import (
 	"fmt"
 	"time"
+	"strconv"
 )
+
+func test() {
+	str := ""
+	for i := 0; i < 100000; i++ {
+		str += "hello" + strconv.Itoa(i)
+	}
+}
 
 func main() {
 	now := time.Now()
@@ -22,6 +30,27 @@ func main() {
 	fmt.Println("dateStr:", dateStr)
 
 	fmt.Println(now.Format("2006/01/02 15:04:05"))
+
+	// 时间常量
+	i := 0
+	for {
+		i++
+		fmt.Println(i)
+		// time.Sleep(time.Second)
+		time.Sleep(time.Millisecond * 100)
+		if i == 10 {
+			break
+		}
+	}
+
+	// Unix 和 UnixNano
+	fmt.Printf("Unix时间戳=%v UnixNano时间戳=%v\n", now.Unix(), now.UnixNano())
+
+	start := time.Now().Unix()
+	test()
+	end := time.Now().Unix()
+	extime := end - start
+	fmt.Printf("执行test耗费时间为%v秒\n", extime)
 }
 
 

@@ -809,7 +809,7 @@ func read2() {
 - `close`: 关闭 `channel`
 - `len`: 长度，比如 `string, array, slice, map, channel`
 - `new`: 分配内存，主要用来分配值类型，比如 `int, struct`, 返回的是指针
-- `make`: 分配内存，主要分配引用类型，比如 `chan, map, slice`
+- `make`: 分配内存，主要分配引用类型，比如 `channel, map, slice`
 - `append`: 追加元素到数组，`slice` 中
 - `panic` 和 `recover`, 用来做错误处理
 
@@ -1005,3 +1005,55 @@ pStr = new(string)
 - 格式化日期时间
   - `dateStr := fmt.Sprintf("%d-%02d-%02d %02d:%02d:%02d \n", now.Year(),now.Month(), now.Day(), now.Hour(), now.Minute(), now.Second())`
   - `fmt.Println(now.Format("2006/01/02 15:04:05"))`
+
+- 时间常量
+- 休眠时间: time.Sleep(time.Second)
+- 随机时间
+  - now.Unix()
+  - now.UnixNano()
+- 执行代码时间
+  - start := time.Now().Unix()
+  - test()
+  - end := time.Now().Unix()
+
+## 错误处理机制
+
+```go
+func test() {
+  // defer + recover 来捕获处理异常
+  defer func() {
+    if err := recover(); err != nil {
+      fmt.Println("err=", err)	
+      fmt.Println("发送邮件给admin@amdin.com")
+    }
+  }()
+  num1 := 10
+  num2 := 0
+  res := num1 / num2
+  fmt.Println("res=", res)
+}
+```
+
+### 自定义错误
+
+```go
+// 读取配置文件的init.conf 的信息
+// 文件传入错误，返回自定义错误
+func readConf(name string) (err error) {
+  if name == "config.ini" {
+    return nil
+  } else {
+    return errors.New("读取文件错误")
+  }
+}
+
+func test2() {
+  err := readConf("config.ini0")
+  if err != nil {
+    // 读取文件发送错误，输出错误，并终止程序
+    panic(err)
+  }
+
+  fmt.Println("test2继续执行剩余代码...")
+}
+```
