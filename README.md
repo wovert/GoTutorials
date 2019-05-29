@@ -1041,14 +1041,18 @@ func test2() {
 
 ### 什么是切片
 
-> 切片并不是数组或数组指针，它通过内部指针和相关属性引用数组片段，以实现变长方案
-> 一种数据结构体，用来操作数组内部元素
+> 切片并不是数组或数组指针，一种数据结构体，用来操作数组内部元素。它通过内部指针和相关属性引用数组片段，以实现变长方案。
+
+- 切片时引用类型，引用传递
+- 动态变化数组
+- `var sliceName [这里不需要长度]类型`
 
 ```go
-runtime/slice.go => type slice struct {
-  *p
-  len
-  cap
+// runtime/slice.go
+type slice struct {
+  ptr *[2]int // low 指针地址
+  len int // 元素长度
+  cap int // 容量大小
 }
 ```
 
@@ -1057,8 +1061,8 @@ runtime/slice.go => type slice struct {
 `切片名称 [low:high:max]`
 
 - low: 起始下标位置
-- high: 结束下标位置
-- cap(容量): max-low
+- high: 结束下标位置(不包含index of high)
+- cap(容量): max-low (容量是动态变化，必须大于等于切片元素数量)
 
 ### 数组和切片定义区别
 
