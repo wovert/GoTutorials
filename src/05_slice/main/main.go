@@ -34,8 +34,30 @@ func slice2() {
 	fmt.Println("len(s)=", len(s)) // 4
 	fmt.Println("cap(s)", cap(s)) // 7
 }
+
+func slice3() {
+	var slice []float64 = make([]float64, 3, 5)
+	fmt.Printf("slice=%v\n", slice)
+	slice[0] = 1.0
+	slice[1] = 2.0
+	slice[2] = 3.0
+	// slice[3] = 4.0
+	fmt.Printf("slice=%v\n", slice)
+}
+
+func slice4() {
+	var slice []float64 = []float64 {1.0, 2.0, 3.0}
+	fmt.Printf("slice=%v\n", slice)
+	slice[2] = 10.0
+	fmt.Printf("slice=%v\n", slice)
+	fmt.Printf("len(slice)=%v\n", len(slice))
+	fmt.Printf("cap(slice)=%v\n", cap(slice))
+}
+
 func main() {
-	slice0()
+	// slice0()
 	// slice1()
 	// slice2()
+	// slice3()
+	slice4()
 }
