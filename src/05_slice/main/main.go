@@ -54,10 +54,48 @@ func slice4() {
 	fmt.Printf("cap(slice)=%v\n", cap(slice))
 }
 
+func slice5() {
+	s1 := []int {1,2,4,5}
+	s2 := append(s1, 6)
+	s3 := append(s2, 9)
+	s4 := append(s3, 10)
+	s5 := append(s4, 11)
+	s6 := append(s5, 12)
+	s7 := append(s6, 15)
+	s8 := append(s7, 16)
+	fmt.Println(s1)
+	fmt.Println(s2)
+	fmt.Println(s3)
+	fmt.Println(s4)
+	fmt.Println(s5)
+	fmt.Println(s6)
+	fmt.Println(s7)
+	fmt.Println(s8)
+}
+
+func noEmpty(data []string) []string {
+	out := data[:0]
+	for _, str := range data {
+		if str != "" {
+			out = append(out, str)
+		}
+	}
+	return out
+}
+
 func main() {
 	// slice0()
 	// slice1()
 	// slice2()
 	// slice3()
-	slice4()
+	// slice4()
+	// slice5()
+	data := []string{"red", "", "black", "", "", "pink", "blue", "orange", "gray", "purple", "yellow"}
+	afterData := noEmpty(data)
+	fmt.Printf("afterData:%v\n", afterData)
+
+	s1 := afterData[6:] // [purple, yellow] 
+	s2 := afterData[0:5] // "red", black", pink", "blue", "orange"
+	copy(s2, s1)
+	fmt.Printf("s2=%v\n", s2) // [purple yellow pink blue orange]
 }

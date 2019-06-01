@@ -1091,6 +1091,9 @@ slice := intArr[0:3:4] // index:1-3(不包含3)
 
 截取数组，初始化切片时，切片容量跟随原数组
 
+- append(slice, apendElement)
+- copy(targetSlice, sourceSlice)
+
 ## struct
 
 ## oop
@@ -1103,3 +1106,9 @@ slice := intArr[0:3:4] // index:1-3(不包含3)
   - 将对象实例赋值给接口
   - 将一个接口赋值给另一个接口
   
+## 协程
+
+> 轻量级线程
+
+go + 函数名：启动一个协程执行函数
+
