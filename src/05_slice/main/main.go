@@ -83,6 +83,28 @@ func noEmpty(data []string) []string {
 	return out
 }
 
+func strTest() {
+	str := "hello@hotmail.com"
+	slice := str[6:]
+	fmt.Println("slice=", slice)
+
+	arr1 := []rune(str)
+	arr1[0] = '北'
+	str = string(arr1)
+	fmt.Println("str=", str)
+}
+
+func fb(n int) ([]uint64) {
+	fbSlice := make([]uint64, n)
+	fbSlice[0] = 1
+	fbSlice[1] = 1
+
+	for i := 2; i < n; i++ {
+		fbSlice[i] = fbSlice[i - 1] + fbSlice[i - 2]
+	}
+	return fbSlice
+}
+
 func main() {
 	// slice0()
 	// slice1()
@@ -98,4 +120,9 @@ func main() {
 	s2 := afterData[0:5] // "red", black", pink", "blue", "orange"
 	copy(s2, s1)
 	fmt.Printf("s2=%v\n", s2) // [purple yellow pink blue orange]
+	
+	strTest()
+
+	fbSlice := fb(10)
+	fmt.Println("fbSlice=", fbSlice)
 }
