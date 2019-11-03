@@ -28,4 +28,20 @@ func main() {
 
 	modify(&a)
 	fmt.Println(a)
+
+	// heap 上申请一片内存地址空间
+	var pStr *string
+	pStr = new(string)
+	*pStr = "hello world"
+	fmt.Printf("%v\n", *pStr)
+	fmt.Printf("%s\n", *pStr)
+	fmt.Printf("%q\n", *pStr)
+
+	fmt.Println("=========")
+
+	var x int = 100
+	var y = x
+	fmt.Printf("%v\n", &x)
+	fmt.Printf("%v\n", &y)
+
 }

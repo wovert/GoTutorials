@@ -418,9 +418,14 @@ func main() {
 
 ### 标识符
 
-> 字母和下划线开头，大小写敏感，后跟字母和数字和下划线
+> 变量、方法和函数等命名时使用的字符序列称为标识符。字母和下划线开头，大小写敏感，后跟字母和数字和下划线
 
 `_` 是特殊标识符，用来忽略结果
+
+- 标识符规范
+  - 包名与目录名保持一致
+  - 变量名、函数名、常量名采用驼峰法
+  - 变量名、函数名、常量名首字母大写，则可以被其他的包访问；如果首字母小写，则只能在本包中使用
 
 ### 包管理
 
@@ -572,6 +577,7 @@ type (
 
 - 必须显示转换，不能自动转换
 T(v)
+
 ```go
 var i int32 = 257
 var n1 float32 = float32(i)
@@ -663,7 +669,128 @@ import (
 - time.Now().Format("2006/1/02 15:04")
 - time.Now().Format("2006/1/02")
 
+## 运算符
+
+- 算符运算符: +(正号, 加, 字符串相加), -(符号, 减), *, /(取整数), %, i++, i--
+  - `10 / 4 == 2`
+  - `10.0 / 4 = 2.5`
+  - `10%-3 == 1` 与除数有关系
+  - i++, i-- 必须独立使用
+- 赋值运算符: `=, +=, -=, *=, /=, %=`
+- 比较运算符/关系运算符: `==, !=, <, >, <=, >=`
+- 逻辑运算符: `&&, ||, !`
+- 位运算符
+- 其他运算符: `&, *`
+
+### 优先级
+
+- 括号, ++, --
+- 单目运算符：+,-,!,~, (type), *, &, sizeof **右到左**
+- 算符
+- 移位
+- 关系
+- 位
+- 逻辑
+- 赋值 **右到左**
+- 逗号
+
+## 键盘输入语句
+
+- fmt.Scanln()
+- fmt.Scanf()
+
+## 流程控制语句
+
+- 顺序控制语句
+- 分支控制语句
+  - 单分支
+  - 双分支
+  - 多分支
+- 循环控制
+
+- `if a := 1; a < 100 {`
+- `switch num := 100; num {`
+  - `fallthrough` 与 `break` 相反
+
+```go
+switch num :=1; num {
+  case 1:
+    ...
+  case 2, 3, 4:
+    ...
+  default:
+    ...
+}
+
+score := 85
+switch {
+  case socre > 90:
+    ...
+  case score > 80:
+    ...
+  default:
+    ...
+}
+```
+
+- range str: 元素索引，元素值
+
+```go
+for i := 1; i <= n; i++ {
+  ...
+}
+for i <= n {
+  ...
+  i++
+}
+str := "abc"
+for i, data := range str {
+  // i 元素索引
+  // data 元素值
+}
+// 值返回原素值
+for _, data := range str {
+  ...
+}
+// 仅返回元素索引
+for i := range str {
+  ...
+}
+```
+
+- break and goto
+
+```go
+label:
+for ...
+  for ...
+    break label
+```
+
+## 包
+
+- `import` 包时，路径从 `$GOPATH` 环境变量的 `src` 目录开始，编译器自动从 `src` 下开始引入
+- 同一个包下，不能有相同的函数名，否则报重复定义
+
+```go
+import (
+  // 别名
+  util "go/tools/utils"
+)
+```
+
+编译后生成一个有默认名的可执行文件，在 $GOPATH 目录下，可以指定名字和目录 `go build -o bin/my.exe go_code/project/main`
+
+- `pkg/windows_amd64/go_code/project/function/utils.a` 库文件
+
 ## 函数
+
+```go
+func 函数名(形参列表)(返回值列表) {
+  ...
+  return 返回值列表
+}
+```
 
 ### 函数的特点
 
@@ -677,6 +804,13 @@ import (
 - `map, slice, chan, pointer，interface` 默认以引用方式传递
 
 - 命令返回值的名字
+
+### 参数的传递
+
+- 值传递：基本数据类型 int系列, float系列， bool, string, 数组和结构体
+- 引用传递: 指针，slice 切片, map, 管道 chan, interface 等都是引用类型
+
+不管是值传递还是引用传递，传递给函数的都是变量的副本，不同的是，值传递的是值的拷贝，引用传递的是地址的拷贝。地址拷贝效率高，因为数据量小，而值拷贝决定拷贝的数据大小，数据越大，效率越低
 
 ### 可变参数
 
@@ -720,53 +854,84 @@ func read2() {
 - `append`: 追加元素到数组，slice中
 - `panic`和`recover`, 用来做错误处理
 
-## 流程控制语句
+### 函数是数据类型
 
-- `if a := 1; a < 100 {`
-- `switch num := 100; num {`
-  - `fallthrough` 与 `break` 相反
+- 自定义数据类型
+  - `type 自定义数据类型名 数据类型`
+  - `type myInt int` 给int取了别名，myInt和int都是 int类型，但是go认为是两个不同类型
+  - `type mySum func(int, int) int`
+
+- 支持返回值命名
+
 ```go
-switch num :=1; num {
-  case 1:
-    ...
-  case 2, 3, 4:
-    ...
-  default:
-    ...
+func getSumAndSub(n1 int, n2 int) (sum int, sub int) {
+  sum = n1 + n2
+  sub = n1 - n2
+  return
 }
+```
 
-score := 85
-switch {
-  case socre > 90:
-    ...
-  case score > 80:
-    ...
-  default:
-    ...
+### 匿名函数和闭包
+
+```go
+sum := func (a int, b int) func () int {
+  a *= a
+  b *= b
+  return func () int {
+    return a + b
+  }
 }
 ```
 
 - `range str`: 元素索引，元素值
+### defer
+
+在函数中需要创建资源（数据库连接、文件句柄、锁等），为了在函数执行完毕后，及时的释放资源，Go 的设计者提供defer(延时机制)
 
 ```go
-str := "abc"
-for i, data := range str {
-  // i 元素索引
-  // data 元素值
-}
-// 值返回原素值
-for _, data := range str {
-  ...
-}
-// 仅返回元素索引
-for i := range str {
-  ...
+func sum(n1 int, n2 int) int {
+  defer fmt.Println("n1=", n1) // 压栈
+  defer fmt.Println("n2=", n2) // 压栈
+  res := n1 + n2
+  fmt.Println("res=", res)
+  return res
 }
 ```
+
+- 遇到defer 语句时，不会立即执行 defer 后的语句，而是将 defer 后的语句压入到一个栈中
+- 当函数执行完毕之后，再从 defer 栈，**先入后出**的方式出栈（一次从栈顶去除语句执行）
+- 在 defer 将语句放入到栈时，也会将相关的值拷贝同时入栈
+
+### 变量作用域
+
+- 局部变量：函数内声明/定义的变量，作用域**仅限于函数内部**
+- 全局变量：函数外声明/定义的变量，作用域在**整个包**都有效，如果其**首字母为大写**，则作用域在**整个程序有效**
+- 代码块：在 for/if 中，作用域在该代码块中
+
+### 注释事项
+
+- 函数外不能使用 `Name := "tome"`，因为等价 `var Name string Name="tom"`，**赋值语句不能在函数体外**
 
 ## 指针
 
 > 指针是一个某个**内存地址的值**。这个内存地址是内存中存储的另一个变量的值的起始位置。Go语言对指针的支持介于 Java 语言和 C/C++ 语言之间，Go 语言没有向 Java 语言那样取消了对指针的直接操作的能力，也避免了 C/C++ 语言中由于对指针的滥用而造成的安全和可靠性问题。
+
+### 栈帧的内存布局
+
+- 栈帧：用来给函数运行提供内存空间，取内存上 stack 上。当函数调用时，产生栈帧，函数调研结束，释放栈帧。
+- 栈帧存储
+  - 1)局部变量
+  - 2)形参（形参与局部变量存储地位等同）
+  - 3)内存字段描述值
+
+- 栈基指针（调用函数开始） VS 栈顶指针（调用函数结束）
+
+- stack(默认1M, Windows OS 可以扩展到8M, Linux 可以扩展到 16M)
+- heap
+- .bss(未初始化数据区) RW
+- .data(初始化的数据区）RW
+- .rodata(只读数据区) RO
+- .text(代码区) RO
 
 ### Go 语言的指针
 
@@ -840,3 +1005,226 @@ go + 函数名：启动一个协程执行函数体
 
 
 
+### 空指针和野指针
+
+- 空指针：为初始化的指针 `var p *int` `*p --> error`
+- 野指针：被一片无效的空间初始化 `var p *int = 0`
+
+- `0x000-0xff` 内存地址给操作系统使用
+
+heap 上申请一片内存地址空间
+
+```go
+var pStr *string
+pStr = new(string)
+```
+
+- 变量存储
+  - 等号左边的变量，是变量所指向的内存空间(写)
+  - 等号右边的变量，是变量内存空间存储的数据值(读)
+
+- 指针的函数传递
+  - 传地址（传引用）：将形参的地址值作为函数参数传递
+  - 传值（数据值）：将实参的值拷贝一份给西形参
+  - 传引用：在A栈帧内部，修改B栈帧中的变量值
+
+## 字符串函数
+
+- 字符串长度(字节): `len(str)`
+  - 一个 ascii 占用一个字节
+  - 一个汉字占用3个字节
+- `str1 := []rune(str)`
+- 字符串转整数：`n, err = strconv.Atoi("12")`
+- 整数转字符串：`str = strconv.Itoa(1234)`
+- 字符串转 []byte: `var bytes = []byte("hello World")`
+- []byte转字符串：`str = string([]byte{97,98,99})`
+- 10进制转2,8,16进制：`str = strconv.FormatInt(123, 2) // 2->8,16`
+- 查找子串是否在指定的字符串中：`bool strings.Contains("seafood", "foo")`
+- 统计一个字符串有几个指定的子串：`strings.Count('ceheese', 'e')`
+- 字符串比较（不区分大小写）: `bool strings.EqualFold("abc", "Abc")`
+  - 区分大小写：`abc == Abc`
+- 返回子串在字符串第一次出现的 `index` 值，没有返回 -1: `strings.Index("NLT_abc", "abc")`
+- 返回子串在字符串最后一次出现的 `index` 值，没有返回 -1: `strings.LastIndex("NLT_abc", "abc")`
+- 子串替换成另外一个子串(n:替换几个,-1替换所有)： `strings.Replace("go go hello", "go", "go 语言", -n)`
+- 大小写转换：`strings.ToLower/ToUpper()`
+- 字符串分割成字符串数组: `int strings.Split("hello World", ",")`
+- 字符串左右两边空格去掉：`strings.TrimSpace(" tn a lone sss...  ")`
+- 字符串左右两边指定的字符去掉：`strings.Trim("!Hello!", "!")`
+- 字符串左边指定的字符去掉：`strings.TrimLeft("!Hello!", "!")`
+- 字符串右边指定的字符去掉：`strings.TrimRight("!Hello!", "!")`
+- 是否以某个字符串开头：`strings.HasPrefix("http://www.wovert.com", "http")`
+- 是否以某个字符串结尾：`strings.HasSuffix("http://www.wovert.com", ".com")`
+
+## 日期时间相关函数
+
+> time 包
+
+- now := time.Now()
+- now.Year()
+- now.Month()
+- int(now.Day())
+- now.Hour()
+- now.Minute()
+- now.Second()
+
+- 格式化日期时间
+  - `dateStr := fmt.Sprintf("%d-%02d-%02d %02d:%02d:%02d \n", now.Year(),now.Month(), now.Day(), now.Hour(), now.Minute(), now.Second())`
+  - `fmt.Println(now.Format("2006/01/02 15:04:05"))`
+
+- 时间常量
+- 休眠时间: time.Sleep(time.Second)
+- 随机时间
+  - now.Unix()
+  - now.UnixNano()
+- 执行代码时间
+  - start := time.Now().Unix()
+  - test()
+  - end := time.Now().Unix()
+
+## 错误处理机制
+
+```go
+func test() {
+  // defer + recover 来捕获处理异常
+  defer func() {
+    if err := recover(); err != nil {
+      fmt.Println("err=", err)	
+      fmt.Println("发送邮件给admin@amdin.com")
+    }
+  }()
+  num1 := 10
+  num2 := 0
+  res := num1 / num2
+  fmt.Println("res=", res)
+}
+```
+
+### 自定义错误
+
+```go
+// 读取配置文件的init.conf 的信息
+// 文件传入错误，返回自定义错误
+func readConf(name string) (err error) {
+  if name == "config.ini" {
+    return nil
+  } else {
+    return errors.New("读取文件错误")
+  }
+}
+
+func test2() {
+  err := readConf("config.ini0")
+  if err != nil {
+    // 读取文件发送错误，输出错误，并终止程序
+    panic(err)
+  }
+
+  fmt.Println("test2继续执行剩余代码...")
+}
+```
+
+## 数组
+
+> 存放多个同一类型数据，是值类型
+
+### 数组使用注意事项
+
+- 声明/定义数组之后，长度固定，不能动态变化
+- 数组是值类型
+
+## 切片
+
+### 为什么使用切片
+
+1. 数组的容量固定，不能自动扩展
+2. 值传递，数组作为函数参数时，将整个数组值拷贝一份给形参
+
+所用的场景中，使用切片替换数组使用
+
+### 什么是切片
+
+> 切片并不是数组或数组指针，一种数据结构体，用来操作数组内部元素。它通过内部指针和相关属性引用数组片段，以实现变长方案。
+
+- 切片时引用类型，引用传递
+- 动态变化数组
+- `var sliceName [这里不需要长度]类型`
+
+```go
+// runtime/slice.go
+type slice struct {
+  ptr *[2]int // low 指针地址
+  len int // 元素长度
+  cap int // 容量大小
+}
+```
+
+### 如何使用切片
+
+`切片名称 [low:high:max]`
+
+- low: 起始下标位置
+- high: 结束下标位置(不包含index of high)
+- cap(容量): max-low (容量是动态变化，必须大于等于切片元素数量)
+
+1. 定义一个切片，然后让切片引用一个已经创建好的数组：切片或数组都可以访问元素
+
+```go
+intArr := [...]int{1,2,3,4,5,6}
+slice := intArr[0:3:4] // index:1-3(不包含3)
+```
+
+2. 通过 make 来创建切片: 只能通过 slice 下边访问元素
+
+`var sliceName []int = make([]int, len, cap)`
+
+3. 直接指定具体数组
+
+`var slice []int = []int {1,3,4}`
+
+- 总结
+  - 通过 make 方式创建切片可以指定切片的大小和容量
+  - 如果没有给切片各个元素赋值，那个就会使用默认值：0, "", false
+  - 通过 make 方式创建的切片对应的数组是 由 make 底层维护，对外不可见，即智能通过 slice 去访问各个元素
+
+### 数组和切片定义区别
+
+- 创建数组 [] 指定数组长度
+- 创建切片时, [] 为空 或者 ...
+
+截取数组，初始化切片时，切片容量跟随原数组
+
+- append(slice, apendElement)
+- copy(targetSlice, sourceSlice)
+
+## struct
+
+## oop
+
+### go 接口
+
+> 一个类只需要实现了接口要求的所有函数，这个类实现的接口
+
+- 接口赋值
+  - 将对象实例赋值给接口
+  - 将一个接口赋值给另一个接口
+  
+## 协程
+
+> 轻量级线程
+
+go + 函数名：启动一个协程执行函数
+
+## 算法和数据结构
+
+### 排序
+
+- 排序：将一组数据，依指定的顺序进行排列的过程
+- 排序的分类
+  - 内部排序：将所有的数据加载到内部存储器中进行排序（**交换式排序法、选择式排序法、插入式排序法**）
+    - 交换式排序：冒泡排序(Bubble sort)、快速排序(Quick sort)
+  - 外部排序：数据量过大，无法全部加载到内存中，需要借助外部存储进行排序（**合并排序法和直接合并排序法**）
+
+### 查找
+
+- 顺序查找
+- 二分查找（必须是有序数组）
