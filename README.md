@@ -5,12 +5,12 @@
 ### Go 语言的背景
 
 - **Ken Tompsom** (B/Unix/C 发明人)
-- **Rob Pike**(罗布·派克) Unix退队，Plan 9 OS 成员，创造 UTF-8 字符编码, 1980奥运会 射箭银牌，天文学家，演讲家
-- **Rober Griesemer**: 协助 Java的 HotSpot 编译器，Chrome 浏览器的 JavaScript 引擎 V8
+- **Rob Pike**(罗布·派克) Unix退队，Plan 9 OS 成员，创造 UTF-8 字符编码, 1980奥运会射箭银牌，天文学家，演讲家
+- **Rober Griesemer**: 协助 Java HotSpot 编译器，Chrome 浏览器的 JavaScript 引擎 V8
 
 ### 为什么创造 Go 语言
 
-- 计算机硬件技术更新频繁，性能提高很快。目前主流的编程语言发展明显落后于硬件，不能合理利用**多核多CPU**的优势提升软件系统性能。现有的编程语言：1. 风格不统一；2.计算能力不够；3.处理大并发不够好
+- 计算机硬件技术更新频繁，性能提高很快。目前主流的编程语言发展明显落后于硬件，不能合理利用**多核多CPU**的优势提升软件系统性能。现有的编程语言：1. 风格不统一；2. 计算能力不够；3. 处理大并发不够好
 - **软件复杂度越来越高，维护成本越来越高**，目前缺乏一个足够简洁高效的编程语言
 - 企业运行维护很多 C/C++ 项目，C/C++ 程序运行速度虽然很快，但是**编译速度很慢**，同时还存在**内存泄露**的一系列困扰需要解决
 
@@ -35,7 +35,7 @@
 - 脚本语言开发速度
 - `C/C++` 运行速度
 - 支持并发编程
-- 为大数据、微服务，并发而生的通用编程语言
+- 为**大数据、微服务，高并发**而生的通用编程语言
 
 ### Go 特性
 
@@ -284,13 +284,14 @@ $ source ~/.bash_profile
 
 ```sh
 启动 sshd 服务
-sudo launchctl loadl -w /System/Library/LaunchDaemons/ssh.plist
+$ sudo launchctl loadl -w /System/Library/LaunchDaemons/ssh.plist
 
 停止 sshd 服务
-sudo launchctl unload -w /System/Library/LaunchDaemons/ssh.plist
+$ sudo launchctl unload -w /System/Library/LaunchDaemons/ssh.plist
 
 查看是否启动
-sudo launchctl list | grep ssh
+$ sudo launchctl list | grep ssh
+
 显示 0 com.openssh.sshd 代表启动成功了
 
 解压
@@ -308,29 +309,23 @@ $ unzip VScode-darwin-stable.zip
 
 文件编码必须是 `utf-8`
 
-``` go
+``` shell
 编译
-go build hello.go
+$ go build hello.go
 
 编译运行
-go run hello.go
+$ go run hello.go
 ```
 
-## 班主任
+### go 命令行
 
-- 考勤管理
-- 转介绍
-- 班委会
-- 学院访谈
-- 班级活动
-- 就业指导
-
-## 课堂纪律
-
-- 上课时间：不要迟到，不要玩手机
-- 上课氛围：积极听讲，有问题就问
-- 课后练习：按时做完并提交
-- 个人态度：主动学习并教授他人
+- go get : 获取远程包（需提前安装 git 或 hg）
+- go run : 直接运行程序
+- go build : 测试编译、检查是否有编译错误
+- go fmt : 格式化源码
+- go install : 编译包文件并编译整个程序
+- go test : 运行测试文件
+- go doc : 查看文档 
 
 ## 快速入门
 
@@ -378,10 +373,10 @@ func main() {
 ### GoLang 执行流程分析
 
 - 源码编译，在执行，Go执行流程
-  - .go文件 ---- go build(编译) ---> 可执行文件 ---- 运行 ----> 结果
+  - .go文件 ---- `go build`(编译) ---> 可执行文件 ---- 运行 ----> 结果
 
 - 源码直接执行 `go run`
-  - .go文件 ---- go run(编译和运行) -----> 结果
+  - .go文件 ---- `go run`(编译和运行) -----> 结果
 
 #### 执行流程区别
 
@@ -399,7 +394,7 @@ func main() {
 - 源文件必须以`.go` 扩展名
 - 应用程序的执行入口是 `main()`方法
 - 严格区分大小写
-- 每个语句后不需要分好（自动加分好）
+- 每个语句后不需要分号（自动加分号(`;`)）
 - Go 编译器逐行进行编译的，因为每行写一条语句，不能把多条语句写在同一个，否则报错
 - 定义的变量或者 `import` 的包没有使用，那么代码不能编译通过
 - 大括号都是成对儿出现的，缺一不可
@@ -411,8 +406,8 @@ func main() {
 
 ### 规范代码风格
 
-- Shifrt + Tab
-- gofmt 进行格式化
+- Shift + Tab
+- `gofmt` 进行格式化
   - `gofmt -w hello.go`
 
 ## 基础语法
@@ -462,14 +457,14 @@ const hello string = "wovert"
 2. 变量赋值
 3. 使用变量
 
-- 声明变量之后，没有赋值会使用默认值(int=0, string="")
+- 声明变量之后，没有赋值会使用默认值(`int=0, string=""`)
 - 变量类型写在变量名之后
 - 编译器可推测变量类型
 - 没有 `char`, 只有 `rune`
 - 原生支持复数类型
 - 该数据内类的值可以在同一类型范围内不断变化
 - 变量在同一个作用域内不能重名
-- 变量=变量名+值+数据类型
+- 变量 = 变量名 + 值 + 数据类型
 
 ```go
 var (
@@ -478,50 +473,93 @@ var (
 )
 ```
 
-### 数据类型
+## 数据类型
 
-- 基本数据类型
-  - 数值型
-    - 整数类型={`int, (u)int8, (u)int16, (u)int32, (u)int64, uintptr, byte,}`
-      - `rune` = `(u)int32` (符文，32bit,char类型)
-      - `byte = uint8`
-    - 浮点类型={`float32, float64`}
-  - 字符型(没有专门的字符型，使用 byte 保存单个字母字符)
-  - 布尔型=`bool`
-  - 字符串=`string`
-- 派生/复杂数据类型
-  - 指针
-  - 数组
-  - 结构体
-  - 管道
-  - 函数
-  - 切片
-  - 接口
-  - map
+### 基础数据类型
 
-#### 整数值
+| 类型 ｜ 名称 ｜ 长度 ｜ 默认值 ｜ 说明 ｜
+｜ --- ｜ --- ｜ ---- ｜ ----  ｜ --- ｜
+| bool ｜ 布尔类型 ｜ 1 ｜ false ｜ true/false 不可以用数字代表 ｜
+| byte ｜ 字节型 ｜ 1 ｜ 0 ｜ uint8 别名 ｜
+| rune ｜ 字符型 ｜ 4 ｜ 0 ｜ 专用于存储 unicode 编码，等价于uint32 ｜
+| int, uint ｜ 整型 ｜ 4 or 8 ｜ 0 ｜ 32 bit or 64 bit ｜
+| int8, uint8 ｜ 整型 ｜ 1 ｜ 0 ｜ -128 ~ 127, 0 ~ 255 ｜
+| int16, uint16 ｜ 整型 ｜ 2 ｜ 0 ｜ -32768 ~ 32767, 0 ~ 65535 ｜
+| int32, uint32 ｜ 整型 ｜ 4 ｜ 0 ｜ -21亿 ~ 21亿, 0 ~ 42亿 ｜
+| int64, uint64 ｜ 整型 ｜ 8 ｜ 0 ｜ ｜
+| float32 ｜ 浮点型 ｜ 4 ｜ 0.0 ｜ 小数位精确到 7 位 ｜
+| float64 ｜ 浮点型 ｜ 8 ｜ 0.0 ｜ 小数位精确到 15 位 ｜
+| complex64 ｜ 符合类型 ｜ 8 ｜  ｜  ｜
+| complex128 ｜ 符合类型 ｜ 16 ｜  ｜  ｜
+| uintptr ｜ 整型 ｜ 4 or 8 ｜  ｜ 存储指针 uint32 or uint64 整数  ｜
+| string ｜ 字符串 ｜  ｜ "" ｜ utf-8 字符串 ｜
+
+### fmt 包的格式化输出输入
+
+| 格式 | 含义 |
+| ---- | ---- |
+| %% | %字面量 |
+| %b | 二进制整数值（基数为2）或者是科学计数法表示的指数为2的浮点数 |
+| %d | 十进制数值（基数为10） |
+| %e | 科学计数法表示的浮点数或者复数值 |
+| %E | 科学计数法表示的浮点数或者复数值 |
+| %f |浮点数或者复数值 |
+| %g | %e或者%f表示的浮点数或者复数，任何一个都以最为紧凑的方式输出 |
+
+| %G | %E或者%f表示的浮点数或者复数，任何一个都以最为紧凑的方式输出 |
+| %o | 八进制整数值 |
+| %p | 十六进制表示的一个值的地址。前缀为0x后跟小写的a-f表示 |
+| %s | 字符串 |
+| %t | true/false |
+| %T | 值得类型 |
+| %v | 默认格式输出的内置或者自动移类型的值，或者是使用其类型的 String()方式输出的自定义值，如果该防范存在的话 |
+| %U | Unicode 表示整数码点，默认值为4个数字字符 |
+| %x | 16进制整数值 a-f |
+| %X | 16进制整数值 A-F |
+
+### 类型转换
+
+- 不允许隐式转换，所有类型必须显式声明，而且转换只能两个相互兼容的类型之间
+- bool 与 整型不能相互转换
+- 0就是假，非0就是真
+- 字符类型本质就是整型
+
+### 类型别名
+
+```cgo
+// int64 类型改名为bigint
+type bigint int64
+var x bigint = 100
+
+type (
+  myint int // int改名为int
+  mystr string // string改名为 mystr
+)
+```
+
+### 整数值
 
 - 默认声明未 int 类型
 
-#### 浮点型
+### 浮点型
 
-- 浮点数=符号位+指数位+尾数位
+- 浮点数 = 符号位 + 指数位 + 尾数位
 - 有固定的范围和字段长度，不受具体 OS 的影响
-- 默认声明未 float64类型
+- 默认声明未 float64 类型
 
-#### 字符类型
+### 字符类型
 
 - 字符型存储到计算机中，需要将字符对应的码值（整数）找出来
   - 存储：字符->对应码值->二进制->存储
   - 读取：二进制->码值->字符->读取
 - Go 语言的编码都统一使用 `utf-8`
 
-#### 布尔类型
+### 布尔类型
 
 - 占一个字节
-- bool取值范围：`true | false`，不能使用0或非0
+- bool 取值范围：`true | false`，不能使用0或非0
 
-#### 字符串类型
+### 字符串类型
 
 - 使用 UTF-8 编码标识 Unicode 文本
 - 字符串一旦赋值，就不能修改。字符串是不可变的
@@ -529,14 +567,6 @@ var (
 - `反引号，已字符串的原生形式输出，包括换行和特殊字符，可以实现防止攻击、输出源代码等效果`
 - 字符串拼接换行时，`+` 保留在行尾
 
-#### 基本数据类型默认值
-
-- 整型：0
-- 浮点型：0
-- 字符串：""
-- 布尔类型：false
-
-- `%v` 变量的值输出
 
 #### 基本数据类型转换
 
@@ -555,6 +585,28 @@ fmt.Printf("i=%T \n", i)
 - 范围小的可以转换为范围大的，也可以范围大的转换为范围小的
 - 被转换的是变量存储的数据，变量本身的数据类型并没有变化
 - `int64` 转换成 `int8`，编译时不会拨错，只是转换的结果是按**溢出**处理
+
+### 复合类型
+
+| 类型 ｜ 名称 ｜ 长度 ｜ 默认值 ｜ 说明 ｜
+｜ --- ｜ --- ｜ ---- ｜ ----  ｜ --- ｜
+| pointer ｜ 指针 ｜  ｜ nil ｜  ｜
+| array ｜ 数组 ｜  ｜ 0 ｜ ｜
+| slice ｜ 切片 ｜  ｜ nil ｜ 引用类型 ｜
+| map ｜ 字典 ｜  ｜ nil ｜ 引用类型 ｜
+| struct ｜ 结构体 ｜  ｜ nil ｜ ｜
+
+
+- 派生/复杂数据类型
+  - 指针
+  - 数组
+  - 结构体
+  - 管道
+  - 函数
+  - 切片
+  - 接口
+  - map
+
 
 ### map
 
@@ -622,17 +674,17 @@ import (
 
 无论是值传递，还是引用传递，传递给函数的都是变量的副本，不过，值传递是值的拷贝。引用传递是地址的拷贝，一般来说，地址拷贝更为高效，而值拷贝取决于拷贝的对象大小，对象越大，则性能越低。
 
-- map, slice, chan, 指针，interface 默认以引用方式传递
+- `map, slice, chan, pointer，interface` 默认以引用方式传递
 
 - 命令返回值的名字
 
 ### 可变参数
 
 ``` go
-// 0个货多个参数
+// 0个或多个参数
 func add(arg... int) int {}
 
-// 1个货多个参数
+// 1个或多个参数
 func add(a int, arg... int) int {
 }
 
@@ -640,7 +692,7 @@ func add(a int, arg... int) int {
 func add(a int, b int, arg... int) int {}
 ```
 
-其中arg是一个`slice`, 通过`arg[index]`一次访问所有参数通过`len(arg)`来判断传递参数的个数
+其中 `arg` 是一个`slice`, 通过`arg[index]`一次访问所有参数通过`len(arg)`来判断传递参数的个数
 
 ``` go
 func read() {
@@ -656,18 +708,17 @@ func read2() {
       conn.Close()
     }
   }()
-
 }
 ```
 
 ### 内置函数
 
-- close: 关闭channel
-- len: 长度，比如 string, array, slice, map, channel
-- new: 分配内存，主要用来分配值类型，比如int, struct, 返回的是指针
-- make: 分配内存，主要分配引用类型，比如chan, map, slice
-- append: 追加元素到数组，slice中
-- panic和recover, 用来做错误处理
+- `close`: 关闭 channel
+- `len`: 长度，比如 string, array, slice, map, channel
+- `new`: 分配内存，主要用来分配值类型，比如int, struct, 返回的是指针
+- `make`: 分配内存，主要分配引用类型，比如chan, map, slice
+- `append`: 追加元素到数组，slice中
+- `panic`和`recover`, 用来做错误处理
 
 ## 流程控制语句
 
@@ -695,7 +746,7 @@ switch {
 }
 ```
 
-- range str: 元素索引，元素值
+- `range str`: 元素索引，元素值
 
 ```go
 str := "abc"
@@ -728,3 +779,64 @@ for i := range str {
 指针就是地址，指针变量就是存储地址的变量
 
 *p: 解引用，间接引用
+
+## xorm 操作数据库
+
+```
+go get github.com/go-xorm/xorm
+go get github.com/go-sql-driver/mysql
+```
+
+
+## go get golang.org/x 包失败
+
+- gopm 来获取无法下载的包
+```sh
+$ go get -v github.com/gpmgo/gopm
+$ gopm get -g -v golang.org/x/tools/cmd/goimports
+```
+
+
+Go version >= 1.11
+```sh
+export GO111MODULE=on
+export GOPROXY=https://goproxy.io
+go mod ...
+Windows 用户，可以在 PowerShell 中设置：
+
+$env:GOPROXY = "https://goproxy.io"
+```
+
+
+// string到int
+int, err := strconv.Atoi(string)
+
+// string到int64
+int64, err := strconv.ParseInt(string, 10, 64)
+
+// int到string
+string := strconv.Itoa(int)
+
+// int64到string
+string := strconv.FormatInt(int64,10)
+
+## leetcode.com
+
+## 协程 Coroutine
+
+> 轻量级 “线程”
+
+协程可以创建百万个而不会导致系统资源衰竭，而线程和进程通常多也不能超过1万个。这也是协程也叫做轻量级线程的原因
+
+- **非抢占式**多任务处理，由协程主动交出控制权
+- **编译器**/解释器/虚拟机层面的多任务
+- 多个协程可能在一个或多个线程上运行
+
+go + 函数名：启动一个协程执行函数体
+
+
+## socket 编程
+
+
+
+
