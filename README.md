@@ -1228,3 +1228,25 @@ go + 函数名：启动一个协程执行函数
 
 - 顺序查找
 - 二分查找（必须是有序数组）
+
+## select
+
+```go
+select {
+  case <-chan1: // chan1成功读到数据，则进行该case处理语句
+  case chan2<-1: // 成功向chan2写入数据，则进行该case处理语句
+  default: // 上面没有成功，则进入default处理流程
+}
+```
+
+## beego
+
+```sh
+$ go get github.com/astaxie/beego
+
+bee工具
+$ go get github.com/beego/bee
+```
+
+- bee new
+- bee api
