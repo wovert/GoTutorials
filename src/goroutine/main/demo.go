@@ -21,6 +21,9 @@ func test() {
 }
 
 func main() {
+	// 获取CPU数量
+	num := runtime.NumCPU()
+
 	// 并行计算的CPU核数的最大值
 	n := runtime.GOMAXPROCS(1)
 	fmt.Printf("n = %d\n", n)
