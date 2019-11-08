@@ -19,6 +19,8 @@ func (myNode *myTreeNode) postOrder() {
 	myNode.node.Print()
 }
 
+
+
 func main() {
 	// var root TreeNode
 	// fmt.Println(root) // 0 nil nli

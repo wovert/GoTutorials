@@ -31,8 +31,9 @@ func (person *Person) getAge() uint8 {
 }
 
 type Student struct {
-	Person
+	Person  // 匿名字段，继承了Person的成员
 	school string
+	name string
 }
 
 func (student *Student) getSchool() string {
@@ -73,10 +74,12 @@ func main() {
 	fmt.Printf("name2=%s, age2=%d\n",name2, age2)
 
 	stu := new(Student)
-	stu.name = "lingyima"
+	stu.name = "lingyima" // Student.name
+	stu.Person.name = "person的名字"
 	stu.age = 18
 	stu.school = "Hight 20"
 	school := stu.getSchool()
+	fmt.Printf("stu is %v\n", stu)
 	fmt.Printf("stu scholl is %s\n", school)
 
 	var animal Animal // 声明接口变量

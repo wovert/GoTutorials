@@ -32,4 +32,11 @@ func main() {
 	m2 := make(map[string]int) // m2 == empty map
 	var m3 map[string]int // m3 == nil
 	fmt.Println(m1, m2, m3)
+
+	m4 := make(map[int]string, 2)
+	m4[0] = "make"
+	m4[1] = "Jack"
+	m4[2] = "White"
+	fmt.Println("m4 = ", m4)
+	fmt.Println("len = ", len(m4))
 }
