@@ -8,7 +8,7 @@ import(
 type Student struct {
 	name string // name = private 不显示在json
 	age int // age = private
-	Nickname string `json:"nickanme"` // public
+	Nickname string `json:"nickanme"` // public, 结构元素标签
 	Height int `json:"height"` // public
 }
 
@@ -43,4 +43,8 @@ func main() {
   var m4 interface{}
   json.Unmarshal([]byte(m3), &m4)
   fmt.Printf("%v", m4)
+
+  // json解析到结构体
+
+  // json解析道map
 }
