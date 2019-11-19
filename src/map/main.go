@@ -3,7 +3,26 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
+
+
+func wordCount(str string) map[string]int {
+	s := strings.Fields(str)
+	m := make(map[string]int)
+
+
+	for i:=0; i<len(s); i++ {
+		if _, ok := m[s[i]]; ok {
+			m[s[i]] = m[s[i]] + 1
+		} else {
+			m[s[i]] = 1
+		}
+	}
+
+	return m
+
+}
 
 func main() {
 	// key: string类型
@@ -39,4 +58,11 @@ func main() {
 	m4[2] = "White"
 	fmt.Println("m4 = ", m4)
 	fmt.Println("len = ", len(m4))
+
+
+	str := "How are you and I I I love you very much"
+	mRes := wordCount(str)
+	for k, v := range mRes {
+		fmt.Printf("%q;%d\n", k, v)
+	}
 }

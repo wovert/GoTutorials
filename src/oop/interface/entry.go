@@ -12,9 +12,36 @@ type Retriever interface {
 	Get(url string) string
 }
 
+type Poster interface {
+  Post(url string, form map[string]string)
+}
+
 
 func download(r Retriever) string {
 	return r.Get("http://www.baidu.com")
+}
+
+func post(poster Poster) {
+  poster.Post("http://www.baidu.com", 
+map[string]string {
+  "name": "wovert",
+  "course": "golang",
+})
+}
+
+type RetrieverPoster interface {
+  Retriever
+  Poster
+  // Connect(host string)
+}
+
+const url = "http://www.baiud.com"
+func session(s RetrieverPoster) string {
+  // s.Get()
+  s.Post(url, map[string]string{
+    "contents": "another faked wovert",
+  })
+  return s.Get(url)
 }
 
 func main() {
@@ -24,6 +51,8 @@ func main() {
   wovetRetriever := r.(wovert.Retriever)
   fmt.Println(wovetRetriever.Contents)
 
+  fmt.Println("Try a session")
+  fmt.Println(session(r))
 //   fmt.Println(download(r))
 
   r = &real.Retriever{
@@ -36,6 +65,7 @@ func main() {
   realRetriever := r.(*real.Retriever)
   fmt.Println(realRetriever.TimeOut)
 //   fmt.Println(download(r))
+
 
   
 }

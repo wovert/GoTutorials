@@ -614,9 +614,47 @@ fmt.Printf("i=%T \n", i)
   - map
 
 
-### map
+## map
 
 `make` 用于内建类型(`map, slice, channel`)的内存分配
+
+### 创建方式
+
+1. `var m1 map[int]string` 不能存储数据
+2. `m2 := map[int]string{}` 能存储数据
+3. `m3 := make(map[int]string)` 默认len=0
+4. `m4 := make(map[int]string, 10)`
+
+### 初始化：
+  
+- 1. `var m map[int] string = map[int]string{1:"name",2:"age"}`
+- 2. `m := map[int]string{1:"name",2:"age"}`
+
+### 赋值：
+  
+- m := make(map[int]string, 1)
+- m[700] = "nami"
+- m[20] = "hello"
+- m[3] = "world"
+- m[3] = " world"
+
+
+新map元素key与原map元素相同，则覆盖
+
+
+### 遍历元素
+
+```
+if v, has = m[1]; has {
+  println("has")
+} else {
+  println("no has")
+} 
+```
+
+### 删除元素
+
+`delete(map, key)`
 
 ## file
 
@@ -1025,10 +1063,11 @@ pStr = new(string)
 
 - 指针的函数传递
   - 传地址（传引用）：将形参的地址值作为函数参数传递
-  - 传值（数据值）：将实参的值拷贝一份给西形参
-  - 传引用：在A栈帧内部，修改B栈帧中的变量值
+    - 传引用：在A栈帧内部，修改B栈帧中的变量值
+  - 传值（数据值）：将实参的值拷贝一份给形参
+  
 
-## 字符串函数
+## 字符串函
 
 - 字符串长度(字节): `len(str)`
   - 一个 ascii 占用一个字节
@@ -1163,7 +1202,7 @@ d := [5]int{2: 10, 4:20} // [0 0 10 0 20]
 1. 数组的容量固定，不能自动扩展
 2. 值传递，数组作为函数参数时，将整个数组值拷贝一份给形参
 
-所用的场景中，使用切片替换数组使用
+Go语言中，几乎可以在所有的场景中，使用切片替换数组使用
 
 ### 什么是切片
 
@@ -1217,9 +1256,9 @@ slice := intArr[0:3:4] // index:1-3(不包含3)
 
 截取数组，初始化切片时，切片容量跟随原数组
 
-- append(slice, apendElement)
+- `append(slice, apendElement)`
   - 智能的底层数组的容量增长，一旦超过底层数组容量，通常以2倍容量重新分配底层数组，并复制原来的数据
-- copy(targetSlice, sourceSlice)
+- `copy(targetSlice, sourceSlice)`
   - 源元素覆盖目的元素
 
 ## struct
@@ -1276,3 +1315,8 @@ $ go get github.com/beego/bee
 
 - bee new
 - bee api
+
+## 函数式编程
+
+- 不可变性：不能有状态，只有常量和函数
+- 函数只能有一个参数

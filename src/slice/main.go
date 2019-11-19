@@ -3,9 +3,11 @@ package main
 import (
 	"fmt"
 )
+
 func printSlice(s []int) {
 	fmt.Printf("%v, len=%d, cap=%d\n", s, len(s), cap(s))
 }
+
 func slice0() {
 	intArr := [...]int{1,2,3,4,5,6}
 	slice := intArr[0:3:4] // index:1-3(不包含3)
@@ -77,7 +79,7 @@ func slice5() {
 }
 
 func noEmpty(data []string) []string {
-	out := data[:0]
+	out := data[:0] // 原切片上截取一个长度为0的切片 make([]string, 0)
 	for _, str := range data {
 		if str != "" {
 			out = append(out, str)
@@ -176,4 +178,5 @@ func main() {
 	tail := s2[len(s2)-1]
 	s2 = s3[:len(s2)-1]
 	printSlice(s2) // [4 
+	println(tail)
 }
