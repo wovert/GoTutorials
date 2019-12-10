@@ -1046,23 +1046,6 @@ string := strconv.FormatInt(int64,10)
 
 ## leetcode.com
 
-## 协程 Coroutine
-
-> 轻量级 “线程”
-
-协程可以创建百万个而不会导致系统资源衰竭，而线程和进程通常多也不能超过1万个。这也是协程也叫做轻量级线程的原因
-
-- **非抢占式**多任务处理，由协程主动交出控制权
-- **编译器**/解释器/虚拟机层面的多任务
-- 多个协程可能在一个或多个线程上运行
-
-go + 函数名：启动一个协程执行函数体
-
-
-## socket 编程
-
-
-
 
 ### 空指针和野指针
 
@@ -1358,12 +1341,34 @@ man := Person{name:"wovert", age:18}
 - 接口赋值
   - 将对象实例赋值给接口
   - 将一个接口赋值给另一个接口
-  
-## 协程
 
-> 轻量级线程
+## 协程 Coroutine
 
-go + 函数名：启动一个协程执行函数
+> 轻量级 “线程”
+
+协程可以创建百万个而不会导致系统资源衰竭，而线程和进程通常多也不能超过1万个。这也是协程也叫做轻量级线程的原因
+
+- **非抢占式**多任务处理，由协程主动交出控制权
+- **编译器**/解释器/虚拟机层面的多任务
+- 多个协程可能在一个或多个线程上运行
+
+go + 函数名：启动一个协程执行函数体
+
+### goroutine 特性
+
+- 主 goroutine 退出后，其他的工作 goroutine 也会自动退出
+
+
+### runtime 包
+
+- Goshed: 出让当前go程所占用的 CPU 时间片
+- Goexit: 退出当前go程，也就是调用go协程函数
+  - return: 返回当前函数调用处，return之前的 defer 注册生效
+- Gomaxprocs: 设置并行计算的CPU核数的最大值，并返回之前的CPU核数量值
+
+
+## socket 编程
+
 
 ## 算法和数据结构
 
@@ -1393,14 +1398,28 @@ select {
 ## beego
 
 ```sh
-$ go get github.com/astaxie/beego
+$ go get -u github.com/astaxie/beego
 
 bee工具
-$ go get github.com/beego/bee
+$ go get -u github.com/beego/bee
 ```
 
-- bee new
-- bee api
+安装之后，bee 可执行文件默认存放在$GOPATH/bin里面，所以需要把`$GOPATH/bin`添加到环境变量中
+```
+$ echo 'export PATH="$PATH/bin:$PATH"' >> ~/.bashrc
+$ source .bashrc
+```
+
+- `bee new 项目名` 创建一个项目；通过 bee 创建的项目代码都是在`$GOPATH/src`目录下面
+- `bee api`
+
+
+dyld: malformed mach-o image: segment __DWARF has vmsize < filesize
+
+升级到1.13.4后问题被修复
+
+brew升级golang: `brew upgrade go`
+
 
 ## 函数式编程
 

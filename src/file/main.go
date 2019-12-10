@@ -10,7 +10,36 @@ import (
 func main() {
 	//test()
   //testWrite()
-	testRead()
+	//testRead()
+	//copyFile()
+	readDir()
+}
+
+func readDir() {
+	fmt.Println("请输入查询的目录：")
+	var path string
+	fmt.Scan(&path)
+
+	// open dir
+	f, err := os.OpenFile(path, os.O_RDONLY, os.ModeDir)
+	if err != nil {
+		fmt.Println("Open file err:", err)
+		return
+	}
+	defer f.Close()
+
+	// 读取目录项
+	info, err := f.Readdir(-1) // 读取目录中所有目录项
+
+	// 遍历切片
+	for _, fileInfo := range info {
+		if fileInfo.IsDir() {
+			fmt.Println(fileInfo.Name() , "是一个目录")
+		} else {
+			fmt.Println(fileInfo.Name() , "是一个文件")
+		}
+	}
+
 }
 
 func test() {
@@ -75,7 +104,7 @@ func testRead() {
 
 	fmt.Println("successful!")
 
-	// 创建一个带有缓冲区的 reader
+	// 创建一个带有缓冲区（用户缓冲）的 reader
 	reader := bufio.NewReader(f)
 	for {
 		buf, err := reader.ReadBytes('\n') // 读一行数据
@@ -92,4 +121,58 @@ func testRead() {
 		fmt.Println(string(buf))
 	}
 
+}
+
+func copyFile() {
+	args := os.Args // 获取命令行参数
+
+	if args == nil || len(args) !=3 {
+		fmt.Println("useage: xx src File destFile")
+		return
+	}
+
+	srcPath := args[1]
+	dstPath := args[2]
+	fmt.Printf("srcPath=%s, dstPath=%s\n", srcPath, dstPath)
+
+	if srcPath == dstPath {
+		fmt.Println("errors: 源文件名 与 目标文件名相同")
+		return
+	}
+
+	srcFile, err1 := os.Open(srcPath) // 打开源文件
+	if err1 != nil {
+		fmt.Println(err1)
+		return
+	}
+
+	dstFile, err2 := os.Create(dstPath) // 创建目标文件
+	if err2 != nil {
+		fmt.Println(err2)
+		return
+	}
+
+	buf := make([]byte, 1024) // 切片缓冲区
+	for {
+		// 从源文件读取内容，n为读取文件内容的长度
+		n, err := srcFile.Read(buf)
+		if err != nil && err != io.EOF {
+			fmt.Println(err)
+			break;
+		}
+
+		if n == 0 {
+			fmt.Println("文件处理完毕")
+			break
+		}
+
+		// 切片截取
+		tmp := buf[:n]
+
+		// 把读取的内容写入到目的文件
+		dstFile.Write(tmp)
+
+	}
+	srcFile.Close()
+	dstFile.Close()
 }

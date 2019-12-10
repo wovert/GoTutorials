@@ -25,12 +25,14 @@ func (stu *Student) sayHi() {
 	fmt.Printf("Student [%s, %d] sayHi \n", stu.name, stu.id)
 }
 
-// Student 实现sayHi方法
+// Teacher 实现sayHi方法
 func (tmp *Teacher) sayHi() {
-	fmt.Printf("Student [%s, %s] sayHi \n", tmp.addr, tmp.group)
+	fmt.Printf("Teacher [%s, %s] sayHi \n", tmp.addr, tmp.group)
 }
 
 type MyStr string
+
+// MyStr类型 实现 sayHi方法
 func (tmp *MyStr) sayHi() {
 	fmt.Printf("MyStr [%v] sayHi \n", &tmp)
 }
@@ -47,6 +49,7 @@ func main() {
   i = s
 //   i.sayHi()
   WhoSayHi(i)
+
 
   t := &Teacher{addr: "북경", group: "100"}
   i = t
@@ -73,13 +76,13 @@ func main() {
 	// 	fmt.Printf("x[%d]类型为Student,内容为%v\n", index, value)
 	// }
 
-	switch value := data.(type) {
-	  case int:
-		fmt.Printf("x[%d]类型为int,内容为%d\n", index, value)
-	  case string:
-		fmt.Printf("x[%d]类型为string,内容为%s\n", index, value)
-	  case Student:
-		fmt.Printf("x[%d]类型为Student,内容为%v\n", index, value)
-	}
+		switch value := data.(type) {
+			case int:
+			fmt.Printf("x[%d]类型为int,内容为%d\n", index, value)
+			case string:
+			fmt.Printf("x[%d]类型为string,内容为%s\n", index, value)
+			case Student:
+			fmt.Printf("x[%d]类型为Student,内容为%v\n", index, value)
+		}
   }
 }
