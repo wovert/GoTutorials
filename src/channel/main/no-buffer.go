@@ -1,31 +1,30 @@
 package main
 
 import (
-  "fmt"
-  "time"
+	"fmt"
 )
 
-var ch chan int
+var ch2 chan int
 
 func main() {
 	// 创建一个无缓存的channel，即不能存储数据
-	ch = make(chan int, 0) // 等价于 make(chan int)
+	ch2 = make(chan int, 0) // 等价于 make(chan int)
 
-	// len(ch) 缓冲区剩余个数，cap(ch)缓冲区大小
-	fmt.Printf("len(ch)=%d, cap(ch)=%d\n", len(ch), cap(ch))
+	// len(ch) 缓冲区剩余未读取数据个数，cap(ch)通道容量
+	fmt.Printf("len(ch)=%d, cap(ch)=%d\n", len(ch2), cap(ch2))
 
 	// 新建一个协程
   go func (){
-		for i:=0; i<3; i++ {
+		for i:=0; i<10; i++ {
 			fmt.Println("子协程：i = ", i)
-			ch <- i // 管道写内容，如果没有人读取会阻塞
+			ch2 <- i // 管道写内容，如果没有人读取会阻塞
 		}
 	}()
 
-	time.Sleep(time.Second * 2)
+	//time.Sleep(time.Second * 2)
 
-	for i:=0; i<3; i++ {
-		num := <-ch // 没有内容会阻塞
-		fmt.Println("num = ", num)
+	for i:=0; i<10; i++ {
+		num := <-ch2 // 如果没有数据写入到管道，则会阻塞
+		fmt.Println("主协程, num = ", num) // 打印是 IO 操作，耗时（访问硬件），阻塞排队。即子协程继续运行
 	}
 }
