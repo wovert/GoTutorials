@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 var ch2 chan int
@@ -17,11 +18,11 @@ func main() {
   go func (){
 		for i:=0; i<10; i++ {
 			fmt.Println("子协程：i = ", i)
-			ch2 <- i // 管道写内容，如果没有人读取会阻塞
+			ch2 <- i // 管道写内容，如果没有人读取会阻塞等待. IO延迟
 		}
 	}()
 
-	//time.Sleep(time.Second * 2)
+	time.Sleep(time.Second * 2)
 
 	for i:=0; i<10; i++ {
 		num := <-ch2 // 如果没有数据写入到管道，则会阻塞
