@@ -1472,6 +1472,17 @@ for num := range ch { // 不能替换为 <-ch
 }
 ```
 
+### 单向channel
+
+- 默认channel是双向:  `var ch chain int; ch := make(chan int)`
+- 单向写channel: `var sendCh chan <- int; sendChd := make(chan <-int)` 不能读操作
+- 单向读channel: `var recvCh <-chan int; recvCh := make(<-chan int)`
+
+- 转换
+  - 双向channel可以隐式转换为任意一种单向channel `sendCh = ch`
+  - 单向channel 不能转换为双向channel `ch = sendCh/recvCh error!!!`
+  
+- 传参：传引用
 
 ## socket 编程
 
