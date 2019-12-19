@@ -1466,6 +1466,10 @@ if num, ok := <-ch; ok == true {
     // 没有数据
 }
 
+// range代替ok
+for num := range ch { // 不能替换为 <-ch
+
+}
 ```
 
 
