@@ -1484,6 +1484,69 @@ for num := range ch { // 不能替换为 <-ch
   
 - 传参：传引用
 
+## 生产者消费者模型
+
+- 写入数据（生产者）----> 缓冲区（公共区）----> 读取数据（消费者）
+  - 生产者：发送数据端
+  - 消费者：接受数据端
+  - 缓冲区
+    - 1. 解耦（降低生产者和消费者之间的耦合度）
+    - 2. 并发（生产者消费者数量不对等时，依然能保持正常通信）
+    - 3. 缓存（生产者和消费者数据处理速度不一致时，暂存数据）
+
+- 缓冲区：channel
+  - 有缓冲：异步通信
+  - 无缓冲：同步通信
+  
+- 模拟订单
+  - 下单（生产者）
+  - 处理订单（消费者）
+
+## timer 定时器
+
+```cgo
+type Tier struct {
+    C <-chan Time,
+    r runtimeTimer
+}
+// 定时时间到达以前，没有数据写入timer.C会一直阻塞，直到定时时间到，系统会自动向 timer.C 这个 channel中写入当前时间，阻塞即被解除
+```
+
+1. 创建定时器 myTime := time.NewTimer(2*time.Second)
+2. 停止：myTimer.Stop - 将定时器归零 <-myTimer.C 会阻塞
+3. 重置：myTimer.Reset(time.Second)
+
+### 周期定时器
+
+1. 创建周期定时器 myTicker := time.NewTicker(time.Seconds)
+
+- 定时时长到达后，系统会自动向 Ticker 的 C中写入系统当前时间
+- 并且，每个一个定时时长后，循环写入系统当前时间
+
+2. 在子协程循环读取C，获取系统写入的时间
+
+## select
+
+> 监听 channel 上的数据流动，读？写？
+> 每个case 语句必须是一个IO操作
+
+1. 监听case中，没有满足监听条件，阻塞
+2. 监听饿case中，有多个满足监听条件，任选一个执行
+3. 可以使用default来处理所有case都不满足监听条件的状况。通常不用（会产生忙轮询）
+4. select 自身不带有循环机制，需借助外层 for 来循环监听
+5. break 只能跳出 select, 类似于 switch 中用法
+
+```cgo
+select {
+  case <-chan1:
+    // 如果chan1成功读到数据，则进行该case处理语句
+  case chan2<-1:
+    // 如果成功向chan2写入数据，则进行该case 处理语句
+  default: // 忙轮询，不推荐使用
+    // 上面都没有成功，即上面都阻塞，则进入default 处理流程
+}
+```
+
 ## socket 编程
 
 
