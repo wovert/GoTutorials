@@ -1675,6 +1675,7 @@ dyld: malformed mach-o image: segment __DWARF has vmsize < filesize
 brew升级golang: `brew upgrade go`
 
 
+
 ## 函数式编程
 
 - 不可变性：不能有状态，只有常量和函数
