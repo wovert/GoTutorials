@@ -1594,8 +1594,32 @@ A 、B go程 共同访问共享数据。 由于cpu调度随机，需要对 共�
 
 > 网络通信过程中，socket一定是成对儿出现
 
+- client : server
+- "" : listen(ip+port)
+- dial : accept
+- write : read
+- read : write
+- close: close
 
+### TCP 并发服务器
 
+1. 创建监听套接字 `listener := net.Listener("tcp", "SERVER_IP:PORT")`
+2. `defer listener.Close()`
+3. for 循环阻塞监听客户端连续事件 `conn, err := listener.Accept()`
+4. 创建子协程对应每一个客户端进行数据通信 `go HandlerConnect()`
+5. 实现 HandlerConnect
+
+```cgo
+Handler(conn net.Conn){
+    defer conn.Close()
+    获取成功连接的客户端Add conn.RemoteAddr()
+    for循环读取客户读发送的数据 conn.Read(buf)
+    处理数据
+    回写转化后的数据
+}
+```
+
+服务端判断关闭：Read读客户端数据返回0 - 对端关闭
 
 ## 算法和数据结构
 
