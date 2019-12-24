@@ -1454,7 +1454,7 @@ channel 应用于两个协程中，一个读，一个写
   - 1.数据没有发送完，不应该关闭channel
   - 2.已经关闭的channel，不能向其写数据。报错 "panic: send on closed channel"
   - 3.写端已经关闭channel, 可以从中读取数据。
-    - 读无缓冲channel: 读到 0 —— 说明：写端已经关闭
+    - 读无缓冲channel: 读到 0/false/"" —— 说明：写端已经关闭
     - 读有缓冲channel: 如果缓冲区内有数据，先读数据，读完数据后，可以继续读，但读到0。
 
 ```cgo
@@ -1471,6 +1471,9 @@ for num := range ch { // 不能替换为 <-ch
 
 }
 ```
+
+
+len: 未读数据的长度, 查看channel中元素的个数
 
 ### 单向channel
 
