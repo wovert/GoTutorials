@@ -1624,6 +1624,20 @@ Handler(conn net.Conn){
 
 服务端判断关闭：Read读客户端数据返回0 - 对端关闭
 
+### UDP
+
+> 无连接的，不可靠的报文传递
+
+#### UDP服务器
+
+1. 创建 server端地址结构(IP+PORT) `net.ResolveUDPAddr()`
+2. 创建用于通信的socket, 绑定地址结构 `conn = net.ListenUDP()`
+3. `defer conn.Close()`
+4. 读取客户端发送的数据 `n, clientAddr, err := conn.ReadFromUDP()`
+5. 写数据给客户端 WriteToUDP("数据", clientAddr)
+
+
+
 ## 算法和数据结构
 
 ### 排序
