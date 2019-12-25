@@ -1635,7 +1635,32 @@ Handler(conn net.Conn){
 4. 读取客户端发送的数据 `n, clientAddr, err := conn.ReadFromUDP()`
 5. 写数据给客户端 WriteToUDP("数据", clientAddr)
 
+### 聊天室主模块
 
+- 主协程：创建监听套接字，循环Accept()客户端连接 —— 启动子协程 HandlerConnect
+- HandlerConnect: 创建用户结构体对象，存入onlineMap, 发送用户登录广播，聊天信息，处理查询在线用户、改名、下线和超时剔除。
+- Manager: 监听全局 channel message，将读到的消息广播给onlineMap 中的所有用户
+- WriteMsgToClient: 读取每个用户自带 channel C上消息（由Manager发送该消息），回写给用户
+- 全局数据模块：
+  - 用户结构体：Client{C,Name,Addr string}
+  - 在线用户列表：onlineMap[string]Client key:客户端IP+PORT value:Client
+  - 消息通道：message
+
+### 广播用户在线
+
+1. 主协程，创建监听套接字并defer
+2. for 循环监听客户端连接请求
+3. 有一个客户端连接请求，创建子协程处理客户端数据 HandlerConnect(conn)并defer
+4. 定义全局结构体类型 C, Name, Addr
+5. 创建全局 map, channel
+6. 实现HandlerConnect函数，获取客户端IP+PORT —— RemoteAddr()；初始化新用户结构体信息，name==Addr
+7. 创建 Mananger管理子协程—— Accept() 之间
+8. 实现 Manager，初始化在用用户map，循环读取全局channel，如果无数据，阻塞，有数据，遍历在线用户map，将数据写到用户通道C中
+9. 新用户添加到在线用户map中，key==IP+PORT value=新用户结构体
+10. 创建 WriteMsgToClient 子协程里，专门给当前用户写数据 —— 来源于用户自带的 C 中
+11. 创建 WriteMsgToClient(client, conn)，遍历自带的C，读数据，conn.Write 到客户端
+12. HandlerConnect 中，结束位置，组织用户上线信息，将用户上线信息写到全局 channel —— Manager的读被激活（原来一直阻塞） 
+13. HandlerConnect 中，结尾加 for {;}
 
 ## 算法和数据结构
 
