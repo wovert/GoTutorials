@@ -1662,6 +1662,20 @@ Handler(conn net.Conn){
 12. HandlerConnect 中，结束位置，组织用户上线信息，将用户上线信息写到全局 channel —— Manager的读被激活（原来一直阻塞） 
 13. HandlerConnect 中，结尾加 for {;}
 
+### 广播用户消息
+
+1. 疯长函数 MakeMsg() 处理广播、用户消息
+2. HandlerConnect 中，创建匿名子协程，读取用户套接字上发送来的聊天内容。写到全局channel
+3. 循环 conn.Read n == 0, err != nil
+4. 写给全局 message —— 后续的事，原来广播用户上线模块完成。(Manager, WriteMsgToClient)
+
+### 查询在线用户
+
+1. 将读到的用户消息 msg 结尾 "\r\n" 或 "\n" 去掉
+2. 判断是否是 "who"命令
+3. 如果是，遍历在线用户列表，组织显示信息，写到socket中
+4. 如果不是，写给全局 message
+
 ## 算法和数据结构
 
 ### 排序
