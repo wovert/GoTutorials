@@ -1676,6 +1676,13 @@ Handler(conn net.Conn){
 3. 如果是，遍历在线用户列表，组织显示信息，写到socket中
 4. 如果不是，写给全局 message
 
+### 修改用户名
+
+1. 将读取到用户消息 msg 判断是否包含 "rename"
+2. 提取 "|" 后面的字符串，存入到Client的Name成员中
+3. 更新在线用户列表。onlineMap. key —— IP+PORT
+4. 提示用户更新完成。conn.Write()
+
 ## 算法和数据结构
 
 ### 排序

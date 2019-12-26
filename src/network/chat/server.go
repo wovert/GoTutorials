@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net"
+	"strings"
 )
 
 // 创建用户结构体类型
@@ -101,6 +102,11 @@ func HandlerConnect(conn net.Conn) {
 					userInfo := user.Addr + ":" + user.Name + "\n"
 					conn.Write([]byte(userInfo))
 				}
+			} else if len(msg) > 8 && msg[:6] == "rename" { // rename|
+				newName := strings.Split(msg, "|")[1]
+				client.Name = newName // 修改结构体
+				onlineMap[netAddr] = client // 更新用户列表 onlineMap
+				conn.Write([]byte("rename sucessfull.\n"))
 			} else {
 				// 将读到的用户消息，写入到message中进行广播
 				message <- MakeMsg(client, msg)
