@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"strings"
+	"time"
 )
 
 // 创建用户结构体类型
@@ -58,6 +59,9 @@ func HandlerConnect(conn net.Conn) {
 	// 关闭客户读连接请求
 	defer conn.Close()
 
+	// 创建channel判断，用户是否活跃
+	isOnline := make(chan bool)
+
 	// 获取用户网络地址 IP+PORT
 	netAddr := conn.RemoteAddr().String()
 
@@ -78,12 +82,16 @@ func HandlerConnect(conn net.Conn) {
 	//message <- "[" + netAddr + "]" + client.Name + " login"
 	message <- MakeMsg(client, "login")
 
+	// 创建一个channel，判断退出状态
+	isQuit := make(chan bool)
+
 	// 创建匿名子协程，处理用户发送的消息
 	go func() {
 		buf := make([]byte, 4096)
 		for {
 			n, err := conn.Read(buf)
 			if n == 0 {
+				isQuit <- true
 				fmt.Printf("监测到客户端: %s退出\n", client.Name)
 				return
 			}
@@ -102,8 +110,9 @@ func HandlerConnect(conn net.Conn) {
 					userInfo := user.Addr + ":" + user.Name + "\n"
 					conn.Write([]byte(userInfo))
 				}
-			} else if len(msg) > 8 && msg[:6] == "rename" { // rename|
+			} else if len(msg) >= 8 && msg[:6] == "rename" { // rename|
 				newName := strings.Split(msg, "|")[1]
+				fmt.Println("new Name:", newName)
 				client.Name = newName // 修改结构体
 				onlineMap[netAddr] = client // 更新用户列表 onlineMap
 				conn.Write([]byte("rename sucessfull.\n"))
@@ -112,15 +121,29 @@ func HandlerConnect(conn net.Conn) {
 				message <- MakeMsg(client, msg)
 			}
 
-			fmt.Println([]byte(msg))
-			fmt.Println(msg + "...")
+			isOnline <- true // 活跃用户
+
+			//fmt.Println([]byte(msg))
+			//fmt.Println(msg + "...")
 
 		}
 	}()
 
 	// 保证不退出
 	for {
-		;
+		// 监听channel上的流动
+		select {
+			case <-isQuit:
+				delete(onlineMap, client.Addr) // 将用户从online移除
+				message <- MakeMsg(client, "logout") // 写入用户退出消息到全局channel
+				return
+			case <-isOnline:
+				// 重置下面的计时器
+			case <-time.After(time.Second * 10):
+				delete(onlineMap, client.Addr) // 将用户从online移除
+				message <- MakeMsg(client, "logout") // 写入用户退出消息到全局channel
+				return
+		}
 	}
 }
 

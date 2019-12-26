@@ -1683,6 +1683,20 @@ Handler(conn net.Conn){
 3. 更新在线用户列表。onlineMap. key —— IP+PORT
 4. 提示用户更新完成。conn.Write()
 
+### 用户退出
+
+1. 在用户成功登录之后，创建监听用户退出的 channel - isQuit
+2. 当conn.Read == 0, isQuit <- true
+3. 在HandlerConnect 结尾中，添加 select 监听 isQuit
+4. 条件满足，将用户从在线用户列表移除。组织用户下线消息，写入message(广播)
+
+### 超时处理
+
+1. 在select中监听定时器，time.After()，计时到达。将用户从在线列表移除，组织用户下线消息，写入message(广播)
+2. 创建监听用户活跃的channel - isOnline
+3. 只要用户执行：聊天、改名、who、任意一个操作，isOnline <- true
+4. 在 select 中添加监听 <-isOnline，条件满足，不做任何事情。目的是重置计数器 
+
 ## 算法和数据结构
 
 ### 排序
