@@ -1697,6 +1697,34 @@ Handler(conn net.Conn){
 3. 只要用户执行：聊天、改名、who、任意一个操作，isOnline <- true
 4. 在 select 中添加监听 <-isOnline，条件满足，不做任何事情。目的是重置计数器 
 
+## http
+
+http 请求报文格式
+```
+GET / HTTP/1.1 —— 请求行：请求方法+空格+URL+空格+协议版本+回车符(\r)+换行符(\n)
+Host: 127.0.0.1:8900 —— 请求头部：头部字段名称+冒号(:)+空格+值+回车符(\r)+换行符(\n)
+Connection: keep-alive
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36
+Sec-Fetch-User: ?1
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Sec-Fetch-Site: none
+Sec-Fetch-Mode: navigate
+Accept-Encoding: gzip, deflate, br
+Accept-Language: zh-CN,zh;q=0.9,ko;q=0.8,en;q=0.7
+                —— 回车符(\r)+换行符(\n)，表示请求头结束
+请求报体：请求方法对应
+```
+
+回调函数：函数指针，通过地址，在某一特定位置，调用函数。
+
+在程序中，定义一个函数，但不显示调用。当某一条件满足时，该函数有操作系统系统自动调用。
+
+### HTTP 请求头部
+
+
+
 ## 算法和数据结构
 
 ### 排序
