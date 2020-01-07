@@ -1721,10 +1721,6 @@ Accept-Language: zh-CN,zh;q=0.9,ko;q=0.8,en;q=0.7
 
 在程序中，定义一个函数，但不显示调用。当某一条件满足时，该函数有操作系统系统自动调用。
 
-### HTTP 请求头部
-
-
-
 ## 算法和数据结构
 
 ### 排序
@@ -1781,3 +1777,66 @@ brew升级golang: `brew upgrade go`
 
 - 不可变性：不能有状态，只有常量和函数
 - 函数只能有一个参数
+
+
+## cannot find package "golang.org/x/time/rate" in any of:
+
+
+解决方案：
+
+```
+# cd $GOPATH
+# mkdir -pv golang.org/x/
+# git clone https://github.com/golang/time.git
+```
+
+## 粘包和半包
+
+从服务端的控制台输出可以看出，存在三种类型的输出：
+
+一种是正常的一个数据包输出。
+一种是多个数据包“粘”在了一起，我们定义这种读到的包为粘包。
+一种是一个数据包被“拆”开，形成一个破碎的包，我们定义这种包为半包。
+为什么会出现半包和粘包？
+
+客户端一段时间内发送包的速度太多，服务端没有全部处理完。于是数据就会积压起来，产生粘包。
+定义的读的buffer不够大，而数据包太大或者由于粘包产生，服务端不能一次全部读完，产生半包。
+什么时候需要考虑处理半包和粘包？
+
+TCP连接是长连接，即一次连接多次发送数据。
+每次发送的数据是结构的，比如 JSON格式的数据 或者 数据包的协议是由我们自己定义的（包头部包含实际数据长度、协议魔数等）。
+
+解决思路
+
+定长分隔(每个数据包最大为该长度，不足时使用特殊字符填充) ，但是数据不足时会浪费传输资源
+使用特定字符来分割数据包，但是若数据中含有分割字符则会出现Bug
+在数据包中添加长度字段，弥补了以上两种思路的不足，推荐使用
+拆包演示
+通过上述分析，我们最好通过第三种思路来解决拆包粘包问题。
+Golang的bufio库中有为我们提供了Scanner，来解决这类分割数据的问题。
+
+type Scanner
+Scanner provides a convenient interface for reading data such as a file of newline-delimited lines of text. Successive calls to the Scan method will step through the 'tokens' of a file, skipping the bytes between the tokens. The specification of a token is defined by a split function of type SplitFunc; the default split function breaks the input into lines with line termination stripped. Split functions are defined in this package for scanning a file into lines, bytes, UTF-8-encoded runes, and space-delimited words. The client may instead provide a custom split function.
+
+简单来讲即是：
+Scanner为 读取数据 提供了方便的 接口。连续调用Scan方法会逐个得到文件的“tokens”，跳过 tokens 之间的字节。token 的规范由 SplitFunc 类型的函数定义。我们可以改为提供自定义拆分功能。
+接下来看看 SplitFunc 类型的函数是什么样子的：
+
+
+主要原因就是tcp数据传递模式是流模式，在保持长连接的时候可以进行多次的收和发。
+
+“粘包”可发生在发送端也可发生在接收端：
+
+1. 由Nagle算法造成的发送端的粘包：Nagle算法是一种改善网络传输效率的算法。简单来说就是当我们提交一段数据给TCP发送时，TCP并不立刻发送此段数据，而是等待一小段时间看看在等待期间是否还有要发送的数据，若有则会一次把这两段数据发送出去。
+
+2. 接收端接收不及时造成的接收端粘包：TCP会把接收到的数据存在自己的缓冲区中，然后通知应用层取数据。当应用层由于某些原因不能及时的把TCP的数据取出来，就会造成TCP缓冲区中存放了几段数据。
+
+ 
+
+解决办法
+出现”粘包”的关键在于接收方不确定将要传输的数据包的大小，因此我们可以对数据包进行封包和拆包的操作。
+
+封包：封包就是给一段数据加上包头，这样一来数据包就分为包头和包体两部分内容了(过滤非法包时封包会加入”包尾”内容)。包头部分的长度是固定的，并且它存储了包体的长度，根据包头长度固定以及包头中含有包体长度的变量就能正确的拆分出一个完整的数据包。
+
+我们可以自己定义一个协议，比如数据包的前4个字节为包头，里面存储的是发送的数据的长度
+
