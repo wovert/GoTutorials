@@ -7,6 +7,7 @@ import (
 	"io"
 	"net"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -42,11 +43,19 @@ const (
 	ORDER_SECOND 	= 1 		// 后入
 )
 
+// 消息
+const (
+	MSG_MATCH = "match"
+	MSG_WHO 	= "who"
+	MSG_ROOMS = "rooms"
+)
+
 // 客户端信息
 type Client struct {
 	C chan string			// 用户发送数据的管道
 	Name string				// 用户名
 	Addr string				// 网络地址
+	Uid int64					// 用户编号
 	Sex int8					// 性别
 	Type int8					// 匹配类型
 	Status int8				// 匹配状态
@@ -123,9 +132,9 @@ func searchMatch(key string)  {
 		if (cli.Status == STATUS_FINDING && cli.Sex == client.Sex) {
 			// 获取聊天室名称，纳秒时间戳
 			room := time.Now().UnixNano()
-			fmt.Println("聊天室名称：", room)
-			fmt.Println("主动匹配地址：", cli.Addr)
-			fmt.Println("被动匹配地址：", client.Addr)
+			fmt.Println("创建聊天室名称：", room)
+			//fmt.Println("主动匹配地址：", cli.Addr)
+			//fmt.Println("被动匹配地址：", client.Addr)
 
 			// 初始化聊天室
 			roomList[room] = []string{cli.Addr, client.Addr}
@@ -139,23 +148,24 @@ func searchMatch(key string)  {
 			client.Status = STATUS_CHATING
 
 			// 向双方发送匹配信息
-			msg := `匹配成功`
-			cli.C <- makeMsg(cli, msg)
-			client.C <- makeMsg(cli, msg)
+			cli.C <- makeMsg(cli, "与" + strconv.FormatInt(client.Uid, 10) + "匹配成功")
+			client.C <- makeMsg(cli, "与" + strconv.FormatInt(cli.Uid, 10) + "匹配成功")
 
 			// 广播匹配成功的用户信息
-			broadMsg := cli.Addr + "与" + client.Addr + "匹配成功"
+			broadMsg := strconv.FormatInt(cli.Uid, 10) + "与" + strconv.FormatInt(client.Uid, 10) + "聊天中"
 			message <- makeMsg(cli, broadMsg)
 
 			// 更新用户状态
 			onlineMap[cli.Addr] = cli
-			onlineMap[client.Addr] = client
+			onlineMap[key] = client
 
+			rwlocker.Unlock()
 			break
 		}
 		rwlocker.Unlock()
 	}
-	fmt.Println(client.Addr + "等待匹配中")
+	message <- makeMsg(client, "广播：" + strconv.FormatInt(client.Uid, 10) + "等待匹配中")
+	//fmt.Println(client.Addr + "等待匹配中")
 }
 
 // 用户处理连接
@@ -178,10 +188,10 @@ func handleConn(conn net.Conn) {
 	go writeMsgToClient(cli, conn)
 
 	// 广播某个人在线
-	message <- makeMsg(cli, "login")
+	//message <- makeMsg(cli, "login")
 
 	// 提示我是谁
-	cli.C <- makeMsg(cli, "我在线")
+	cli.C <- makeMsg(cli, "上线")
 
 	isQuit := make(chan bool) // 对方是否主动退出
 	hasData := make(chan bool) // 对方是否数据发送
@@ -214,42 +224,68 @@ func handleConn(conn net.Conn) {
 
 			fmt.Println("[" , conn.RemoteAddr().String() , "]发送的数据：", msg)
 
-			// 匹配连接
-			if msg == "match" {
-				// 是否已经连接匹配中？？？？？？？
-				if (cli.Status == STATUS_STOPING) {
-					go match(cliAddr)
+			// todo 根据msg对逻辑进行处理
+			switch msg {
+				// 匹配连接
+				case MSG_MATCH:
+					cli = onlineMap[cliAddr]
+					message <- makeMsg(cli, strconv.FormatInt(cli.Uid, 10) + "的匹配状态" + strconv.Itoa(int(cli.Status)))
+					// 是否已经连接匹配中
+					if (cli.Status == STATUS_STOPING) {
+						go match(cliAddr)
+						msg := strconv.FormatInt(cli.Uid, 10) + "=>寻找匹配中"
+						message <- makeMsg(cli, msg)
 
-				} else if cli.Status == STATUS_CHATING {
+					// 正在聊天中
+					} else if cli.Status == STATUS_CHATING {
 
-					// 退出聊天室
-					//go exitRoom(cliAddr)
+						message <- makeMsg(cli, strconv.FormatInt(cli.Uid, 10) + "=>重新连接")
 
-				}
+						// 退出聊天室并建立新的聊天
+						go exitRoom(cliAddr, func(){
+							message <- makeMsg(cli, strconv.FormatInt(cli.Uid, 10) + "=>重新匹配")
+							match(cliAddr)
+							msg := strconv.FormatInt(cli.Uid, 10) + "=>寻找匹配中"
+							message <- makeMsg(cli, msg)
+						})
+					}
+				// 在线用户列表
+				case MSG_WHO:
+					//rwlocker.Lock()
+					for _, cli := range onlineMap {
+						msg := "[" + strconv.FormatInt(cli.Uid,10) + "]" + ", 状态:" +
+							strconv.Itoa(int(cli.Status)) + ", 房号：" +
+							strconv.Itoa(int(cli.Room)) + ", 性别:" +
+							strconv.Itoa(int(cli.Sex)) + ", 对方索引：" + strconv.Itoa(int(cli.Order))
+						fmt.Println(msg)
+						message <- makeMsg(cli, msg)
+					}
+					//rwlocker.Unlock()
+				case MSG_ROOMS:
+					for _, room := range roomList {
+						msg := strconv.FormatInt(onlineMap[room[0]].Uid, 10) + "与" +
+							strconv.FormatInt(onlineMap[room[1]].Uid, 10) + "聊天中"
+						fmt.Println(msg)
+						message <- makeMsg(cli, msg)
+					}
 			}
-
-			// 在线用户列表
-			if msg == "onlines" {
-				//rwlocker.Lock()
-				for _, cli := range onlineMap {
-					msg := "用户：" + cli.Addr + ", 状态:" +
-						strconv.Itoa(int(cli.Status)) + ", 房号：" +
-						strconv.Itoa(int(cli.Room)) + ", 对方索引：" + strconv.Itoa(int(cli.Order))
-					fmt.Println(msg)
-					message <- makeMsg(cli, msg)
+			//fmt.Println("login|1长度：", len(msg))
+			if len(msg) >= 7 && msg[:5] == "login" {
+				// rename|1
+				fmt.Println(msg, strings.Contains(msg, "="))
+				if !strings.Contains(msg, "=") {
+					fmt.Println("不包含用户UID")
+				} else {
+					uid := strings.Split(msg, "=")[1]
+					id, err := strconv.ParseInt(uid, 10, 64)
+					if err != nil {
+						fmt.Println("登录编号错误:", id)
+					} else {
+						cli.Uid = id
+						onlineMap[cliAddr] = cli
+						message <- makeMsg(cli, strconv.FormatInt(id, 10) + "=>登录成功")
+					}
 				}
-				//rwlocker.Unlock()
-			}
-
-			// 聊天室列表
-			if msg == "rooms" {
-				//rwlocker.Lock()
-				for _, room := range roomList {
-					msg := "用户1：" + room[0] + ", 用户2:" + room[1]
-					fmt.Println(msg)
-					message <- makeMsg(cli, msg)
-				}
-				//rwlocker.Unlock()
 			}
 
 			// 断开匹配
@@ -257,53 +293,7 @@ func handleConn(conn net.Conn) {
 			// 转发此内容
 			//message <- makeMsg(cli, msg)
 			hasData <- true // 有数据
-
 		}
-
-
-
-		//buf := make([]byte, 2048)
-
-		// 循环读取发送的内容
-		//for {
-		//	n, err := conn.Read(buf)
-		//	fmt.Println("n=", n)
-		//	if n == 0 || n == 1 { // 对方断开 or 出问题
-		//		isQuit <- true
-		//		// fmt.Println(cli.Name + "退出")
-		//		fmt.Println("conn.Read err = ", err)
-		//		return
-		//	}
-		//
-		//	// fmt.Println("start:" + string(buf[:n]) +"====")
-		//	// fmt.Println("len:", len(string(buf[:n])))
-		//	if (len(string(buf[:n])) == 1) {
-		//		// return
-		//	}
-		//	msg := string(buf[:n-2]) // 通过 windows nc测试，多一个换行
-		//	// fmt.Println(len(msg))
-		//
-		//	// 查询在线用户有多少人
-		//	if len(msg) == 3 && msg == "who" {
-		//		// 遍历map，给当前用户发送所有成员
-		//		conn.Write([]byte("user list :\n"))
-		//
-		//		for _, tmp := range onlineMap {
-		//			msg = tmp.Addr + ":" + tmp.Name + "\n"
-		//			conn.Write([]byte(msg))
-		//		}
-		//	} else if len(msg) >= 8 && msg[:6] == "rename" {
-		//		// rename|mike
-		//		name := strings.Split(msg, "|")[1]
-		//		cli.Name = name
-		//		onlineMap[cliAddr] = cli
-		//		conn.Write([]byte("rename ok\n"))
-		//	} else {
-		//   // 转发此内容
-		//   message <- makeMsg(cli, string(msg))
-		//	}
-		//	hasData <- true // 有数据
-		//}
 	}()
 
 	for {
@@ -314,11 +304,10 @@ func handleConn(conn net.Conn) {
 			//message <- makeMsg(cli, "logout") // 告诉所有在线用户，谁退出了
 			return
 		case <- hasData:
-		case <- time.After(10 * time.Second): // 30s 后退出聊天室
+		case <- time.After(30 * time.Second): // 30s 后退出聊天室
 			go exitRoom(cliAddr, func(){
 				exitProcess(cliAddr)
 			})
-
 			return
 		}
 	}
@@ -348,6 +337,9 @@ func main () {
 	}
 }
 
+/**
+ * 匹配用户
+ */
 func match(key string) {
 	cli := onlineMap[key]
 	cli.Status = STATUS_FINDING
@@ -365,20 +357,23 @@ func match(key string) {
  */
 func exitRoom(cliAddr string, callback func()) {
 
-	// 当前过期用户
+	// 当前用户退出聊天室
 	cli := onlineMap[cliAddr]
-	room := cli.Room // 房间号
-	index := cli.Order // 对方索引号
+
+	room := cli.Room 			// 房间号
+	index := cli.Order 		// 对方索引号
+
 	cli.Status = STATUS_STOPING
 	cli.Room = 0
 	cli.Order = 0
+	// 更新当前用户信息
 	onlineMap[cliAddr] = cli
 
 	//fmt.Println("房间号：", room)
 	//fmt.Println("对方索引号：", index)
 	//fmt.Println("几个聊天室", len(roomList))
 
-	cli.C <- makeMsg(cli, "=======自己退出=======")
+	cli.C <- makeMsg(cli, strconv.FormatInt(cli.Uid, 10) + "退出聊天室")
 
 	// 房间号为空，说明对方已经退出聊天室
 	if room == 0 {
@@ -390,29 +385,28 @@ func exitRoom(cliAddr string, callback func()) {
 
 	// 更新另一个用户信息
 	if len(roomList[room]) == 2 {
+		// 聊天对象另一个用户信息
 		key := roomList[room][index]
 		matchUser := onlineMap[key]
 		matchUser.Status = STATUS_STOPING
 		matchUser.Room = 0
+
+		// 更新聊天对象用户信息
 		onlineMap[key] = matchUser
 
-		// 移除聊天室
+		// 移除当前聊天室
 		delete(roomList, room)
 		fmt.Println("移除聊天室：", room)
 
 		// 告诉所有在线用户，谁退出了
-		message <- makeMsg(cli, "退出聊天室")		// 自己退出
-		message <- makeMsg(matchUser, "退出聊天室") // 对方退出
+		message <- makeMsg(cli, "广播：" + strconv.FormatInt(cli.Uid, 10) + "退出聊天室")		// 自己退出
+		message <- makeMsg(matchUser, "广播：" + strconv.FormatInt(matchUser.Uid, 10) + "退出聊天室") // 对方退出
 
-		cli.C <- makeMsg(cli, "=======对方:" + matchUser.Addr + "退出=======")
-		matchUser.C <- makeMsg(matchUser, "=======对方:" + cli.Addr + "退出=======")
+		//cli.C <- makeMsg(cli, "=======聊天对象:" + strconv.FormatInt(matchUser.Uid, 10) + "退出=======")
+		//matchUser.C <- makeMsg(matchUser, "=======聊天对象:" + strconv.FormatInt(cli.Uid, 10) + "退出=======")
 
 	}
-	//else {
-	//	// 告诉所有在线用户，谁退出了
-	//	message <- makeMsg(cli, "退出聊天室")
-	//}
-	go callback()
+	callback()
 }
 
 // 退出连接
@@ -422,9 +416,10 @@ func exitProcess(cliAddr string) {
 	cli := onlineMap[cliAddr]
 
 	// 告诉所有在线用户，谁退出了
-	message <- makeMsg(cli, "当前连接过期，已经关闭连接")
+	message <- makeMsg(cli, strconv.FormatInt(cli.Uid, 10) + "关闭连接")
 
+	fmt.Println("删除在线用户：", strconv.FormatInt(cli.Uid, 10))
 	// 当前用户从map移除
 	delete(onlineMap, cliAddr)
-	fmt.Println("删除在线用户：", cli)
+
 }

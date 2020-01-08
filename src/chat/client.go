@@ -72,7 +72,8 @@ func main() {
 			fmt.Println("decode msg failed, err:", err)
 			return
 		}
-		fmt.Println("server发来的数据：", msg)
+		//fmt.Println("server发来的数据：", msg)
+		fmt.Println(msg)
 	}
 	for {
 		;
