@@ -48,6 +48,7 @@ const (
 	MSG_MATCH = "match"
 	MSG_WHO 	= "who"
 	MSG_ROOMS = "rooms"
+	MSG_LOGOUT = "logout"
 )
 
 // 客户端信息
@@ -249,6 +250,7 @@ func handleConn(conn net.Conn) {
 							message <- makeMsg(cli, msg)
 						})
 					}
+
 				// 在线用户列表
 				case MSG_WHO:
 					//rwlocker.Lock()
@@ -261,6 +263,8 @@ func handleConn(conn net.Conn) {
 						message <- makeMsg(cli, msg)
 					}
 					//rwlocker.Unlock()
+
+				// 显示所有聊天室
 				case MSG_ROOMS:
 					for _, room := range roomList {
 						msg := strconv.FormatInt(onlineMap[room[0]].Uid, 10) + "与" +
@@ -268,8 +272,17 @@ func handleConn(conn net.Conn) {
 						fmt.Println(msg)
 						message <- makeMsg(cli, msg)
 					}
+
+				// 退出聊天室
+				case MSG_LOGOUT:
+					go exitRoom(cliAddr, func() {
+						msg := strconv.FormatInt(cli.Uid, 10) + "=>手动退出聊天室"
+						message <- makeMsg(cli, msg)
+					})
 			}
 			//fmt.Println("login|1长度：", len(msg))
+
+			// 登录操作
 			if len(msg) >= 7 && msg[:5] == "login" {
 				// rename|1
 				fmt.Println(msg, strings.Contains(msg, "="))
@@ -288,7 +301,22 @@ func handleConn(conn net.Conn) {
 				}
 			}
 
-			// 断开匹配
+			// 私聊发送信息
+			if len(msg) >= 6 && msg[:4] == "send" {
+				cli = onlineMap[cliAddr]
+				// send=1
+				//fmt.Println(msg, strings.Contains(msg, "="))
+
+				if !strings.Contains(msg, "=") {
+					fmt.Println("不包含用户发送内容")
+				} else {
+					content := strings.Split(msg, "=")[1]
+					room := cli.Room
+					index := cli.Order
+					destCli := onlineMap[roomList[room][index]]
+					destCli.C <- makeMsg(destCli, strconv.FormatInt(cli.Uid, 10) + "发送：" + content)
+				}
+			}
 
 			// 转发此内容
 			//message <- makeMsg(cli, msg)
