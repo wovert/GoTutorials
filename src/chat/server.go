@@ -12,21 +12,18 @@ import (
 	"time"
 )
 
-// 匹配状态
+
 const (
+	// 匹配状态
 	STATUS_STOPING 		= 1;		// 停止匹配
 	STATUS_FINDING 		= 2;		// 寻找匹配
 	STATUS_CHATING 		= 3;		// 聊天中
-)
 
-// 性别
-const (
+	// 性别
 	SEX_FEMALE 	= 0		// 女人
 	SEX_MALE 		= 1		// 男人
-)
 
-// 匹配类型
-const (
+	// 匹配类型
 	TYPE_RANDOM 	= 1		// 随机
 	TYPE_PAYMENT 	= 2		// 付费
 )
@@ -116,6 +113,8 @@ var rwlocker sync.RWMutex
 func searchMatch(key string)  {
 	client := onlineMap[key]
 
+	matchFlag := false
+
 	// 遍历onlineMap
 	for _, cli := range onlineMap {
 		// 是否是自己
@@ -161,11 +160,14 @@ func searchMatch(key string)  {
 			onlineMap[key] = client
 
 			rwlocker.Unlock()
+			matchFlag = true
 			break
 		}
 		rwlocker.Unlock()
 	}
-	message <- makeMsg(client, "广播：" + strconv.FormatInt(client.Uid, 10) + "等待匹配中")
+	if !matchFlag {
+		message <- makeMsg(client, "广播：" + strconv.FormatInt(client.Uid, 10) + "等待匹配中")
+	}
 	//fmt.Println(client.Addr + "等待匹配中")
 }
 
@@ -328,8 +330,9 @@ func handleConn(conn net.Conn) {
 		// 通过select检测channel的流动
 		select {
 		case <-isQuit:
-			//delete(onlineMap, cliAddr) // 当前用户从 map 移除
-			//message <- makeMsg(cli, "logout") // 告诉所有在线用户，谁退出了
+			go exitRoom(cliAddr, func(){
+				exitProcess(cliAddr)
+			})
 			return
 		case <- hasData:
 		case <- time.After(30 * time.Second): // 30s 后退出聊天室
