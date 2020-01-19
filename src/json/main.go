@@ -37,7 +37,7 @@ func main() {
   if nil != err3 {
     panic(err3)
   }
-  fmt.Println(string(m3))
+  fmt.Println("m3:", string(m3))
 
   // 对m3进行解码
   var m4 interface{}

@@ -1794,24 +1794,27 @@ brew升级golang: `brew upgrade go`
 
 从服务端的控制台输出可以看出，存在三种类型的输出：
 
-一种是正常的一个数据包输出。
-一种是多个数据包“粘”在了一起，我们定义这种读到的包为粘包。
-一种是一个数据包被“拆”开，形成一个破碎的包，我们定义这种包为半包。
-为什么会出现半包和粘包？
+1. 一种是正常的一个数据包输出。
+2. 一种是**多个数据包“粘”在了一起**，我们定义这种读到的包为**粘包**。
+3. 一种是**一个数据包被“拆”开**，形成一个破碎的包，我们定义这种包为**半包**。
+
+### 为什么会出现半包和粘包？
 
 客户端一段时间内发送包的速度太多，服务端没有全部处理完。于是数据就会积压起来，产生粘包。
 定义的读的buffer不够大，而数据包太大或者由于粘包产生，服务端不能一次全部读完，产生半包。
 什么时候需要考虑处理半包和粘包？
 
 TCP连接是长连接，即一次连接多次发送数据。
-每次发送的数据是结构的，比如 JSON格式的数据 或者 数据包的协议是由我们自己定义的（包头部包含实际数据长度、协议魔数等）。
+每次发送的数据是结构的，比如 JSON格式的数据或者数据包的协议是由我们自己定义的（**包头部包含实际数据长度、协议魔数**等）。
 
-解决思路
+### 解决思路
 
-定长分隔(每个数据包最大为该长度，不足时使用特殊字符填充) ，但是数据不足时会浪费传输资源
-使用特定字符来分割数据包，但是若数据中含有分割字符则会出现Bug
-在数据包中添加长度字段，弥补了以上两种思路的不足，推荐使用
-拆包演示
+1. 定长分隔(每个数据包最大为该长度，不足时使用特殊字符填充) ，但是数据不足时会浪费传输资源
+2. 使用特定字符来分割数据包，但是若数据中含有分割字符则会出现Bug
+3. 在数据包中添加长度字段，弥补了以上两种思路的不足，推荐使用
+
+### 拆包演示
+
 通过上述分析，我们最好通过第三种思路来解决拆包粘包问题。
 Golang的bufio库中有为我们提供了Scanner，来解决这类分割数据的问题。
 
@@ -1819,7 +1822,7 @@ type Scanner
 Scanner provides a convenient interface for reading data such as a file of newline-delimited lines of text. Successive calls to the Scan method will step through the 'tokens' of a file, skipping the bytes between the tokens. The specification of a token is defined by a split function of type SplitFunc; the default split function breaks the input into lines with line termination stripped. Split functions are defined in this package for scanning a file into lines, bytes, UTF-8-encoded runes, and space-delimited words. The client may instead provide a custom split function.
 
 简单来讲即是：
-Scanner为 读取数据 提供了方便的 接口。连续调用Scan方法会逐个得到文件的“tokens”，跳过 tokens 之间的字节。token 的规范由 SplitFunc 类型的函数定义。我们可以改为提供自定义拆分功能。
+`Scanner` 为读取数据提供了方便的接口。连续调用Scan方法会逐个得到文件的“tokens”，跳过 tokens 之间的字节。token 的规范由 SplitFunc 类型的函数定义。我们可以改为提供自定义拆分功能。
 接下来看看 SplitFunc 类型的函数是什么样子的：
 
 
