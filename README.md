@@ -599,7 +599,7 @@ fmt.Printf("i=%T \n", i)
 | pointer ｜ 指针 ｜  ｜ nil ｜  ｜
 | array ｜ 数组 ｜  ｜ 0 ｜ ｜
 | slice ｜ 切片 ｜  ｜ nil ｜ 引用类型 ｜
-| map ｜ 字典 ｜  ｜ nil ｜ 引用类型 ｜
+| map ｜ 字典或映射 ｜  ｜ nil ｜ 引用类型 ｜
 | struct ｜ 结构体 ｜  ｜ nil ｜ ｜
 
 
@@ -613,48 +613,6 @@ fmt.Printf("i=%T \n", i)
   - 接口
   - map
 
-
-## map
-
-`make` 用于内建类型(`map, slice, channel`)的内存分配
-
-### 创建方式
-
-1. `var m1 map[int]string` 不能存储数据
-2. `m2 := map[int]string{}` 能存储数据
-3. `m3 := make(map[int]string)` 默认len=0
-4. `m4 := make(map[int]string, 10)`
-
-### 初始化：
-  
-- 1. `var m map[int] string = map[int]string{1:"name",2:"age"}`
-- 2. `m := map[int]string{1:"name",2:"age"}`
-
-### 赋值：
-  
-- m := make(map[int]string, 1)
-- m[700] = "nami"
-- m[20] = "hello"
-- m[3] = "world"
-- m[3] = " world"
-
-
-新map元素key与原map元素相同，则覆盖
-
-
-### 遍历元素
-
-```
-if v, has = m[1]; has {
-  println("has")
-} else {
-  println("no has")
-} 
-```
-
-### 删除元素
-
-`delete(map, key)`
 
 ## file
 
@@ -1202,14 +1160,16 @@ d := [5]int{2: 10, 4:20} // [0 0 10 0 20]
 
 ### 为什么使用切片
 
-1. 数组的容量固定，不能自动扩展
-2. 值传递，数组作为函数参数时，将整个数组值拷贝一份给形参
+1. 数组的**容量固定**，不能自动扩展
+2. 值传递，数组作为函数参数时，将整个数组值**拷贝**一份给形参
 
-Go语言中，几乎可以在所有的场景中，使用切片替换数组使用
+在所有的场景中，使用切片替换数组使用
 
 ### 什么是切片
 
-> 切片并不是数组或数组指针，一种数据结构体，用来操作数组内部元素。它通过内部指针和相关属性引用数组片段，以实现变长方案。
+切片并**不是数组或数组指针**，一种**数据结构体**，用来操作数组内部元素。
+
+**切片通过内部指针和相关属性引用数组片段，以实现变长方案**
 
 - 切片时引用类型，引用传递
 - 动态变化数组
@@ -1226,11 +1186,10 @@ type slice struct {
 
 ### 如何使用切片
 
-`切片名称 [low:high:max]`
-
-- low: 起始下标位置
-- high: 结束下标位置(不包含index of high)
-- cap(容量): max-low (容量是动态变化，必须大于等于切片元素数量)
+- `切片名称 [low:high:max]`
+    - low: 起始下标位置
+    - high: 结束下标位置(不包含index of high) len=hight-low
+    - cap(容量): cap=max-low (容量是动态变化，必须大于等于切片元素数量)
 
 1. 定义一个切片，然后让切片引用一个已经创建好的数组：切片或数组都可以访问元素
 
@@ -1241,16 +1200,26 @@ slice := intArr[0:3:4] // index:1-3(不包含3)
 
 2. 通过 make 来创建切片: 只能通过 slice 下边访问元素
 
-`var sliceName []int = make([]int, len, cap)`
+```go
+slice := make([]int, len, cap)
+slice := make([]int, len) 没有指定容量，容量等于长度，常用方式
+var sliceName []int = make([]int, len, cap)
+
+```
 
 3. 直接指定具体数组
 
-`var slice []int = []int {1,3,4}`
+```
+#自动推导类型
+slice := []int{1,2,4,6}
+var slice []int = []int {1,3,4}
+
+```
 
 - 总结
   - 通过 make 方式创建切片可以指定切片的大小和容量
   - 如果没有给切片各个元素赋值，那个就会使用默认值：0, "", false
-  - 通过 make 方式创建的切片对应的数组是 由 make 底层维护，对外不可见，即智能通过 slice 去访问各个元素
+  - 通过 make 方式创建的切片对应的数组是由 make 底层维护，对外不可见，即智能通过 slice 去访问各个元素
 
 ### 数组和切片定义区别
 
@@ -1259,10 +1228,60 @@ slice := intArr[0:3:4] // index:1-3(不包含3)
 
 截取数组，初始化切片时，切片容量跟随原数组
 
+s[:hight:max] 从0开始，到high结束之前
+
+s[low:] 从low开始，到末尾
+
+s[:high] 从0开始，到high结束，容量跟随原先容量 [常用]
+
 - `append(slice, apendElement)`
   - 智能的底层数组的容量增长，一旦超过底层数组容量，通常以2倍容量重新分配底层数组，并复制原来的数据
 - `copy(targetSlice, sourceSlice)`
   - 源元素覆盖目的元素
+
+## map
+
+`make` 用于内建类型(`map, slice, channel`)的内存分配
+
+### 创建字典方式
+
+1. `var m1 map[int]string` 不能存储数据
+2. `m2 := map[int]string{}` 能存储数据
+3. `m3 := make(map[int]string)` 默认len=0
+4. `m4 := make(map[int]string, 10)`
+
+### 字典初始化
+  
+- 1. `var m map[int] string = map[int]string{1:"name",2:"age"}`
+- 2. `m := map[int]string{1:"name",2:"age"}`
+
+### 字典赋值
+  
+```cgo
+m := make(map[int]string, 1)
+m[700] = "nami"
+m[20] = "hello"
+m[3] = "world"
+m[3] = " world"
+```
+
+新map元素key与原map元素相同，则覆盖
+
+
+### 遍历字典元素
+
+```
+if v, has = m[1]; has {
+  println("has")
+} else {
+  println("no has")
+} 
+```
+
+### 删除字典元素
+
+`delete(map, key)`
+
 
 ## struct
 

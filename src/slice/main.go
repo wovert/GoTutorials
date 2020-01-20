@@ -24,11 +24,12 @@ func slice0() {
 
 func slice1() {
 	arr := [6]int {1,2,3,4,5,6}
-	s := arr[1:3:5]
+	//s := arr[1:3:5]
+	s := arr[1:3] // 6-1=5 cap=元素数量-开始解决索引值
 
 	fmt.Println("s=", s) // [2 3]
 	fmt.Println("len(s)=", len(s)) // 2
-	fmt.Println("cap(s)", cap(s)) // 4
+	fmt.Println("cap(s)", cap(s)) // 5
 }
 
 func slice2() {
@@ -112,11 +113,13 @@ func fb(n int) ([]uint64) {
 
 func main() {
 	// slice0()
-	// slice1()
+	//slice1()
 	// slice2()
 	// slice3()
 	// slice4()
-	// slice5()
+	slice5()
+	return
+
 	// data := []string{"red", "", "black", "", "", "pink", "blue", "orange", "gray", "purple", "yellow"}
 	// afterData := noEmpty(data)
 	// fmt.Printf("afterData:%v\n", afterData)
