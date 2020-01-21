@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package prototext;
+
+// 熊猫 发送的消息
+message PandaRequest {
+  string name = 1;            // 姓名
+  int32 height = 2;           // 身高
+  repeated int32 weight = 3;  // 体重, []int32 切片类型
+}
+
+// 熊猫 返回的消息
+message PandaResponse {
+  int32 errno = 1;            // 错误号
+  string errmessage = 2;      // 错误信息
+}
+
+// protoc --proto_path=IMPORT_PATH --go_out=./ *.proto
