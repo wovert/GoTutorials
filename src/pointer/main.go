@@ -12,7 +12,7 @@ func modify(p *int) {
 
 func main() {
 	var a int = 5
-	var p *int = &a
+	var p *int = &a // &int 解引用, var p *int 指针变量
 
 	fmt.Println(&a)
 
