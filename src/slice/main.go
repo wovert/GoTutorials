@@ -89,6 +89,17 @@ func noEmpty(data []string) []string {
 	return out
 }
 
+func noEmpty2(data []string) []string {
+	i := 0
+	for _, str := range data {
+		if str != "" {
+			data[i] = str // 直接在源串上操作
+			i++
+		}
+	}
+	return data[:i]
+}
+
 func strTest() {
 	str := "hello@hotmail.com"
 	slice := str[6:]
@@ -117,12 +128,13 @@ func main() {
 	// slice2()
 	// slice3()
 	// slice4()
-	slice5()
-	return
+	//slice5()
+	//return
 
-	// data := []string{"red", "", "black", "", "", "pink", "blue", "orange", "gray", "purple", "yellow"}
-	// afterData := noEmpty(data)
-	// fmt.Printf("afterData:%v\n", afterData)
+	data := []string{"red", "", "black", "", "", "pink", "blue", "orange", "gray", "purple", "yellow"}
+	afterData := noEmpty2(data)
+	fmt.Printf("afterData:%v\n", afterData)
+	return
 
 	// s1 := afterData[6:] // [purple, yellow] 
 	// s2 := afterData[0:5] // "red", black", pink", "blue", "orange"
