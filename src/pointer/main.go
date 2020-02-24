@@ -35,7 +35,7 @@ func main() {
 	*pStr = "hello world"
 	fmt.Printf("%v\n", *pStr)
 	fmt.Printf("%s\n", *pStr)
-	fmt.Printf("%q\n", *pStr)
+	fmt.Printf("%q\n", *pStr) // %q 输出go语言格式
 
 	fmt.Println("=========")
 

@@ -15,8 +15,8 @@ func slice0() {
 	fmt.Printf("intArr[0]=%v\n", &intArr[0])
 	fmt.Printf("slice[0]=%v\n", &slice[0])
 	fmt.Printf("slice=%v\n", slice)
-	fmt.Printf("len(slice)=%v\n", len(slice))
-	fmt.Printf("cap(slice)=%v\n", cap(slice))
+	fmt.Printf("len(slice)=%v\n", len(slice)) // 3-1=2
+	fmt.Printf("cap(slice)=%v\n", cap(slice)) // 4-0=4
 	fmt.Printf("intArr=%v\n", intArr)
 	slice[1] = 34
 	fmt.Printf("intArr=%v\n", intArr)
@@ -34,11 +34,11 @@ func slice1() {
 
 func slice2() {
 	arr := [8]int {1,2,3,4,5,6,7,8}
-	s := arr[1:5]
+	s := arr[1:5] // cap默认是8
 
 	fmt.Println("s=", s) // [2 3 4 5]
 	fmt.Println("len(s)=", len(s)) // 4
-	fmt.Println("cap(s)", cap(s)) // 7
+	fmt.Println("cap(s)", cap(s)) // 8-1=7
 }
 
 func slice3() {

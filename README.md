@@ -458,6 +458,10 @@ const hello string = "wovert"
 
 > 内存中一个数据存储空间
 
+- 变量存储
+  - 等号左边的变量，代表变量所只想的内存空间（写）
+  - 等号右边的变量，代表变量内存空间存储的数据值（读）
+
 1. 声明变量
 2. 变量赋值
 3. 使用变量
@@ -831,7 +835,7 @@ func 函数名(形参列表)(返回值列表) {
 
 ### 可变参数
 
-``` go
+```cgo
 // 0个或多个参数
 func add(arg... int) int {}
 
@@ -845,7 +849,7 @@ func add(a int, b int, arg... int) int {}
 
 其中 `arg` 是一个`slice`, 通过`arg[index]`一次访问所有参数通过`len(arg)`来判断传递参数的个数
 
-``` go
+```cgo
 func read() {
   mc.Lock()
   defer mc.Unlock()
@@ -964,7 +968,7 @@ func sum(n1 int, n2 int) int {
 
 ## xorm 操作数据库
 
-```
+```sh
 go get github.com/go-xorm/xorm
 go get github.com/go-sql-driver/mysql
 ```
@@ -988,7 +992,7 @@ Windows 用户，可以在 PowerShell 中设置：
 $env:GOPROXY = "https://goproxy.io"
 ```
 
-
+```cgo
 // string到int
 int, err := strconv.Atoi(string)
 
@@ -1000,9 +1004,9 @@ string := strconv.Itoa(int)
 
 // int64到string
 string := strconv.FormatInt(int64,10)
+```
 
 ## leetcode.com
-
 
 ### 空指针和野指针
 
@@ -1127,7 +1131,6 @@ func test2() {
 
 > 存放多个同一类型数据，是值类型
 
-
 ### 数组初始化
 
 ```cgo
@@ -1141,7 +1144,6 @@ c := [5]int{1,2,3} // [1 2 3 0 0]
 
 // 指定某个元素初始化
 d := [5]int{2: 10, 4:20} // [0 0 10 0 20]
-
 ```
 
 ### 数组使用注意事项
@@ -1163,7 +1165,7 @@ d := [5]int{2: 10, 4:20} // [0 0 10 0 20]
 1. 数组的**容量固定**，不能自动扩展
 2. 值传递，数组作为函数参数时，将整个数组值**拷贝**一份给形参
 
-在所有的场景中，使用切片替换数组使用
+所有的场景中，使用**切片替换数组**使用
 
 ### 什么是切片
 
@@ -1195,7 +1197,7 @@ type slice struct {
 
 ```cgo
 intArr := [...]int{1,2,3,4,5,6}
-slice := intArr[0:3:4] // index:1-3(不包含3)
+slice := intArr[0:3:4] // index:1-3(不包含3), cap=4-0
 ```
 
 2. 通过 make 来创建切片: 只能通过 slice 下边访问元素
@@ -1204,7 +1206,6 @@ slice := intArr[0:3:4] // index:1-3(不包含3)
 slice := make([]int, len, cap)
 slice := make([]int, len) 没有指定容量，容量等于长度，常用方式
 var sliceName []int = make([]int, len, cap)
-
 ```
 
 3. 直接指定具体数组
@@ -1213,7 +1214,6 @@ var sliceName []int = make([]int, len, cap)
 #自动推导类型
 slice := []int{1,2,4,6}
 var slice []int = []int {1,3,4}
-
 ```
 
 - 总结
