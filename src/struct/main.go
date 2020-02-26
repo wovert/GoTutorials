@@ -79,9 +79,11 @@ func main() {
 	fmt.Printf("&man = %p\n", &man3)
 	fmt.Printf("&man.name = %p\n", &(man3.name))
 
+	// 结构体指针
 	var person1 *Person = &Person{"wovert", 'f', 19}
 	fmt.Println("person1=", person1)
 
+	// 堆创建结构体对象
 	person2 := new(Person)
 	person2.name = "xiuhong"
 	person2.age = 20
@@ -89,7 +91,6 @@ func main() {
 
 
 	return
-
 
 
 	person := Human{name: "张三", age: 25}

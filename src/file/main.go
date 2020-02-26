@@ -9,10 +9,83 @@ import (
 
 func main() {
 	//test()
-  //testWrite()
+  testWrite()
 	//testRead()
 	//copyFile()
-	readDir()
+	//readDir()
+}
+
+func test() {
+	// 创建文件
+	//f, err := os.Create("./tmp")
+	//if err != nil {
+	//	fmt.Println("create err:", err)
+	//	return
+	//} else {
+	//	fmt.Println("create file successful!")
+	//}
+	//defer f.Close()
+	//return
+
+	// 只读方式打开文件
+	//f, err := os.Open("./tmp")
+	//if err != nil {
+	//	fmt.Println("Open file error!")
+	//} else {
+	//	fmt.Println("Open file successful!")
+	//}
+	//defer f.Close()
+	//return
+
+	// 读写方式打开文件
+	// 打开文件权限：O_RDONLY, O_WRONLY, O_RDWR
+	// 0: 没有任何权限；1: 执行权限（可执行文件); 2: 写权限; 3: 写/执行
+	// 4: 读权限; 5: 去/执行；6: 读权限于写权限， 7: 读权限于写权限，执行权限
+	f, err := os.OpenFile("./tmp", os.O_RDWR, 6)
+	if err != nil {
+		fmt.Println("create err:", err)
+	}
+	defer f.Close()
+
+	// 写入字符串内容
+	_, err = f.WriteString("hello world")
+	if err != nil {
+		fmt.Println("write err:", err)
+	} else {
+		fmt.Println("Create file and Write successful!")
+	}
+}
+
+func testWrite() {
+	// 写文件操作
+	f, err := os.OpenFile("./tmp", os.O_RDWR, 6)
+	if err != nil {
+		fmt.Println("OpenFile err:", err)
+		return
+	}
+	defer f.Close()
+
+	fmt.Println("Open file successful by Read Write Only")
+
+	// 按照字符串写入，返回字节数
+	//n, err := f.WriteString("12中\n") // 写入前三个123，中文3个字节
+	//if err != nil {
+	//	fmt.Println("WriteString err:", err)
+	//	return
+	//}
+	//fmt.Println("写入字节数为 n =", n) // 写入字节数
+
+
+	// 按位置写入
+	// 偏移量(正：像文件尾偏，负：向文件头偏)
+	// 偏移起始位置（os.SeekStart, os.SeekEnd, os.SeekCurrent）
+	// 返回值：从文件起始位置，到当前文件读写指针位置的偏移量
+	off, _ := f.Seek(5, io.SeekStart)
+	//off, _ := f.Seek(-5, io.SeekEnd)
+	fmt.Println("off :", off)
+	n, _ := f.WriteAt([]byte("345"), off) // 从偏移off开始写入
+	fmt.Println("Write n :", n) // 3
+
 }
 
 func readDir() {
@@ -42,56 +115,7 @@ func readDir() {
 
 }
 
-func test() {
-	//f, err := os.Create("./tmp")
-	//f, err := os.Open("./tmp")
-	// 打开文件权限：O_RDONLY, O_WRONLY, O_RDWR
-	f, err := os.OpenFile("./tmp", os.O_RDWR, 6)
-	if err != nil {
-		fmt.Println("create err:", err)
-	}
 
-	defer f.Close()
-
-	_, err = f.WriteString("hello world")
-	if err != nil {
-		fmt.Println("write err:", err)
-		return
-	}
-
-	fmt.Println("Create file successful!")
-}
-
-func testWrite() {
-	// 写文件操作
-	f, err := os.OpenFile("./tmp", os.O_RDWR, 6)
-	if err != nil {
-		fmt.Println("OpenFile err:", err)
-		return
-	}
-	defer f.Close()
-
-	fmt.Println("successful!")
-
-	// 按照字符串写入，返回字节数
-	//n, err := f.WriteString("12中\n") // 写入前三个123
-	//if err != nil {
-	//	fmt.Println("WriteString err:", err)
-	//	return
-	//}
-	//fmt.Println("n =", n) // 写入字节数
-
-	// 按位置写入
-	// 偏移量(正：像文件尾偏，负：向文件头偏)
-	// 偏移起始位置（os.SeekStart, os.SeekEnd, os.SeekCurrent）
-	// 返回值：从文件起始位置，到当前文件读写指针位置的偏移量
-	off, _ := f.Seek(5, io.SeekStart)
-	//off, _ := f.Seek(-5, io.SeekEnd)
-	fmt.Println("off :", off)
-	n, _ := f.WriteAt([]byte("345"), off) // 从偏移off开始写入
-	fmt.Println("Write n :", n) // 3
-
-}
 
 func testRead() {
 	// 写文件操作

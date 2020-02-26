@@ -8,7 +8,7 @@ import (
 
 
 func wordCount(str string) map[string]int {
-	s := strings.Fields(str)
+	s := strings.Fields(str) // 将字符串拆分成字符串切片
 	m := make(map[string]int)
 
 

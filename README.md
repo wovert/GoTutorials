@@ -620,9 +620,9 @@ fmt.Printf("i=%T \n", i)
 
 ## file
 
-1. os.Create 文件不存在创建，文件存在，将文件内容清空
-2. open 打开文件，以只读方式打开文件
-3. OpenFile,以只读、只写、读写方式打开文件
+1. `os.Create` 文件不存在创建，文件存在，将文件内容清空
+2. `open` 打开文件，以**只读**方式打开文件
+3. `OpenFile` 以**只读、只写、读写**方式打开文件
 
 资源关闭
 
@@ -643,10 +643,6 @@ defer file.close()
   - 1.创建一个带有缓冲区的 Reader(读写)
   - 2.从reader的缓冲区中，读取指定长度的数据。数据长度取决于参数delime
 - 按字节写
-
-### 缓冲区
-
-
 
 ## 异常处理
 
@@ -1248,12 +1244,12 @@ s[:high] 从0开始，到high结束，容量跟随原先容量 [常用]
 1. `var m1 map[int]string` 不能存储数据
 2. `m2 := map[int]string{}` 能存储数据
 3. `m3 := make(map[int]string)` 默认len=0
-4. `m4 := make(map[int]string, 10)`
+4. `m4 := make(map[int]string, 10)` len=10
 
 ### 字典初始化
   
-- 1. `var m map[int] string = map[int]string{1:"name",2:"age"}`
-- 2. `m := map[int]string{1:"name",2:"age"}`
+- 1. 定义式同时初始化 `var m map[int] string = map[int]string{1:"name",2:"age"}`
+- 2. 自动推倒类型`m := map[int]string{1:"name",2:"age"}`
 
 ### 字典赋值
   
@@ -1271,6 +1267,7 @@ m[3] = " world"
 ### 遍历字典元素
 
 ```cgo
+// v是元素值，has(bool)是否存在key
 if v, has = m[1]; has {
   println("has")
 } else {
@@ -1331,7 +1328,7 @@ man := Person{name:"wovert", age:18}
 
 `var man *Person = &Person{"name", 'm', 20}`
 
-2. `new(Person)`
+2. `person2 := new(Person)`
 
 ### 结构体指针地址
 
@@ -1370,27 +1367,324 @@ go + 函数名：启动一个协程执行函数体
 
 ### 并发
 
+- 1s = 1000ms 毫秒
+- 1ms = 1000us 微秒
+- 1us = 1000ns 纳秒
+
+- 并行：借助多核 CPU 实现
+
 - 宏观：用户体验上，程序并行执行
 - 微观：多个计划任务，顺序执行。快速的切换，轮换使用CPU时间轮片
+
+### 进程
 
 - 进程并发
   - 程序：编译成功得到的二进制文件。占用磁盘空间
   - 进程：运行的程序，占用系统资源（内存）
+    - 孤儿进程：父进程先于子进程结束，则子进程成为孤儿进程，子进程的父进程成为init进程，称为 init 进程领养孤儿进程
+    - 僵尸进程：进程终止，父进程尚未回收，子进程残留资源(PCB)存放于内核中，编程僵尸(Zombie)进程
   
-- 进程状态：初始态、就绪态、运行态、挂起（阻塞）态、终止（停止）态
+- 进程状态：
+  - 初始态
+  - 就绪态(等待CPU分配时间片队列)
+  - 运行态(占用CPU)
+  - 挂起或阻塞(等待除CPU以外的其他资源主动放弃CPU)态，I/O操作状态
+  - 终止或停止态
+
+### 线程
 
 - 线程并发：
-  - 线程：LWP 轻量级的进程。最小的执行单位。—— CPU分配时间轮片的对象
-  - 进程：最小的系统资源分配单位
+  - 线程：LWP(Light Weight Process) 轻量级的进程；最小的执行单位；CPU分配时间轮片的对象；有独立的PCB，但没有独立的地址空间（共享）
+  - 进程：独立地址空间，拥有PCB；最小的系统资源分配单位
   
+  
+- 32 bit and 64 bit 分配比例相同  
+
 - 同步
   - 协同不调：按照预定的先后次序运行
   - 线程同步：一个线程发出某一功能调用时，在没有得到结果之前，该调用不返回。同时其他线程为保证数据一致性，不能调用该功能。
   - 线程同步机制：
-    - 互斥锁（互斥量）：建议帧。拿到锁以后，才能访问数据，没有拿到锁的线程，阻塞等待。等到拿锁的线程释放帧
+    - 互斥锁（互斥量）：建议帧。拿到锁以后，才能访问数据，没有拿到锁的线程，阻塞等待。等到拿锁的线程释放帧。初始化，加锁，解锁，销毁
     - 读写锁：一把锁（读属性、写属性）。写独占、读共享，写锁优先级最高
+      - 互斥锁和读写锁基本是一样的，只是在加锁时区分 “读锁” 还是 “写锁”
+      - 加读锁（可以重复加），加写锁（一次只能一个），多个线程都加了读锁，这多个线程可以同时访问读操作共享资源
+        
     - 信号量
     - 条件变量
+
+
+#### 互斥锁（同步）
+
+在多任务操作系统中，同时运行的多个任务可能都需要使用同一种资源。这个过程有点类似于，公司部门里，我在使用着打印机打印东西的同时（还没有打印完），别人刚好也在此刻使用打印机打印东西，如果不做任何处理的话，打印出来的东西肯定是错乱的。
+  在线程里也有这么一把锁——互斥锁（mutex），互斥锁是一种简单的加锁的方法来控制对共享资源的访问，互斥锁只有两种状态,即上锁( lock )和解锁( unlock )。
+
+【互斥锁的特点】：
+
+1. 原子性：把一个互斥量锁定为一个原子操作，这意味着操作系统（或pthread函数库）保证了如果一个线程锁定了一个互斥量，没有其他线程在同一时间可以成功锁定这个互斥量；
+
+2. 唯一性：如果一个线程锁定了一个互斥量，在它解除锁定之前，没有其他线程可以锁定这个互斥量；
+
+3. 非繁忙等待：如果一个线程已经锁定了一个互斥量，第二个线程又试图去锁定这个互斥量，则第二个线程将被挂起（不占用任何cpu资源），直到第一个线程解除对这个互斥量的锁定为止，第二个线程则被唤醒并继续执行，同时锁定这个互斥量。
+
+【互斥锁的操作流程如下】：
+
+1. 在访问共享资源后临界区域前，对互斥锁进行加锁；
+
+2. 在访问完成后释放互斥锁导上的锁。在访问完成后释放互斥锁导上的锁；
+
+3. 对互斥锁进行加锁后，任何其他试图再次对互斥锁加锁的线程将会被阻塞，直到锁被释放。对互斥锁进行加锁后，任何其他试图再次对互斥锁加锁的线程将会被阻塞，直到锁被释放。
+
+```c
+#include <pthread.h>
+#include <time.h>
+// 初始化一个互斥锁。
+int pthread_mutex_init(pthread_mutex_t *mutex, 
+						const pthread_mutexattr_t *attr);
+
+// 对互斥锁上锁，若互斥锁已经上锁，则调用者一直阻塞，
+// 直到互斥锁解锁后再上锁。
+int pthread_mutex_lock(pthread_mutex_t *mutex);
+
+// 调用该函数时，若互斥锁未加锁，则上锁，返回 0；
+// 若互斥锁已加锁，则函数直接返回失败，即 EBUSY。
+int pthread_mutex_trylock(pthread_mutex_t *mutex);
+
+// 当线程试图获取一个已加锁的互斥量时，pthread_mutex_timedlock 互斥量
+// 原语允许绑定线程阻塞时间。即非阻塞加锁互斥量。
+int pthread_mutex_timedlock(pthread_mutex_t *restrict mutex,
+const struct timespec *restrict abs_timeout);
+
+// 对指定的互斥锁解锁。
+int pthread_mutex_unlock(pthread_mutex_t *mutex);
+
+// 销毁指定的一个互斥锁。互斥锁在使用完毕后，
+// 必须要对互斥锁进行销毁，以释放资源。
+int pthread_mutex_destroy(pthread_mutex_t *mutex);
+```
+
+【Demo】（阻塞模式）：
+
+```c
+//使用互斥量解决多线程抢占资源的问题
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <string.h>
+ 
+char* buf[5]; //字符指针数组  全局变量
+int pos; //用于指定上面数组的下标
+ 
+//1.定义互斥量
+pthread_mutex_t mutex;
+ 
+void *task(void *p)
+{
+    //3.使用互斥量进行加锁
+    pthread_mutex_lock(&mutex);
+ 
+    buf[pos] = (char *)p;
+    sleep(1);
+    pos++;
+ 
+    //4.使用互斥量进行解锁
+    pthread_mutex_unlock(&mutex);
+}
+ 
+int main(void)
+{
+    //2.初始化互斥量, 默认属性
+    pthread_mutex_init(&mutex, NULL);
+ 
+    //1.启动一个线程 向数组中存储内容
+    pthread_t tid, tid2;
+    pthread_create(&tid, NULL, task, (void *)"zhangfei");
+    pthread_create(&tid2, NULL, task, (void *)"guanyu");
+    //2.主线程进程等待,并且打印最终的结果
+    pthread_join(tid, NULL);
+    pthread_join(tid2, NULL);
+ 
+    //5.销毁互斥量
+    pthread_mutex_destroy(&mutex);
+ 
+    int i = 0;
+    printf("字符指针数组中的内容是：");
+    for(i = 0; i < pos; ++i)
+    {
+        printf("%s ", buf[i]);
+    }
+    printf("\n");
+    return 0;
+}
+```
+
+【Demo】（非阻塞模式）：
+
+```c
+#include <stdio.h>
+#include <pthread.h>
+#include <time.h>
+#include <string.h>
+ 
+int main (void)
+{
+    int err;
+    struct timespec tout;
+    struct tm *tmp;
+    char buf[64];
+    pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+    
+    pthread_mutex_lock (&lock);
+    printf ("mutex is locked\n");
+    clock_gettime (CLOCK_REALTIME, &tout);
+    tmp = localtime (&tout.tv_sec); 
+    strftime (buf, sizeof (buf), "%r", tmp);
+    printf ("current time is %s\n", buf);
+    tout.tv_sec += 10;
+    err = pthread_mutex_timedlock (&lock, &tout);
+    clock_gettime (CLOCK_REALTIME, &tout);
+    tmp = localtime (&tout.tv_sec);
+    strftime (buf, sizeof (buf), "%r", tmp);
+    printf ("the time is now %s\n", buf);
+    if (err == 0)
+        printf ("mutex locked again\n");
+    else 
+        printf ("can`t lock mutex again:%s\n", strerror (err));
+    return 0;
+}
+```
+
+#### 读写锁（同步）
+
+  读写锁与互斥量类似，不过读写锁允许更改的并行性，也叫共享互斥锁。互斥量要么是锁住状态，要么就是不加锁状态，而且一次只有一个线程可以对其加锁。读写锁可以有3种状态：读模式下加锁状态、写模式加锁状态、不加锁状态。
+
+  一次只有一个线程可以占有写模式的读写锁，但是多个线程可以同时占有读模式的读写锁（允许多个线程读但只允许一个线程写）。
+
+【读写锁的特点】：
+
+如果有其它线程读数据，则允许其它线程执行读操作，但不允许写操作；
+
+如果有其它线程写数据，则其它线程都不允许读、写操作。
+
+【读写锁的规则】：
+
+如果某线程申请了读锁，其它线程可以再申请读锁，但不能申请写锁；
+
+如果某线程申请了写锁，其它线程不能申请读锁，也不能申请写锁。
+
+读写锁适合于对数据结构的读次数比写次数多得多的情况。
+
+```c
+#include <pthread.h>
+// 初始化读写锁
+int pthread_rwlock_init(pthread_rwlock_t *rwlock, 
+						const pthread_rwlockattr_t *attr); 
+
+// 申请读锁
+int pthread_rwlock_rdlock(pthread_rwlock_t *rwlock ); 
+
+// 申请写锁
+int pthread_rwlock_wrlock(pthread_rwlock_t *rwlock ); 
+
+// 尝试以非阻塞的方式来在读写锁上获取写锁，
+// 如果有任何的读者或写者持有该锁，则立即失败返回。
+int pthread_rwlock_trywrlock(pthread_rwlock_t *rwlock); 
+
+// 解锁
+int pthread_rwlock_unlock (pthread_rwlock_t *rwlock); 
+
+// 销毁读写锁
+int pthread_rwlock_destroy(pthread_rwlock_t *rwlock);
+```
+
+【Demo】：
+
+```c
+// 一个使用读写锁来实现 4 个线程读写一段数据是实例。
+// 在此示例程序中，共创建了 4 个线程，
+// 其中两个线程用来写入数据，两个线程用来读取数据
+#include <stdio.h>  
+#include <unistd.h>  
+#include <pthread.h>  
+
+pthread_rwlock_t rwlock; //读写锁  
+int num = 1;  
+  
+//读操作，其他线程允许读操作，却不允许写操作  
+void *fun1(void *arg)  
+{  
+    while(1)  
+    {  
+        pthread_rwlock_rdlock(&rwlock);
+        printf("read num first == %d\n", num);
+        pthread_rwlock_unlock(&rwlock);
+        sleep(1);
+    }
+}
+  
+//读操作，其他线程允许读操作，却不允许写操作  
+void *fun2(void *arg)
+{
+    while(1)
+    {
+        pthread_rwlock_rdlock(&rwlock);
+        printf("read num second == %d\n", num);
+        pthread_rwlock_unlock(&rwlock);
+        sleep(2);
+    }
+}
+ 
+//写操作，其它线程都不允许读或写操作  
+void *fun3(void *arg)
+{
+    while(1)
+    {
+        pthread_rwlock_wrlock(&rwlock);
+        num++;
+        printf("write thread first\n");
+        pthread_rwlock_unlock(&rwlock);
+        sleep(2);
+    }
+}
+ 
+//写操作，其它线程都不允许读或写操作  
+void *fun4(void *arg)
+{
+    while(1)
+    {  
+        pthread_rwlock_wrlock(&rwlock);  
+        num++;  
+        printf("write thread second\n");  
+        pthread_rwlock_unlock(&rwlock);  
+        sleep(1);  
+    }  
+}  
+  
+int main()  
+{  
+    pthread_t ptd1, ptd2, ptd3, ptd4;  
+      
+    pthread_rwlock_init(&rwlock, NULL);//初始化一个读写锁  
+      
+    //创建线程  
+    pthread_create(&ptd1, NULL, fun1, NULL);  
+    pthread_create(&ptd2, NULL, fun2, NULL);  
+    pthread_create(&ptd3, NULL, fun3, NULL);  
+    pthread_create(&ptd4, NULL, fun4, NULL);  
+      
+    //等待线程结束，回收其资源  
+    pthread_join(ptd1, NULL);  
+    pthread_join(ptd2, NULL);  
+    pthread_join(ptd3, NULL);  
+    pthread_join(ptd4, NULL);  
+      
+    pthread_rwlock_destroy(&rwlock);//销毁读写锁  
+      
+    return 0;  
+}
+```
+
+
 
 - 协程并发：Python、Lua、Rust
 
