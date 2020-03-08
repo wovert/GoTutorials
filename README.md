@@ -1695,22 +1695,35 @@ int main()
 
 ### goroutine 特性
 
-- 主 goroutine 退出后，其他的工作 goroutine 也会自动退出
+**主 goroutine 退出后，其他的工作 goroutine 也会自动退出**
 
+
+```sh
+$ go run --race goroutine.go
+```
 
 ### runtime 包
 
-- Goshed: 出让当前go程所占用的 CPU 时间片
-- Goexit: 退出当前go程，也就是调用go协程函数
-  - return: 返回当前函数调用处，return之前的 defer 注册生效
-- Gomaxprocs: 设置并行计算的CPU核数的最大值，并返回之前的CPU核数量值
-
+- `Goshed`: 出让当前go程所占用的 CPU 时间片，之后抢占时间轮片回复正常。出让当前go程所占用CPU时间片，当再次获得CPU时，从出让位置继续回复执行。
+- `Goexit`: 将立即终止当前 goroutine 执行，调度器确保所有已注册 defer 延迟调用被执行
+  - 结束调用该函数函数的当前go程，Goexit() 之前注册的 defer 都生效
+  - `return`: 返回当前函数调用处，return之前的 defer 注册生效
+- `Gomaxprocs`: 设置当前进程使用的最大 CPU 核数，返回上一次调用成功的设置值。首次调用返回默认值
 
 ## channel
 
-> 对应一个管道（通道FIFO）
+> 一种数据类型，对应一个管道。解决go程的同步问题以及协程之间的数据共享（数据传递）的问题。
+
+- goroutine 运行在相同的地址空间，因为访问共享内存必须做好同步
+- goroutine 奉行**通过通信来的共享内存，而不是共享内存来通信**
+- 引用类型 channel用于多个 goroutine通讯，其内部实现了同步，确保并发安全
 
 `make(chan 在通道中传递的数据类型, 容量)`
+
+- FIFO(First In First Out) 队列 => 管道
+- LIFO(Last In First Out) 堆栈
+
+每个进程启动，系统会自动打开三个文件：标准输入、标准输出、标准错误 —— 对应三个文件：`stdin, stdout, stderr`。进程结束，自动关闭三个文件
 
 - 容量 0: 无缓冲channel
 - 容量 > 0: 有缓冲channel
@@ -1719,18 +1732,17 @@ int main()
 
 - 写端（传入端） `chan <-` 写端写数据，读端不再读，阻塞
 - 读端 (传出端) `<- chan` 读端读数据，同时写端不再写，读端阻塞
+- 读端和写端必须同时满足条件，才在栈上进行数据流动，否则阻塞
 
-读端和写端必须同时满足条件，才在栈上进行数据流动，否则阻塞。
 
-### 无缓冲的 channel
 
-> 无缓冲的通道（unbuffered channel）是指在接受前没有能力保存任何值的通道
+### 无缓冲的 channel(unbuffered channel)
 
-通道容量为0， len=0
+> 是指在接受前没有能力保存任何值的通道
 
-无缓冲的channel 应用于两个协程中，一个读，一个写
-
-具备同步的能力。读、写同步
+- 通道容量为0， len=0
+- 无缓冲的channel 应用于两个协程中，一个读，另一个写
+- 具备同步的能力。读、写同步
 
 这种类型的通道要求发送 goroutine 和接受 goroutine 同时准备好，才能完成发送和接受操作。否则，通道会导致先执行发送或接受操作的goroutine 阻塞等待。
 
@@ -1741,45 +1753,49 @@ int main()
 
 [无缓冲的逻辑](./images/1.gif)
 
+1. 两个 goroutine 都达到通道，但哪个都没有开始执行发送或者接受；
+2. 左侧的 goroutine 将他的手伸进了通道，这模拟了向通道发送数据的行为。这时，这个 goroutine 会在通道中被锁住，直到借还完成
+3. 右侧的 goroutine 将他的手放入通道，这模拟了从通道里接受数据。这个 goroutine 一样也会在通道中被锁住，直到交换完成
+4. 第4步和第5步，进行交换，并最终，在第6步，两个goroutine 都将他们的手从通道里拿出来，这模拟了被锁住的goroutine得到释放。两个 goroutine 现在都可以去做其他事情了。
 
-### 有缓冲的 channel
+
+### 有缓冲的 channel —— 异步通信
 
 > 通道容量为非0，channel中剩余未读取数据个数。cap(ch), 通道的容量
 
-channel 应用于两个协程中，一个读，一个写
+channel 应用于两个协程中，一个读，另一个写
 
-缓冲区可以进行数据存储，存储至容量上限，阻塞。具备**异步**能力。
+缓冲区可以进行数据存储，存储至容量上限，阻塞。具备**异步**能力，不需要同时操作缓冲区（发短信）
 
 
 ### 关闭channel
 
 > `close(ch)`
 
-确定不再相对发送、接受数据。关闭 channel。使用 close(ch) 关闭 channel
+确定不再相对发送、接受数据。关闭 channel（发送端关闭channel）。使用 close(ch) 关闭 channel
 对端可以判断 channel 是否关闭
 
 - 总结
   - 1.数据没有发送完，不应该关闭channel
-  - 2.已经关闭的channel，不能向其写数据。报错 "panic: send on closed channel"
-  - 3.写端已经关闭channel, 可以从中读取数据。
+  - 2.已经关闭的channel，不能向其写数据；报错 "panic: send on closed channel"
+  - 3.写端已经关闭channel, 可以从中读取数据
     - 读无缓冲channel: 读到 0/false/"" —— 说明：写端已经关闭
-    - 读有缓冲channel: 如果缓冲区内有数据，先读数据，读完数据后，可以继续读，但读到0。
+    - 读有缓冲channel: 如果缓冲区内有数据，先读数据，读完数据后，可以继续读且读到0
 
 ```cgo
 // 如果对端已经关闭，ok 返回 false, num 无数据
 // 如果对端没有关闭，ok 返回 true, num 保存读到的数据
 if num, ok := <-ch; ok == true {
-    // 读取数据
+  // 读取数据
 } else {
-    // 没有数据
+  // 没有数据
 }
 
-// range代替ok
+// range 替代 ok
 for num := range ch { // 不能替换为 <-ch
-
+  ;
 }
 ```
-
 
 len: 未读数据的长度, 查看channel中元素的个数
 

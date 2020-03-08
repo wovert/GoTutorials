@@ -4,8 +4,18 @@ import (
 	"fmt"
 	"net/http"
   "io/ioutil"
+  "os"
   "strings"
 )
+
+func errFunc(err error, info string) {
+  if err != nil {
+    fmt.Println(info, err)
+    // return // 返回当前函数调用
+    // runtime.Goexit() // 结束当前go程
+    os.Exit(1) // 结束当前进程
+  }
+}
 
 func main() {
 //   host := "127.0.0.1:8080"
@@ -17,9 +27,10 @@ func main() {
 //   http.ListenAndServe(host, nil)
 
   res, err := http.Get("http://www.baidu.com")
-  if err != nil {
-	  panic(err)
-  }
+  //if err != nil {
+	//  panic(err)
+  //}
+  errFunc(err, "链接地址失败")
 
   defer res.Body.Close()
   

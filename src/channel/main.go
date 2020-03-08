@@ -17,11 +17,11 @@ func Printer(str string) {
 
 func Person1() {
 	Printer("hello")
-	ch <- 888
+	ch <- 888 // 写入
 }
 
 func Person2() {
-	<-ch
+	<-ch // 读取
 	Printer("world")
 }
 
@@ -33,6 +33,6 @@ func main() {
 
 	// 死循环，不让主协程结束
 	for {
-
+		;
 	}
 }

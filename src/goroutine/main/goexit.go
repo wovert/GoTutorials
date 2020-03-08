@@ -5,17 +5,28 @@ import (
 	"runtime"
 )
 
+func testGoexit() {
+	//defer fmt.Println("cccccccccccc")
+	//return // 下面语句不会执行，返回当前函数出
+	//fmt.Println("ddddddddddd")
+
+	//fmt.Println("cccccccccccc")
+	//return // 下面语句不会执行，返回当前函数出
+	//defer fmt.Println("ddddddddddd")
+
+
+	defer fmt.Println("cccccccccccc") // 调用Goexit 之前的 defer 定义的语句会执行
+	runtime.Goexit() // 退出当前 go 程（man()函数的go func()退出），不会执行下面 defer 语句
+	defer fmt.Println("ddddddddddd")
+}
+
 func main() {
+	go func() {
+		fmt.Println("aaaaaaaaaaa")
+		testGoexit()
+		fmt.Println("bbbbbbbbbbb")
+	}()
 
-	n := runtime.GOMAXPROCS(2) // 设置最大的CPU数量
-	fmt.Println("默认CPU核数：", n) // 4
+	for {;}
 
-
-	m := runtime.GOMAXPROCS(1) // 设置最大的CPU数量
-	fmt.Println("上一次CPU核数：", m) // 2
-
-	for {
-		go fmt.Print(0) // 子协程
-		fmt.Print(1) // 主协程
-	}
 }
