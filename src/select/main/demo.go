@@ -20,13 +20,14 @@ func main() {
 		runtime.Goexit() // 退出自己协程
 	}()
 
+  L:
   for {
   	select {
 			case num := <- ch:
 				fmt.Println("读到：", num)
 			case <-quit:
-				return // 终止进程
-				//break // 跳出select
+				//return // 终止进程
+				break L // 跳出L
 		}
   	fmt.Println("======")
 	}

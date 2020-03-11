@@ -17,6 +17,7 @@ func main() {
 
 	// time.Sleep(time.Second)
 
+	// 坚挺channel上数据流动
 	select {
 	case <-ch:
 		fmt.Println("come to read ch!")

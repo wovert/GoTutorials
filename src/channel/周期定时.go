@@ -22,12 +22,13 @@ func main() {
 			i++
 			fmt.Println("nowTime:", nowTime)
 			if i == 6 {
-				quit <- true // 解除主协程阻塞
+				quit <- true // 解除主go程阻塞，即 <-quit
 				fmt.Println("结束")
 				break // return runtime.Goexit
 			}
 		}
 	}()
+
 	//for{}
 	<-quit // 子协程 循环获取<-myTicker.C 期间，一直阻塞
 }
