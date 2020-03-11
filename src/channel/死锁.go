@@ -2,11 +2,16 @@ package main
 
 import "fmt"
 
+func main() {
+	//deadlock1()
+	//deadlock2()
+	deadlock3()
+}
+
 func deadlock1(){
 	ch := make(chan int)
 
-	ch <- 720 // 写入数据，写端阻塞，不执行向下执行代码
-
+	ch <- 720 // 写端阻塞，不会向下执行代码
 	num := <-ch // 读取数据
 
 	fmt.Println("num=", num)
@@ -14,9 +19,11 @@ func deadlock1(){
 
 func deadlock2(){
 	ch := make(chan int)
-	num := <-ch // 阻塞
+
+	num := <-ch // 读段阻塞（没有数据可读）
 	fmt.Println("num=", num)
 
+	// 子go程序调用位置放错
 	go func(){
 		ch <- 293
 	}()
@@ -43,8 +50,4 @@ func deadlock3(){
 	}
 }
 
-func main() {
-	//deadlock1()
-	//deadlock2()
-	deadlock3()
-}
+
