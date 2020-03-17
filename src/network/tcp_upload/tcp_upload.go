@@ -1,4 +1,4 @@
-package tcp_server
+package tcp_upload
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 )
 
 // 处理用户请求
-func HandleConn(conn net.Conn) {
+func HandleConn2(conn net.Conn) {
 	// 函数调用完毕，自动关闭conn
 	defer conn.Close()
 
@@ -40,7 +40,7 @@ func HandleConn(conn net.Conn) {
 	}
 }
 
-func Tcp() {
+func Tcp2() {
 
 	networkType := "tcp"
 	host := "127.0.0.1:8000"
@@ -67,7 +67,7 @@ func Tcp() {
 		
 
 		// 处理用户请求，新建一个协程
-		go HandleConn(conn)
+		go HandleConn2(conn)
 
 		// 3. 接受用户的请求数据
 		// buf := make([]byte, 1024) // 1024byte的缓冲区
