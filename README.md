@@ -486,27 +486,28 @@ var (
 
 ### 基础数据类型
 
-| 类型 ｜ 名称 ｜ 长度 ｜ 默认值 ｜ 说明 ｜
-｜ --- ｜ --- ｜ ---- ｜ ----  ｜ --- ｜
-| bool ｜ 布尔类型 ｜ 1 ｜ false ｜ true/false 不可以用数字代表 ｜
-| byte ｜ 字节型 ｜ 1 ｜ 0 ｜ uint8 别名 ｜
-| rune ｜ 字符型 ｜ 4 ｜ 0 ｜ 专用于存储 unicode 编码，等价于uint32 ｜
-| int, uint ｜ 整型 ｜ 4 or 8 ｜ 0 ｜ 32 bit or 64 bit ｜
-| int8, uint8 ｜ 整型 ｜ 1 ｜ 0 ｜ -128 ~ 127, 0 ~ 255 ｜
-| int16, uint16 ｜ 整型 ｜ 2 ｜ 0 ｜ -32768 ~ 32767, 0 ~ 65535 ｜
-| int32, uint32 ｜ 整型 ｜ 4 ｜ 0 ｜ -21亿 ~ 21亿, 0 ~ 42亿 ｜
-| int64, uint64 ｜ 整型 ｜ 8 ｜ 0 ｜ ｜
-| float32 ｜ 浮点型 ｜ 4 ｜ 0.0 ｜ 小数位精确到 7 位 ｜
-| float64 ｜ 浮点型 ｜ 8 ｜ 0.0 ｜ 小数位精确到 15 位 ｜
-| complex64 ｜ 符合类型 ｜ 8 ｜  ｜  ｜
-| complex128 ｜ 符合类型 ｜ 16 ｜  ｜  ｜
-| uintptr ｜ 整型 ｜ 4 or 8 ｜  ｜ 存储指针 uint32 or uint64 整数  ｜
-| string ｜ 字符串 ｜  ｜ "" ｜ utf-8 字符串 ｜
+
+| 类型 | 名称 |	长度 |	默认值 |说明|
+| --------   | -----:   | :---- | :---- | :----: |
+| bool | 布尔类型| 1|false|true/false 不可以用数字代表|
+| byte| 字节型| :---- | 1 | 0 | uint8 别名 |
+| rune | 字符型 | 4 | 0 | 专用于存储 unicode 编码，等价于uint32 |
+| int, uint | 整型 | 4 or 8 | 0 | 32 bit or 64 bit |
+| int8, uint8 | 整型 | 1 | 0 | -128 ~ 127, 0 ~ 255 |
+| int16, uint16 | 整型 | 2 | 0 | -32768 ~ 32767, 0 ~ 65535 |
+| int32, uint32 | 整型 | 4 | 0 | -21亿 ~ 21亿, 0 ~ 42亿 |
+| int64, uint64 | 整型 | 8 | 0 | |
+| float32 | 浮点型 | 4 | 0.0 | 小数位精确到 7 位 |
+| float64 | 浮点型 | 8 | 0.0 | 小数位精确到 15 位 |
+| complex64 | 符合类型 | 8 |  |  |
+| complex128 | 符合类型 | 16 |  | |
+| uintptr | 整型 | 4 or 8 | | 存储指针 uint32 or uint64 整数  |
+| string | 字符串 | | "" | utf-8 字符串 |
 
 ### fmt 包的格式化输出输入
 
 | 格式 | 含义 |
-| ---- | ---- |
+| ---- | :----: |
 | %% | %字面量 |
 | %b | 二进制整数值（基数为2）或者是科学计数法表示的指数为2的浮点数 |
 | %d | 十进制数值（基数为10） |
@@ -598,13 +599,13 @@ fmt.Printf("i=%T \n", i)
 
 ### 复合类型
 
-| 类型 ｜ 名称 ｜ 长度 ｜ 默认值 ｜ 说明 ｜
-｜ --- ｜ --- ｜ ---- ｜ ----  ｜ --- ｜
-| pointer ｜ 指针 ｜  ｜ nil ｜  ｜
-| array ｜ 数组 ｜  ｜ 0 ｜ ｜
-| slice ｜ 切片 ｜  ｜ nil ｜ 引用类型 ｜
-| map ｜ 字典或映射 ｜  ｜ nil ｜ 引用类型 ｜
-| struct ｜ 结构体 ｜  ｜ nil ｜ ｜
+| 类型 |名称 | 长度 |默认值 | 说明 |
+| ---: | :--- | :---- | :----  | :---: |
+| pointer | 指针 | |nil |  |
+| array | 数组 |  | 0 | |
+| slice | 切片 |  |nil | 引用类型 |
+| map | 字典或映射 |  |nil | 引用类型 |
+| struct | 结构体 |  | nil | |
 
 
 - 派生/复杂数据类型
@@ -2041,6 +2042,103 @@ Handler(conn net.Conn){
 - server告诉client自己缓冲区大小 mms: 1024
 
 mms 标志最大段尺寸，如果一个段太大，封装成针后超过了链路层的最大长度，就必须在IP层分片，为了避免这种情况，客户端声明自己的最大段尺寸，建议服务器端发来的段不要超过这个长度
+
+
+![TCP状态转换图](./images/tcp.gif)
+
+![TCP状态转换图](./images/tcp-status.gif)
+
+| TCP connection state | Abbreviation in MVS™ console |	Abbreviation in TSO or UNIX shell |	Description |
+| --------   | -----:   | :---- | :----: |
+| LISTEN	| Listen |	Listen|	|Waiting for a connection request from a remote TCP application. This is the state in which you can find the listening socket of a local TCP server.|
+|SYN-SENT	|SynSent|	SynSent|	Waiting for an acknowledgment from the remote endpoint after having sent a connection request. Results after step 1 of the three-way TCP handshake.|
+|SYN-RECEIVED|	SynRcvd|	SynRcvd|	This endpoint has received a connection request and sent an acknowledgment. This endpoint is waiting for final acknowledgment that the other endpoint did receive this endpoint's acknowledgment of the original connection request. Results after step 2 of the three-way TCP handshake.|
+|ESTABLISHED|	Estblsh|	Establish|	Represents a fully established connection; this is the normal state for the data transfer phase of the connection.|
+|FIN-WAIT-1|	FinWt1|	FinWait1|	Waiting for an acknowledgment of the connection termination request or for a simultaneous connection termination request from the remote TCP. This state is normally of short duration.
+|FIN-WAIT-2|	FinWt2|	FinWait2|	Waiting for a connection termination request from the remote TCP after this endpoint has sent its connection termination request. This state is normally of short duration, but if the remote socket endpoint does not close its socket shortly after it has received information that this socket endpoint closed the connection, then it might last for some time. Excessive FIN-WAIT-2 states can indicate an error in the coding of the remote application.|
+|CLOSE-WAIT|	ClosWt|	ClosWait|	This endpoint has received a close request from the remote endpoint and this TCP is now waiting for a connection termination request from the local application.
+|CLOSING|	Closing	|Closing|	Waiting for a connection termination request acknowledgment from the remote TCP. This state is entered when this endpoint receives a close request from the local application, sends a termination request to the remote endpoint, and receives a termination request before it receives the acknowledgment from the remote endpoint.|
+|LAST-ACK|	LastAck|	LastAck|	Waiting for an acknowledgment of the connection termination request previously sent to the remote TCP. This state is entered when this endpoint received a termination request before it sent its termination request.|
+|TIME-WAIT|	TimeW|t	TimeWait|	Waiting for enough time to pass to be sure the remote TCP received the acknowledgment of its connection termination request.|
+|CLOSED|	Closed|	Closed|	Represents no connection state at all.|
+
+
+- LISTEN：侦听来自远方的TCPport的连接请求
+- SYN-SENT：再发送连接请求后等待匹配的连接请求
+- SYN-RECEIVED：再收到和发送一个连接请求后等待对方对连接请求的确认
+- ESTABLISHED：代表一个打开的连接
+- FIN-WAIT-1：等待远程TCP连接中断请求，或先前的连接中断请求的确认
+- FIN-WAIT-2：从远程TCP等待连接中断请求
+- CLOSE-WAIT：等待从本地用户发来的连接中断请求
+- CLOSING：等待远程TCP对连接中断的确认
+- LAST-ACK：等待原来的发向远程TCP的连接中断请求的确认
+- TIME-WAIT：等待足够的时间以确保远程TCP接收到连接中断请求的确认
+- CLOSED：没有不论什么连接状态
+
+
+TCP是一个面向连接的协议，所以在连接两方发送数据之前，都须要首先建立一条连接。这和前面讲到的协议全然不同。前面讲的全部协议都仅仅是发送数据而已，大多数都不关心发送的数据是不是送到，UDP尤其明显，从编程的角度来说，UDP编程也要简单的多----UDP都不用考虑数据分片。
+
+书中用telnet登陆退出来解释TCP协议连接的建立和中止的过程，能够看到，TCP连接的建立能够简单的称为三次握手，而连接的中止则能够叫做四次握手。
+
+1.连接的建立
+在建立连接的时候，client首先向server申请打开某一个port(用SYN段等于1的TCP报文)，然后server端发回一个ACK报文通知client请求报文收到，client收到确认报文以后再次发出确认报文确认刚才server端发出的确认报文（绕口么），至此，连接的建立完毕。这就叫做三次握手。假设打算让两方都做好准备的话，一定要发送三次报文，并且仅仅须要三次报文就能够了。
+
+能够想见，假设再加上TCP的超时重传机制，那么TCP就全然能够保证一个数据包被送到目的地。
+
+2.结束连接
+TCP有一个特别的概念叫做half-close，这个概念是说，TCP的连接是全双工（能够同一时候发送和接收）连接，因此在关闭连接的时候，必须关闭传和送两个方向上的连接。客户机给server一个FIN为1的TCP报文，然后server返回给client一个确认ACK报文，而且发送一个FIN报文，当客户机回复ACK报文后（四次握手），连接就结束了。
+
+3.最大报文长度
+在建立连接的时候，通信的两方要互相确认对方的最大报文长度(MSS)，以便通信。一般这个SYN长度是MTU减去固定IP首部和TCP首部长度。对于一个以太网，一般能够达到1460字节。当然假设对于非本地的IP，这个MSS可能就仅仅有536字节，并且，假设中间的传输网络的MSS更佳的小的话，这个值还会变得更小。
+
+4.TCP的状态迁移图
+书P182页给出了TCP的状态图，这是一个看起来比較复杂的状态迁移图，由于它包括了两个部分---server的状态迁移和client的状态迁移，假设从某一个角度出发来看这个图，就会清晰很多，这里面的server和client都不是绝对的，发送数据的就是client，接受数据的就是server。
+
+4.1.client应用程序的状态迁移图
+client的状态能够用例如以下的流程来表示：
+
+CLOSED->SYN_SENT->ESTABLISHED->FIN_WAIT_1->FIN_WAIT_2->TIME_WAIT->CLOSED
+
+以上流程是在程序正常的情况下应该有的流程，从书中的图中能够看到，在建立连接时，当client收到SYN报文的ACK以后，client就打开了数据交互地连接。而结束连接则一般是client主动结束的，client结束应用程序以后，须要经历FIN_WAIT_1，FIN_WAIT_2等状态，这些状态的迁移就是前面提到的结束连接的四次握手。
+
+4.2.server的状态迁移图
+server的状态能够用例如以下的流程来表示：
+
+CLOSED->LISTEN->SYN收到->ESTABLISHED->CLOSE_WAIT->LAST_ACK->CLOSED
+
+在建立连接的时候，server端是在第三次握手之后才进入数据交互状态，而关闭连接则是在关闭连接的第二次握手以后（注意不是第四次）。而关闭以后还要等待client给出最后的ACK包才干进入初始的状态。
+
+4.3.其它状态迁移
+书中的图另一些其它的状态迁移，这些状态迁移针对server和client双方面的总结例如以下
+
+ 
+
+LISTEN->SYN_SENT，对于这个解释就非常easy了，server有时候也要打开连接的嘛。
+SYN_SENT->SYN收到，server和client在SYN_SENT状态下假设收到SYN数据报，则都须要发送SYN的ACK数据报并把自己的状态调整到SYN收到状态，准备进入ESTABLISHED
+SYN_SENT->CLOSED，在发送超时的情况下，会返回到CLOSED状态。
+SYN_收到->LISTEN，假设受到RST包，会返回到LISTEN状态。
+SYN_收到->FIN_WAIT_1，这个迁移是说，能够不用到ESTABLISHED状态，而能够直接跳转到FIN_WAIT_1状态并等待关闭。
+4.4.2MSL等待状态
+书中给的图里面，有一个TIME_WAIT等待状态，这个状态又叫做2MSL状态，说的是在TIME_WAIT2发送了最后一个ACK数据报以后，要进入TIME_WAIT状态，这个状态是防止最后一次握手的数据报没有传送到对方那里而准备的（注意这不是四次握手，这是第四次握手的保险状态）。这个状态在非常大程度上保证了两方都能够正常结束，可是，问题也来了。
+
+因为插口的2MSL状态（插口是IP和port对的意思，socket），使得应用程序在2MSL时间内是无法再次使用同一个插口的，对于客户程序还好一些，可是对于服务程序，比如httpd，它总是要使用同一个port来进行服务，而在2MSL时间内，启动httpd就会出现错误（插口被使用）。为了避免这个错误，server给出了一个平静时间的概念，这是说在2MSL时间内，尽管能够又一次启动server，可是这个server还是要平静的等待2MSL时间的过去才干进行下一次连接。
+
+4.5.FIN_WAIT_2状态
+这就是著名的半关闭的状态了，这是在关闭连接时，client和server两次握手之后的状态。在这个状态下，应用程序还有接受数据的能力，可是已经无法发送数据，可是也有一种可能是，client一直处于FIN_WAIT_2状态，而server则一直处于WAIT_CLOSE状态，而直到应用层来决定关闭这个状态。
+
+5.RST，同一时候打开和同一时候关闭
+RST是还有一种关闭连接的方式，应用程序应该能够推断RST包的真实性，即是否为异常中止。而同一时候打开和同一时候关闭则是两种特殊的TCP状态，发生的概率非常小。
+
+6.TCPserver设计
+前面以前讲述过UDP的server设计，能够发现UDP的server全然不须要所谓的并发机制，它仅仅要建立一个数据输入队列就能够。可是TCP不同，TCPserver对于每个连接都须要建立一个独立的进程（或者是轻量级的，线程），来保证对话的独立性。所以TCPserver是并发的。并且TCP还须要配备一个呼入连接请求队列（UDPserver也相同不须要），来为每个连接请求建立对话进程，这也就是为什么各种TCPserver都有一个最大连接数的原因。而依据源主机的IP和port号码，server能够非常轻松的差别出不同的会话，来进行数据的分发。
+
+
+- 主动发起连接请求端：CLOSED -> 完成三次握手 -> ESTABLISHED(数据通信状态) -> Dial()函数返回
+- 被动发起连接请求端：CLOsED -> 调用Accept()函数 -> LISTEN -> 完成三次握手 -> ESTABLISHED(数据通信状态) -> Accept()函数返回
+  - 数据传递期间 -> ESTABLISHED
+- 主动关闭连接请求端：ESTABLISHED -> FIN_WAIT_2(半关闭) -> TIME_WAIT -> 2MSL -> 确认最后一个ACK被对端成功接受 -> CLOSE
+  - 半关闭、TIME_WAIT、2MSL —— 只会出现在"主动关闭连接请求端"
+- 被动关闭连接请求端：ESTABLISHED —— CLOSE
 
 
 ### UDP
