@@ -88,7 +88,7 @@ func HandlerConnect(conn net.Conn) {
 		for {
 			n, err := conn.Read(buf)
 			if n == 0 {
-				isQuit <- true
+				isQuit <- true // 没有读到消息内容，发送退出管道
 				fmt.Printf("监测到客户端: %s退出\n", client.Name)
 				return
 			}
@@ -126,13 +126,13 @@ func HandlerConnect(conn net.Conn) {
 	// 保证不退出
 	for {
 		select { // 监听channel上的流动
-			case <-isQuit:
-				close(client.C)
+			case <-isQuit: // 读取isQuit值
+				close(client.C) // 关闭客户端
 				delete(onlineMap, client.Addr) // 将用户从online移除
 				message <- MakeMsg(client, "logout") // 写入用户退出消息到全局channel
 				return
-			case <-isOnline: // 重置下面的计时器
-			case <-time.After(time.Second * 10):
+			case <-isOnline: // 什么都不做，有发送内容就重置下面的计时器
+			case <-time.After(time.Second * 10): // 超出10s剔除
 				delete(onlineMap, client.Addr) // 将用户从online移除
 				message <- MakeMsg(client, "logout") // 写入用户退出消息到全局channel
 				return
