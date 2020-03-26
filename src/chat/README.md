@@ -28,7 +28,8 @@ var onlineMap[string]Client
     - `message<- 某个人上线了`
 
 - 新开一个用户在在线协程
-```go
+
+```cgo
 for{
   msg := <- message // 如果有内容
 
@@ -40,7 +41,8 @@ for{
 ```
 
 - 新开一个发送内容协程
-```go
+
+```cgo
 // 传递参数cli
 for msg := range cli.C {
   Write(msg)
@@ -49,7 +51,7 @@ for msg := range cli.C {
 
 - 新的协程，接好用户的请求，用户的数据进行转发
 
-```go
+```cgo
 // 用户发过来的数据时 buf
 message <- buf
 

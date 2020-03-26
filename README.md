@@ -2143,7 +2143,7 @@ RST是还有一种关闭连接的方式，应用程序应该能够推断RST包�
 
 ### UDP
 
-> 无连接的，不可靠的报文传递
+> 无连接的，不可靠的报文传递。天生支持并发，因为与客户端并不需要建立连接。
 
 #### UDP服务器
 
@@ -2152,8 +2152,6 @@ RST是还有一种关闭连接的方式，应用程序应该能够推断RST包�
 3. `defer conn.Close()`
 4. 读取客户端发送的数据 `n, clientAddr, err := conn.ReadFromUDP()`
 5. 写数据给客户端 WriteToUDP("数据", clientAddr)
-
-
 
 ### TCP与UDP
 
@@ -2164,10 +2162,12 @@ RST是还有一种关闭连接的方式，应用程序应该能够推断RST包�
   - 优点：效率高、开销小、开发复杂度低
   - 缺点：稳定性差、安全低、无序
   
+[UDP网络穿透/打洞](https://blog.csdn.net/wzj_whut/article/details/86838344)
+  
 ### 聊天室主模块
 
 - 主协程：创建监听套接字，循环Accept()客户端连接 —— 启动子协程 HandlerConnect
-- HandlerConnect: 创建用户结构体对象，存入onlineMap, 发送用户登录广播，聊天信息，处理查询在线用户、改名、下线和超时剔除。
+- HandlerConnect: 创建用户结构体对象，存入onlineMap, 发送用户登录广播，聊天信息，处理查询在线用户、改名、下线和超时剔除
 - Manager: 监听全局 channel message，将读到的消息广播给onlineMap 中的所有用户
 - WriteMsgToClient: 读取每个用户自带 channel C上消息（由Manager发送该消息），回写给用户
 - 全局数据模块：
