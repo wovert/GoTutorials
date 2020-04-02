@@ -1707,7 +1707,7 @@ $ go run --race goroutine.go
 
 - `Goshed`: 出让当前go程所占用的 CPU 时间片，之后抢占时间轮片回复正常。出让当前go程所占用CPU时间片，当再次获得CPU时，从出让位置继续回复执行。
 - `Goexit`: 将立即终止当前 goroutine 执行，调度器确保所有已注册 defer 延迟调用被执行
-  - 结束调用该函数函数的当前go程，Goexit() 之前注册的 defer 都生效
+  - 结束调用该函数函数的**当前go程**(不是进程)，Goexit() 之前注册的 defer 都生效
   - `return`: 返回当前函数调用处，return之前的 defer 注册生效
 - `Gomaxprocs`: 设置当前进程使用的最大 CPU 核数，返回上一次调用成功的设置值。首次调用返回默认值
 

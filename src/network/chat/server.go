@@ -127,7 +127,7 @@ func HandlerConnect(conn net.Conn) {
 	for {
 		select { // 监听channel上的流动
 			case <-isQuit: // 读取isQuit值
-				close(client.C) // 关闭客户端
+				close(client.C) // 关闭客户端 监听用户自带的channel上是否有消息
 				delete(onlineMap, client.Addr) // 将用户从online移除
 				message <- MakeMsg(client, "logout") // 写入用户退出消息到全局channel
 				return
