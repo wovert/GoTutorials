@@ -131,7 +131,7 @@ func HandlerConnect(conn net.Conn) {
 				delete(onlineMap, client.Addr) // 将用户从online移除
 				message <- MakeMsg(client, "logout") // 写入用户退出消息到全局channel
 				return
-			case <-isOnline: // 什么都不做，有发送内容就重置下面的计时器
+			case <-isOnline: // 是否有消息通信，有发送内容就重置下面的计时器
 			case <-time.After(time.Second * 10): // 超出10s剔除
 				delete(onlineMap, client.Addr) // 将用户从online移除
 				message <- MakeMsg(client, "logout") // 写入用户退出消息到全局channel
