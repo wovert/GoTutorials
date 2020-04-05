@@ -12,7 +12,7 @@ func main() {
   isok2, _ := regexp.MatchString("[a-zA-Z]{3}", "cw1ab2")
   fmt.Printf("%v\n", isok2)
 
-  // 成功返回解析器
+  // 成功返回解析器，返回结构体
   reg := regexp.MustCompile(`a.c`)
   if reg == nil {
     fmt.Println("err = ", reg)
@@ -29,7 +29,7 @@ func main() {
   if reg2 == nil {
     panic(reg2)
   }
-  result := reg2.FindAllStringSubmatch(buf, -1)
+  result := reg2.FindAllStringSubmatch(buf, -1) // -1:匹配全部， 1:匹配第一个，2:匹配前两个
   fmt.Println("result = ", result)
 
 
