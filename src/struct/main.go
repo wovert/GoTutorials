@@ -22,6 +22,7 @@ type Person struct {
 	age int
 }
 
+// 方法
 func test(man Person) {
 	man.age = 100
 	fmt.Println("test man size:=", unsafe.Sizeof(man))

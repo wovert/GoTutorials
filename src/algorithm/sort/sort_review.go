@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func BubbleSort(a *[]int) {
+func BubbleSort2(a *[]int) {
 	fmt.Println("排序前", *a)
 	cnt := len(*a)
 	temp := 0
@@ -22,5 +22,5 @@ func BubbleSort(a *[]int) {
 }
 func main() {
 	arr := []int{20,12,9,72,32,52}
-	BubbleSort(&arr)
+	BubbleSort2(&arr)
 }

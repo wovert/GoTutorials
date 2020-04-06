@@ -10,7 +10,7 @@ import (
 
 func main() {
 	//test()
-  //testWrite()
+	//testWrite()
 	//testReadFile()
 	copyFile()
 	//readDir()
@@ -153,8 +153,8 @@ func copyFile() {
 	// 循环从读文件中，获取数据，原封不动的写到写文件中
 	for {
 		// 从源文件读取内容，n为读取文件内容的长度, 读取出来的有效字符(byte)数，读取的字节数
-		n, err := srcFile.Read(buf)
-		if err != nil && err != io.EOF {
+		n, err := srcFile.Read(buf) // n 从文件读取内容的长度
+		if err != nil && err != io.EOF { // 文件出错，同时没有到结尾
 			fmt.Println(err)
 			break;
 		}
@@ -257,11 +257,11 @@ func readFile(fileName string) int  {
 	}
 	defer fp.Close()
 
-	row := bufio.NewReader(fp)  // 创建一个reader
+	row := bufio.NewReader(fp)  // 创建一个reader, 新建一个缓冲区，把内容先放在缓冲区
 	var total int = 0           // 统计 Love 总数的变量
 
 	for {   // 循环 按行读取文件内容，存入buf中
-		buf, err :=row.ReadBytes('\n')
+		buf, err :=row.ReadBytes('\n') // 遇到'\n'结束读取
 		if err != nil && err == io.EOF {
 			break
 		}

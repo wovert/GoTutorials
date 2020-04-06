@@ -621,6 +621,34 @@ fmt.Printf("i=%T \n", i)
 
 ## file
 
+### 文件分类
+
+- 设备文件
+  - 屏幕（标砖输出设备）fmt.Println() 往标砖输出设备写内容
+  - 键盘（标砖输入设备）ftm.Scan() 从标砖输入设备读取内容
+- 磁盘文件：存储设备上的文件
+  - 文本文件：以记事本打开，能看到内容（不是乱码）
+  - 二进制文件：以记事本打开，能看到内容（乱码）
+  
+为什么需要文件？内存掉电丢失，程序结束，内存中的内容小时；文件放磁盘，程序结束，文件还是存在
+
+### 文件接口
+
+- 建立
+  - Create(name string)(file *File, err Error)
+  - NewFile(fd uintptr, name string) *File
+- 打开
+  - OpenFile(name string, flag int, perm uint32) (file *File, err Error)
+- 写文件
+  - Write(b []byte) (n int, err Error)
+  - WriteAt(b []byte, off int64) (n int, err Error)
+  - WriteString(s string) (ret int, err Error)
+- 读文件
+  - Read(b []byte) (n int, err Error)
+  - readAt(b []byte, off int64) (n int, err Error)
+- 删除文件
+  - Remove(name string) Error
+
 1. `os.Create` 文件不存在创建，文件存在，将文件内容清空
 2. `open` 打开文件，以**只读**方式打开文件
 3. `OpenFile` 以**只读、只写、读写**方式打开文件
@@ -1366,6 +1394,11 @@ man := Person{name:"wovert", age:18}
 
 go + 函数名：启动一个协程执行函数体
 
+- 并发：多线程在**一个CPU核心**上运行，就是并发
+- 并行：多线程在**多个CPU核心**上运行，就是并行
+
+![并发和并行](./images/currenty.jpg)
+
 ### 并发
 
 - 1s = 1000ms 毫秒
@@ -1376,6 +1409,9 @@ go + 函数名：启动一个协程执行函数体
 
 - 宏观：用户体验上，程序并行执行
 - 微观：多个计划任务，顺序执行。快速的切换，轮换使用CPU时间轮片
+
+[goroutin调度模型](https://studygolang.com/articles/13259)
+
 
 ### 进程
 
