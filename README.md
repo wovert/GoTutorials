@@ -490,7 +490,7 @@ var (
 | 类型 | 名称 |	长度 |	默认值 |说明|
 | --------   | -----:   | :---- | :---- | :----: |
 | bool | 布尔类型| 1|false|true/false 不可以用数字代表|
-| byte| 字节型| :---- | 1 | 0 | uint8 别名 |
+| byte| 字节型| 1 | 0 | uint8 别名 |
 | rune | 字符型 | 4 | 0 | 专用于存储 unicode 编码，等价于uint32 |
 | int, uint | 整型 | 4 or 8 | 0 | 32 bit or 64 bit |
 | int8, uint8 | 整型 | 1 | 0 | -128 ~ 127, 0 ~ 255 |
@@ -515,7 +515,6 @@ var (
 | %E | 科学计数法表示的浮点数或者复数值 |
 | %f |浮点数或者复数值 |
 | %g | %e或者%f表示的浮点数或者复数，任何一个都以最为紧凑的方式输出 |
-
 | %G | %E或者%f表示的浮点数或者复数，任何一个都以最为紧凑的方式输出 |
 | %o | 八进制整数值 |
 | %p | 十六进制表示的一个值的地址。前缀为0x后跟小写的a-f表示 |
@@ -529,7 +528,7 @@ var (
 
 ### 类型转换
 
-- 不允许隐式转换，所有类型必须显式声明，而且转换只能两个相互兼容的类型之间
+- 不允许隐式转换，**所有类型必须显式声明**，而且转换只能两个相互兼容的类型之间
 - bool 与 整型不能相互转换
 - 0就是假，非0就是真
 - 字符类型本质就是整型
@@ -542,8 +541,8 @@ type bigint int64
 var x bigint = 100
 
 type (
-  myint int // int改名为int
-  mystr string // string改名为 mystr
+  myint int // int 改名为 myint
+  mystr string // string 改名为 mystr
 )
 ```
 
@@ -572,7 +571,7 @@ type (
 ### 字符串类型
 
 - 使用 UTF-8 编码标识 Unicode 文本
-- 字符串一旦赋值，就不能修改。字符串是不可变的
+- 字符串一旦赋值，就不能修改。**字符串是不可变的**
 - "会识别转义字符"
 - `反引号，已字符串的原生形式输出，包括换行和特殊字符，可以实现防止攻击、输出源代码等效果`
 - 字符串拼接换行时，`+` 保留在行尾
@@ -595,7 +594,7 @@ fmt.Printf("i=%T \n", i)
 
 - 范围小的可以转换为范围大的，也可以范围大的转换为范围小的
 - 被转换的是变量存储的数据，变量本身的数据类型并没有变化
-- `int64` 转换成 `int8`，编译时不会拨错，只是转换的结果是按**溢出**处理
+- `int64` 转换成 `int8`，编译时不会报错，只是转换的结果是按**溢出**处理
 
 ### 复合类型
 
@@ -624,8 +623,8 @@ fmt.Printf("i=%T \n", i)
 ### 文件分类
 
 - 设备文件
-  - 屏幕（标砖输出设备）fmt.Println() 往标砖输出设备写内容
-  - 键盘（标砖输入设备）ftm.Scan() 从标砖输入设备读取内容
+  - 屏幕（标砖输出设备）fmt.Println() 往标准输出设备写内容
+  - 键盘（标砖输入设备）ftm.Scan() 从标准输入设备读取内容
 - 磁盘文件：存储设备上的文件
   - 文本文件：以记事本打开，能看到内容（不是乱码）
   - 二进制文件：以记事本打开，能看到内容（乱码）
@@ -758,7 +757,7 @@ import (
 - `switch num := 100; num {`
   - `fallthrough` 与 `break` 相反
 
-```cgo
+```go
 switch num :=1; num {
   case 1:
     ...
@@ -781,7 +780,7 @@ switch {
 
 - range str: 元素索引，元素值
 
-```cgo
+```go
 for i := 1; i <= n; i++ {
   ...
 }
@@ -806,7 +805,7 @@ for i := range str {
 
 - break and goto
 
-```cgo
+```go
 label:
 for ...
   for ...
@@ -818,7 +817,7 @@ for ...
 - `import` 包时，路径从 `$GOPATH` 环境变量的 `src` 目录开始，编译器自动从 `src` 下开始引入
 - 同一个包下，不能有相同的函数名，否则报重复定义
 
-```cgo
+```go
 import (
   // 别名
   util "go/tools/utils"
@@ -831,7 +830,7 @@ import (
 
 ## 函数
 
-```cgo
+```go
 func 函数名(形参列表)(返回值列表) {
   ...
   return 返回值列表
@@ -860,7 +859,7 @@ func 函数名(形参列表)(返回值列表) {
 
 ### 可变参数
 
-```cgo
+```go
 // 0个或多个参数
 func add(arg... int) int {}
 
@@ -874,7 +873,7 @@ func add(a int, b int, arg... int) int {}
 
 其中 `arg` 是一个`slice`, 通过`arg[index]`一次访问所有参数通过`len(arg)`来判断传递参数的个数
 
-```cgo
+```go
 func read() {
   mc.Lock()
   defer mc.Unlock()
@@ -909,7 +908,7 @@ func read2() {
 
 - 支持返回值命名
 
-```cgo
+```go
 func getSumAndSub(n1 int, n2 int) (sum int, sub int) {
   sum = n1 + n2
   sub = n1 - n2
@@ -919,7 +918,7 @@ func getSumAndSub(n1 int, n2 int) (sum int, sub int) {
 
 ### 匿名函数和闭包
 
-```cgo
+```go
 sum := func (a int, b int) func () int {
   a *= a
   b *= b
@@ -934,7 +933,7 @@ sum := func (a int, b int) func () int {
 
 在函数中需要创建资源（数据库连接、文件句柄、锁等），为了在函数执行完毕后，及时的释放资源，Go 的设计者提供defer(延时机制)
 
-```cgo
+```go
 func sum(n1 int, n2 int) int {
   defer fmt.Println("n1=", n1) // 压栈
   defer fmt.Println("n2=", n2) // 压栈
@@ -1017,7 +1016,7 @@ Windows 用户，可以在 PowerShell 中设置：
 $env:GOPROXY = "https://goproxy.io"
 ```
 
-```cgo
+```go
 // string到int
 int, err := strconv.Atoi(string)
 
@@ -1042,7 +1041,7 @@ string := strconv.FormatInt(int64,10)
 
 heap 上申请一片内存地址空间
 
-```cgo
+```go
 var pStr *string
 pStr = new(string)
 ```
@@ -1112,7 +1111,7 @@ pStr = new(string)
 
 ## 错误处理机制
 
-```cgo
+```go
 func test() {
   // defer + recover 来捕获处理异常
   defer func() {
@@ -1130,7 +1129,7 @@ func test() {
 
 ### 自定义错误
 
-```cgo
+```go
 // 读取配置文件的init.conf 的信息
 // 文件传入错误，返回自定义错误
 func readConf(name string) (err error) {
@@ -1158,7 +1157,7 @@ func test2() {
 
 ### 数组初始化
 
-```cgo
+```go
 var a [5]int = [5]int{1,2,3,4,5}
 
 // 自动推倒类型
@@ -1202,7 +1201,7 @@ d := [5]int{2: 10, 4:20} // [0 0 10 0 20]
 - 动态变化数组
 - `var sliceName [这里不需要长度]类型`
 
-```cgo
+```go
 // runtime/slice.go
 type slice struct {
   ptr *[2]int // low 指针地址
@@ -1220,23 +1219,23 @@ type slice struct {
 
 1. 定义一个切片，然后让切片引用一个已经创建好的数组：切片或数组都可以访问元素
 
-```cgo
+```go
 intArr := [...]int{1,2,3,4,5,6}
 slice := intArr[0:3:4] // index:1-3(不包含3), cap=4-0
 ```
 
 2. 通过 make 来创建切片: 只能通过 slice 下边访问元素
 
-```cgo
+```go
 slice := make([]int, len, cap)
-slice := make([]int, len) 没有指定容量，容量等于长度，常用方式
+slice := make([]int, len) // 没有指定容量，容量等于长度，常用方式
 var sliceName []int = make([]int, len, cap)
 ```
 
 3. 直接指定具体数组
 
-```cgo
-#自动推导类型
+```go
+// 自动推导类型
 slice := []int{1,2,4,6}
 var slice []int = []int {1,3,4}
 ```
@@ -1282,7 +1281,7 @@ s[:high] 从0开始，到high结束，容量跟随原先容量 [常用]
 
 ### 字典赋值
   
-```cgo
+```go
 m := make(map[int]string, 1)
 m[700] = "nami"
 m[20] = "hello"
