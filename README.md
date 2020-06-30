@@ -174,6 +174,14 @@
 - `Path`: 添加 SDK 的 `/bin` 目录
 - `$GOPATH` 工作目录（Go项目的工作路径）：目录约定有三个子目录
   - `src` 存放源代码（比如：.go, .c, .h, .s等）
+    - github.com(网站域名) | 公司代码仓库域名(code.wovert.com)
+      - 作者/机构(wovert) | 公司内部组织架构(前段组，后端组)
+        - 项目1(项目名)
+          - 模块A
+          - 模块B
+        - 项目2
+    - gopkg.in
+    - golang.org
   - `pkg` 编译后生成的文件(.a文件)（非main函数的文件在go install后生成）
   - `bin` 存放编译后生成的可执行文件（为了方便，可以把此目录加入到 `$PATH` 变量中）
 
