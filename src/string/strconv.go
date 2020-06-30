@@ -6,6 +6,22 @@ import (
 )
 
 func main() {
+	// 字符串修改
+	s2 := "白萝卜"
+	s3 := []rune(s2) // 字符串强制转换成一个rune切片
+	s3[0] = '红' // rune(int32)
+	fmt.Println(string(s3)) // rune切片强制转换成字符串
+
+	c1 := "红"
+	c2 := '红'
+
+	fmt.Printf("c1:%T c2:%T\n", c1, c2)
+
+	c3 := "H" // string
+	c4 := byte('H') // byte(uint8)
+	fmt.Printf("c3:%T c4:%T\n", c3, c4)
+	fmt.Printf("%d\n", c4)
+
   slice := make([]byte, 0, 1024)
 
   // 追加布尔类型 true

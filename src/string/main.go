@@ -52,8 +52,10 @@ func main() {
 
 	s1 := "hello"
 	s2 := " world"
+	s3 := fmt.Sprintf("%s%s", s1, s2)
 	fmt.Println(s1 + s2)
 	fmt.Printf("len(str1+str2)=%d\n", len(s1+s2))
+	fmt.Println(s3)
 	
 
 
