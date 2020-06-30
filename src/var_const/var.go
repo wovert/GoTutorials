@@ -24,12 +24,35 @@ func main() {
 	// iota 常量自动生成器，每个一行，自动累加1 
 	const (
 		x = iota
-		y = iota
+		y = 100
 		z = iota
+		_ = iota
+		last = iota
 	)
 	fmt.Println("x=", x) // 0
-	fmt.Println("y=", y) // 1
+	fmt.Println("y=", y) // 100
 	fmt.Println("z=", z) // 2
+	fmt.Println("last=", last) // 4
+
+	// 每新增一行常量声明将 iota 计数一次
+	const (
+		d1, d2 = iota + 1, iota + 2 // 1, 2
+		d3, d4 = iota + 1, iota + 2 // 2, 3
+	)
+	fmt.Println("d1=", d1) // 1
+	fmt.Println("d2=", d2) // 2
+	fmt.Println("d3=", d3) // 2
+	fmt.Println("d4=", d4) // 3
+
+	// 定义数量级
+	const (
+		_ = iota
+		KB = 1 << (10 * iota) // 1 << 10
+		MB = 1 << (10 * iota) // 1 << 20
+		GB = 1 << (10 * iota) // 1 << 30
+		TB = 1 << (10 * iota) // 1 << 40
+		PB = 1 << (10 * iota) // 1 << 50
+	)
 
 	const xyz = iota
 	fmt.Println("xyz=", xyz) // 0
