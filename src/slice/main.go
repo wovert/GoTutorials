@@ -140,7 +140,6 @@ func main() {
 	data := []string{"red", "", "black", "", "", "pink", "blue", "orange", "gray", "purple", "yellow"}
 	afterData := noEmpty2(data)
 	fmt.Printf("afterData:%v\n", afterData)
-	return
 
 	// s1 := afterData[6:] // [purple, yellow] 
 	// s2 := afterData[0:5] // "red", black", pink", "blue", "orange"
@@ -151,6 +150,21 @@ func main() {
 
 	// fbSlice := fb(10)
 	// fmt.Println("fbSlice=", fbSlice)
+
+	// append
+
+	x1 := [...]int{1,3,5} // array
+	x2 := x1[:] // slice
+	fmt.Println(x1, len(x1), cap(x2))
+	// 1.切片不保存具体的值
+	// 2.切片对应一个底层数组
+	// 3.底层数组都是占用一块连续的内存
+	fmt.Printf("%p\n", &x2[0])
+	x2 = append(x2[:1], x2[2:]...) // 修改了底层数组
+	fmt.Printf("%p\n", &x2[0])
+	fmt.Println(x2, len(x2), cap(x2))
+	x2[0] = 100 // 修改了底层数组
+	fmt.Println(x1) // [100 5 5]
 
 	arr := [...]int{0,1,2,3,4,5,6,7}
 	s := arr[2:6] // [2,3,4,5]
@@ -186,7 +200,7 @@ func main() {
 	printSlice(s3) // [2 4 6 7 0 0 0 0 0....]
 
 	fmt.Println("=========== Delete elemes from slice ===========")
-	s3 = append(s3[:3], s3[4:]...) // delete 7
+	s3 = append(s3[:3], s3[4:]...) // delete 7, ...展开符
 	printSlice(s3) // [2 4 6 0 0 0 0 0....]
 
 	fmt.Println("=========== Pop from front ===========")

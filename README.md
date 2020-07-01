@@ -1296,8 +1296,6 @@ s2 := []int{} // len(s2)=0; cap(s2)=0, s2!=nil
 s3 := make([]int, 0) // len(s3)=0; cap(s3)=0, s3!=nil
 ```
 
-
-
 ### 如何使用切片
 
 - `切片名称 [low:high:max]`
