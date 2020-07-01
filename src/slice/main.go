@@ -131,6 +131,12 @@ func main() {
 	//slice5()
 	//return
 
+	a1 := [...]int{1,3,5,7,9}
+	ss1 := a1[0:4]
+	fmt.Println(ss1)
+	fmt.Printf("len(ss1)=%d, cap(ss1)=%d", len(ss1), cap(ss1)) // 4, 5
+	
+
 	data := []string{"red", "", "black", "", "", "pink", "blue", "orange", "gray", "purple", "yellow"}
 	afterData := noEmpty2(data)
 	fmt.Printf("afterData:%v\n", afterData)

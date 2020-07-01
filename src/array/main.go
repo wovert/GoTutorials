@@ -34,10 +34,10 @@ func test3() {
 
 func main() {
 	var arr1 [5]int
-	arr2 := [3]int{1,3,5}
-	arr3 := [...] int{2,4,6,8,10}
+	arr2 := [3]int{1,3,5} // 初始化方式1
+	arr3 := [...]int{2,4,6,8,10} // 初始化方式2
 	var grid [4][5]bool
-	strs := [3]string{1: "tom", 0:"jack", 2:"marry"}
+	strs := [3]string{1: "tom", 0:"jack", 2:"marry"} // 根据索引初始化
 
 	fmt.Println(arr1, arr2, arr3) // [0 0 0 0 0] [1 3 5] [2 4 6 8 10]
 	fmt.Println(grid)
