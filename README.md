@@ -959,6 +959,15 @@ func read2() {
 }
 ```
 
+### defer 执行时机
+
+- return 不是原子操作，在底层分为两步来执行
+
+- return x
+  - 1. 返回值x(返回值赋值)
+  - 2. 运行defer
+  - 3. RET指令(RET返回)
+
 ### 内置函数
 
 - `close`: 关闭 channel
