@@ -970,12 +970,14 @@ func read2() {
 
 ### 内置函数
 
-- `close`: 关闭 channel
-- `len`: 长度，比如 string, array, slice, map, channel
-- `new`: 分配内存，主要用来分配值类型，比如int, struct, 返回的是指针
-- `make`: 分配内存，主要分配引用类型，比如chan, map, slice
-- `append`: 追加元素到数组，slice中
+- `close`: 关闭 `channel`
+- `len`: 长度，比如 `string, array, slice, map, channel`
+- `new`: 分配内存，主要用来分配**值类型**，比如`int, struct`, 返回的是**指针**
+- `make`: 分配内存，主要分配**引用类型**，比如`chan, map, slice`，返回的**具体对应的类型**
+- `append`: 追加元素到数组，`slice`中
 - `panic`和`recover`, 用来做错误处理
+  - `recover()`必须搭配`defer`使用
+  - `defer` 一定要在可能引发`panic`的语句之前定义
 
 ### 函数是数据类型
 
