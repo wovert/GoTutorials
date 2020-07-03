@@ -90,6 +90,16 @@ func main() {
 	person2.age = 20
 	fmt.Println("person2=", person2)
 
+	// 匿名结构体, 临时使用
+	var s struct {
+		x string
+		y int
+	}
+
+	s.x = "你好"
+	s.y = 100
+	fmt.Printf("type: T%, value:%v\n", s, s)
+
 
 	return
 
