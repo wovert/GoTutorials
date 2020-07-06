@@ -704,19 +704,19 @@ fmt.Printf("i=%T \n", i)
 ### 文件接口
 
 - 建立
-  - Create(name string)(file *File, err Error)
-  - NewFile(fd uintptr, name string) *File
+  - `Create(name string)(file *File, err Error)`
+  - `NewFile(fd uintptr, name string) *File`
 - 打开
-  - OpenFile(name string, flag int, perm uint32) (file *File, err Error)
+  - `OpenFile(name string, flag int, perm uint32) (file *File, err Error)`
 - 写文件
-  - Write(b []byte) (n int, err Error)
-  - WriteAt(b []byte, off int64) (n int, err Error)
-  - WriteString(s string) (ret int, err Error)
+  - `Write(b []byte) (n int, err Error)`
+  - `WriteAt(b []byte, off int64) (n int, err Error)`
+  - `WriteString(s string) (ret int, err Error)`
 - 读文件
-  - Read(b []byte) (n int, err Error)
-  - readAt(b []byte, off int64) (n int, err Error)
+  - `Read(b []byte) (n int, err Error)`
+  - `readAt(b []byte, off int64) (n int, err Error)`
 - 删除文件
-  - Remove(name string) Error
+  - `Remove(name string) Error`
 
 1. `os.Create` 文件不存在创建，文件存在，将文件内容清空
 2. `open` 打开文件，以**只读**方式打开文件
@@ -1469,15 +1469,57 @@ man := Person{name:"wovert", age:18}
 
 **结构体指针做函数返回值：不能返回局部变量的地址值。局部变量保存在栈帧上，函数调用结束后，栈帧释放，局部变量的地址，不再受系统保护，随时可能分配给其他程序**
 
-## oop
+## 接口
 
-### go 接口
+> 接口是一种类型
+> 一种特殊的类型，规定了变量有哪些方法
+> 接口不关心一个变量是什么类型，只关心能调用它的什么方法
 
-> 一个类只需要实现了接口要求的所有函数，这个类实现的接口
+### 接口的定义
+
+```go
+type 接口名 interface {
+  方法名1(参数1, 参数2...)(返回值1, 返回值2...)
+  方法名2(参数1, 参数2...)(返回值1, 返回值2...)
+  ...
+}
+```
+
+### 接口的实现
+
+> 一个变量实现了接口的所有函数，这个变量就实现了这个接口，可以称为这个接口类型的变量
+
+
+用来给变量\参数\返回值等设置类型
 
 - 接口赋值
   - 将对象实例赋值给接口
   - 将一个接口赋值给另一个接口
+
+
+### 使用值接受者实现接口和使用指针接受者实现接口的区别
+
+- 使用值接受者实现接口，结构体类型和结构体指针类型的变量都能存
+- 指针接受者实现接口只能存结构体指针类型的变量
+
+### 接口和类型的关系
+
+- 多个类可以实现同一个接口
+- 一个类型可以实现多个接口
+
+### 空接口
+
+```go
+type 接口名 interface {}
+
+interface{} // 空接口，没有必要起名字
+```
+
+- 任何类型都实现了这个接口
+- 所有的类型都实现了空接口
+- 任意类型的变量都能保存到空接口中
+
+
 
 ## 协程 Coroutine
 
