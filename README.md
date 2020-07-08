@@ -445,9 +445,31 @@ func main() {
 
 `package <pkgName>`
 
+- 10calc
+  - package calc
+
+```go
+import (
+  // 别名 包路径
+  bieming "code.wovert.com/10calc"
+)
+```
+
+`init()`初始化函数
+
+```go
+import (
+  // 导入包是调用包的init()函数
+  // _ 不使用包内部的标识符，需要匿名导入
+  _ "code.wovert.com/10clac"
+)
+```
+
+- 全局声明 -> init() -> main()
+
 ### var 关键字
 
-``` go
+```go
 var num int
 
 // 简写形式只能在函数体内使用: 自动推到类型（同一个变量只是使用一次，用于初始化那次）
