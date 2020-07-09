@@ -13,6 +13,7 @@ type Human struct {
 
 type Student struct {
 	Human // 匿名字段，默认Student 包含了Human的所有字段
+	// h Human 为Human
 	speciality string
 }
 
