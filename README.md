@@ -727,18 +727,51 @@ fmt.Printf("i=%T \n", i)
 
 - 建立
   - `Create(name string)(file *File, err Error)`
+    - 创建文件：文件不存在创建，存在，则将文件内容清空
   - `NewFile(fd uintptr, name string) *File`
-- 打开
+- 打开: 以只读、读写方式打开文件，文件不存在，打开失败
+  - `Open(name string)` 以只读方式打开文件，文件不存在，打开失败
   - `OpenFile(name string, flag int, perm uint32) (file *File, err Error)`
+    - name: 打开文件的路径；绝对路径；相对路径
+    - 打开文件权限：O_RDONLY, O_WRONLY, O_RDWR
+    - 一般传6或7
 - 写文件
   - `Write(b []byte) (n int, err Error)`
   - `WriteAt(b []byte, off int64) (n int, err Error)`
+    - 按字节写：在文件制定偏移位置，写入 []byte, 通常搭配 Seek()
+    - 1. 待写入的数据
+    - 2. 偏移量
+    - 返回：实际写出的字节数
+    - n, _ = f.WriteAt([]byte("111"), off)
   - `WriteString(s string) (ret int, err Error)`
+    - 按字符串写，n个写入的字符个数
+    - 回车换行：
+      - windows: \r\n
+      - Linux: \n
+  - `seek(offset int， io.SeekStart | io.SeekCurrent | io.SeekEnd)` 修改文件的读写指针位置
+    - 按位置写
+    - offset 偏移量，正：向文件尾偏，负：向文件头偏 
+    - io.*
+      - io.SeekStart 文件起始位置
+      - io.SeekCurrent 文件当前位置
+      - io.SeekEnd 文件结尾位置
+    - 返回值：表示从文件起始，到当前文件读写指针位置的偏移量
 - 读文件
   - `Read(b []byte) (n int, err Error)`
   - `readAt(b []byte, off int64) (n int, err Error)`
+  - 按行读
+    - 1. 创建一个带有缓冲区的 Reader(读写器)
+      - `reader := bufio.NewReader(打开的文件指针)`
+    - 2. 从reader的缓冲区中，读取指定长度的数据。数据长度取决于参数 dlime
+      - `buf, err := reader.ReadBytes('\n') // 按行读`
+      - 判断到达文件结尾：`if err != nil && err == io.EOF` 到文件结尾
+        - 文件结束标记，是要单独读一次获取到的
+  - 缓冲区：内存中的一块区域，用来减少物理磁盘访问操作
+
 - 删除文件
   - `Remove(name string) Error`
+
+
 
 1. `os.Create` 文件不存在创建，文件存在，将文件内容清空
 2. `open` 打开文件，以**只读**方式打开文件
@@ -1440,7 +1473,6 @@ type Person struct {
   sex uint8
   age int
 }
-
 ```
 
 1. 顺序初始化
@@ -1478,6 +1510,10 @@ man := Person{name:"wovert", age:18}
 
 2. `person2 := new(Person)`
 
+```cgo
+p.name = "name"
+p.age = 10
+```
 ### 结构体指针地址
 
 **结构体指针变量的值 = 结构体首个元素的地址**
@@ -1485,7 +1521,7 @@ man := Person{name:"wovert", age:18}
 
 ### 结构体指针传参
 
-- `Unsafe.Sizeof(指针)` 64bit OS，大小未8字节
+- `Unsafe.Sizeof(指针)` 64bit OS，大小均为**8字节**
 - 将结构体变量地址拷贝一份，传递。使用频率非常高～
 
 
@@ -1543,6 +1579,40 @@ interface{} // 空接口，没有必要起名字
 
 
 
+## 工作目录
+
+### 同级目录多文件编程
+
+- project
+  - src
+    - workspace
+        - 01.go
+        - main.go
+
+```cgo
+// 01.go
+package main
+import "fmt"
+func test(a, b int) {
+  fmt.Println(a + b)
+}
+
+// main.go
+package main
+
+// 在多个文件继续编辑时，go Build中选择配置选择目录指定到文件所在的目录级别 -> Run kind(Directory) ----> project/src/workspace
+func main() {
+  // 函数的作用域是项目中整个文件
+  test(10, 20)
+}
+```
+
+- 通过命令编译程序
+  - `go build 01.go 02.go main.go`
+  - `go build ./workspace`
+
+
+
 ## 协程 Coroutine
 
 > 轻量级 “线程”
@@ -1556,7 +1626,12 @@ interface{} // 空接口，没有必要起名字
 go + 函数名：启动一个协程执行函数体
 
 - 并发：多线程在**一个CPU核心**上运行，就是并发
-- 并行：多线程在**多个CPU核心**上运行，就是并行
+  - 同一时刻只有一条指令执行，但多个进程指令被快速的轮换执行，是的在宏观上具有多个进程同时执行的效果，但在微观上并不是同时执行的，只是把时间分成若干段，通过CPU时间片轮转使多个进程快速交替的执行
+  - 宏观：用户体验上，程序再并行执行（人的角度）
+  - 微观：多个计划任务，顺序执行。在飞快的切换，轮换使用 CPU 时间轮片。
+
+- 并行(parallel)：多线程在**多个CPU核心**上运行，就是并行
+  - 同一时刻，有多条指令在多个处理器上同时执行
 
 ![并发和并行](./images/currenty.jpg)
 
@@ -1586,16 +1661,23 @@ go + 函数名：启动一个协程执行函数体
   - 初始态
   - 就绪态(等待CPU分配时间片队列)
   - 运行态(占用CPU)
-  - 挂起或阻塞(等待除CPU以外的其他资源主动放弃CPU)态，I/O操作状态
+  - 挂起或阻塞(等待除CPU以外的其他资源主动放弃CPU)态，**I/O操作状态**
   - 终止或停止态
+
+- 程序和进程
+  - 程序：剧本
+  - 进程：戏(舞台、演员、灯光、道具)
 
 ### 线程
 
 - 线程并发：
-  - 线程：LWP(Light Weight Process) 轻量级的进程；最小的执行单位；CPU分配时间轮片的对象；有独立的PCB，但没有独立的地址空间（共享）
+  - 线程：LWP(Light Weight Process) 轻量级的进程；最小的执行单位；CPU分配时间轮片的对象；有独立的PCB(操作系统为每一个进程都提供了一个PCB：程序控制块，它记录着与此进程相关的信息：进程状态、优先级、PID等等。
+每个进程都有自己的PCB，所有的PCB都放在一张表格中维护，这就是进程表。调度器根据这个表来选择处理器上运行的进程。我们设计的系统中PCB只占一页：4K。)，但没有独立的地址空间（共享）
   - 进程：独立地址空间，拥有PCB；最小的系统资源分配单位
   
   
+![pcb](./images/pcb.png)
+
 - 32 bit and 64 bit 分配比例相同  
 
 - 同步
@@ -1606,7 +1688,6 @@ go + 函数名：启动一个协程执行函数体
     - 读写锁：一把锁（读属性、写属性）。写独占、读共享，写锁优先级最高
       - 互斥锁和读写锁基本是一样的，只是在加锁时区分 “读锁” 还是 “写锁”
       - 加读锁（可以重复加），加写锁（一次只能一个），多个线程都加了读锁，这多个线程可以同时访问读操作共享资源
-        
     - 信号量
     - 条件变量
 
@@ -1616,7 +1697,7 @@ go + 函数名：启动一个协程执行函数体
 在多任务操作系统中，同时运行的多个任务可能都需要使用同一种资源。这个过程有点类似于，公司部门里，我在使用着打印机打印东西的同时（还没有打印完），别人刚好也在此刻使用打印机打印东西，如果不做任何处理的话，打印出来的东西肯定是错乱的。
   在线程里也有这么一把锁——互斥锁（mutex），互斥锁是一种简单的加锁的方法来控制对共享资源的访问，互斥锁只有两种状态,即上锁( lock )和解锁( unlock )。
 
-【互斥锁的特点】：
+【互斥锁的特点】： 
 
 1. 原子性：把一个互斥量锁定为一个原子操作，这意味着操作系统（或pthread函数库）保证了如果一个线程锁定了一个互斥量，没有其他线程在同一时间可以成功锁定这个互斥量；
 
@@ -1882,19 +1963,19 @@ int main()
 }
 ```
 
+协程并发：`Python、Lua、Rust`
 
-
-- 协程并发：Python、Lua、Rust
-
-- 进程：稳定性强（生产线）
-- 线程：节省资源（工人）
-- 协程：效率高（利用闲暇时间做任务）
-
+- 进程：稳定性强（生产线）（最小执行单位）
+  - **稳定性强**
+- 线程：节省资源（工人）（最小资源分配单位）
+  - **节省资源**
+- 协程：利用闲暇时间做任务
+  - **提高程序执行的效率高**
+  - 所有线程都阻塞时，运行的程序叫做协程
 
 ### goroutine 特性
 
 **主 goroutine 退出后，其他的工作 goroutine 也会自动退出**
-
 
 ```sh
 $ go run --race goroutine.go
@@ -1904,8 +1985,8 @@ $ go run --race goroutine.go
 
 - `Goshed`: 出让当前go程所占用的 CPU 时间片，之后抢占时间轮片回复正常。出让当前go程所占用CPU时间片，当再次获得CPU时，从出让位置继续回复执行。
 - `Goexit`: 将立即终止当前 goroutine 执行，调度器确保所有已注册 defer 延迟调用被执行
-  - 结束调用该函数函数的**当前go程**(不是进程)，Goexit() 之前注册的 defer 都生效
-  - `return`: 返回当前函数调用处，return之前的 defer 注册生效
+  - 结束调用该函数函数的**当前go程**(不是进程)，`Goexit()` 之前注册的 `defer` 都生效
+  - `return`: 返回当前函数调用处，`return`之前的 `defer` 注册生效
 - `Gomaxprocs`: 设置当前进程使用的最大 CPU 核数，返回上一次调用成功的设置值。首次调用返回默认值
 
 ## channel
