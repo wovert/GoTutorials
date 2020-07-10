@@ -1583,6 +1583,13 @@ interface{} // 空接口，没有必要起名字
 
 ### 同级目录多文件编程
 
+1. 多个源文件必须放置src目录
+2. 设置GOPATH环境变量
+3. 同一个目录，包名必须一样
+4. go env 查看 go相关的环境路径
+5. 同一个目录，调用别的文件的函数，直接调用即可，无需包名引用
+
+
 - project
   - src
     - workspace
@@ -1611,7 +1618,51 @@ func main() {
   - `go build 01.go 02.go main.go`
   - `go build ./workspace`
 
+### 不同目录多文件编程
 
+1. 不同目录，包名不一样
+2. 调用不同包里面的函数，格式：包名.函数名()
+3. 调用别的包的函数，包函数名首字母必须是大写，否则只能在包内部调用该函数k
+
+- src
+  - main.go
+  - calc
+    - calc.go
+
+- main.go
+```cgo
+package main
+
+import (
+  "calc"
+  "fmt"
+)
+
+func main() {
+  a := calc.add(10, 20)
+  fmt.Println("a=", a)
+}
+```
+
+- calc/calc.go
+```cgo
+package calc
+func Add(a, b int) int {
+  sum := a + b
+  return sum
+}
+```
+
+### go install
+
+1. src 源代码
+2. 多个包
+  - 1. 配置 GOPATH 环境变量，配置 src 同级目录的绝对路径，配置GOBIN环境变量
+project\src 不同目录
+  - 2. 自动生成bin或pkg目录，需要使用 go install 命令，
+- src: 放源代码
+- bin: 放可执行程序
+- pkg: 平台相关的库
 
 ## 协程 Coroutine
 

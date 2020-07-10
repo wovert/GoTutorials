@@ -8,10 +8,7 @@ import (
 func test() {
 	// defer + recover 来捕获处理异常
 	defer func() {
-		// err := recover() // 内置函数，可以捕获到异常
-		// if err != nil {
-		// 	fmt.Println("err=", err)	
-		// }
+		// recover()内置函数，可以捕获到异常
 		if err := recover(); err != nil {
 			fmt.Println("err=", err)	
 			fmt.Println("发送邮件给admin@amdin.com")
@@ -44,7 +41,7 @@ func test2() {
 }
 
 func main() {
-	// test()
-	// fmt.Println("测试结束")
-	test2()
+	test()
+	fmt.Println("测试结束")
+	// test2()
 }
