@@ -28,6 +28,6 @@ func main() {
 
 	for i:=0; i<8; i++ {
 		num := <-ch1 // 没有内容会阻塞
-		fmt.Println("主协程 num = ", num)
+		fmt.Println("主协程 num = ", num) // 有延迟
 	}
 }
