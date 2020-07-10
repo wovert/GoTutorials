@@ -38,8 +38,6 @@ func consumer8(in <- chan int, index int) {
 		cond.L.Unlock()		// 消费结束，解锁互斥锁
 		cond.Signal()			// 唤醒阻塞的生产者
 		time.Sleep(time.Millisecond * 500)	// 消费完休息一会，给其他协程执行机会
-
-
 	}
 }
 

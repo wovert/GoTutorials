@@ -14,7 +14,7 @@ func main() {
 			select {
 				case num := <-ch:
 					fmt.Println("num = ", num)
-				case <-time.After(3 * time.Second):
+				case <-time.After(3 * time.Second): // 3秒内之后没有读取到ch会执行此代码
 					quit <- true
 					//break // runtime.Goexit()
 					goto label

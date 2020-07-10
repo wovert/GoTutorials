@@ -8,6 +8,7 @@ func main() {
 	deadlock3()
 }
 
+// 单go程自己死锁
 func deadlock1(){
 	ch := make(chan int)
 
@@ -17,10 +18,11 @@ func deadlock1(){
 	fmt.Println("num=", num)
 }
 
+// go程间channel访问顺序导致死锁
 func deadlock2(){
 	ch := make(chan int)
 
-	num := <-ch // 读段阻塞（没有数据可读）
+	num := <-ch // 读段阻塞（没有数据可读），先读后写导致死锁
 	fmt.Println("num=", num)
 
 	// 子go程序调用位置放错
@@ -29,6 +31,7 @@ func deadlock2(){
 	}()
 }
 
+// 多go程，多channel交叉死锁
 func deadlock3(){
 	ch1 := make(chan int)
 	ch2 := make(chan int)
@@ -49,5 +52,3 @@ func deadlock3(){
 		}
 	}
 }
-
-

@@ -25,7 +25,7 @@ func writeGo(out chan<- int, i int) {
 	num := rand.Intn(1000)
 
 	rwMutex.Lock()	// 以写模式加锁 (因为readGo已经有锁定，所以不能拿到锁，所以会阻塞)
-	out <- num
+	out <- num // 因为加锁，不能读取通道数据
 	fmt.Printf("%dth 写协程，写入:%d\n", i, num)
 	//time.Sleep(time.Microsecond * 300) // 方法实现现象
 	rwMutex.Unlock() // 解锁
