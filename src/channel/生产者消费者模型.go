@@ -6,10 +6,10 @@ import (
 )
 
 // 生产者：发送数据端
-func producer(out chan<- int) {
+func producer(out chan<- int, value int) {
 	for i:=0; i<50; i++ {
-		fmt.Println("生产者，生产：", i*i)
-		out <- i*i
+		fmt.Printf("生产者[%d]，生产[%d]\n", value, i)
+		out <- value*i
 	}
 	close(out)
 }

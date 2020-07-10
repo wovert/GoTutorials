@@ -12,7 +12,7 @@ func main() {
 	time.Sleep(time.Second)
 
 	// 2. 定时方法
-	// 创建定时器，2s之后，系统向结构体写入时间
+	// 创建定时器 2s之后，操作系统向time结构体写入系统当前时间
 	myTimer := time.NewTimer(time.Second * 2) // 2s
 
 	// 定时满，系统自动写入系统时间。读操作 chan类型，不去读会一直阻塞
@@ -29,11 +29,11 @@ func main() {
 	// 重置定时时长为 1
 	myTimer3.Reset(1 * time.Second)
 	go func() {
-		nowTime := <-myTimer3.C // 定时器停止，系统不会写入数据，因此不能读取时间
+		nowTime := <-myTimer3.C // 定时器停止，系统不会写入数据，因此不能读取时间。会阻塞，不会执行下面语句
 		fmt.Println("子协程，定时完毕:", nowTime)
 	}()
 
-	//myTimer3.Stop() // 定时器停止，即取消 time.Second * 3
+	myTimer3.Stop() // 定时器停止，即取消 time.Second * 3
 
 	for {
 		;

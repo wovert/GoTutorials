@@ -24,7 +24,7 @@ func main() {
 			if i == 6 {
 				quit <- true // 解除主go程阻塞，即 <-quit
 				fmt.Println("结束")
-				break // return runtime.Goexit
+				break // return or runtime.Goexit
 			}
 		}
 	}()
