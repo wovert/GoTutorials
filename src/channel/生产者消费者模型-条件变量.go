@@ -15,7 +15,7 @@ const (
 func producer8(out chan<- int, index int) {
 	for { // 循环目的是一个生产者不停的进行生产
 		cond.L.Lock()			// 条件变量对应互斥加锁
-		for len(out) == COUNT { // 产品区满等待消费者消费，缓冲区已经满了，为什么循环？
+		for len(out) == COUNT { // 产品区满等待消费者消费，缓冲区已经满了，为什么循环
 			cond.Wait()		// 阻塞(挂起)当前协程，等待条件变量满足，被消费者唤醒
 			// 释放已掌握的互斥锁相当于 cond.L.Unlock, 两步为一个原子操作
 			// 当被唤醒，Wait()函数返回时，解除阻塞并重新获取互斥锁，相当于 cond.L.Lock()

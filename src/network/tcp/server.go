@@ -7,12 +7,12 @@ import (
 
 func main() {
 	// 服务器通信协议、IP地址和端口号；创建一个用于监听的 socket
-	listener, err := net.Listen("tcp", "192.168.3.12:8989")
+	listener, err := net.Listen("tcp", "127.0.0.1:8989")
 	if err != nil {
 		fmt.Println("net.Listen err:", err)
 		return
 	}
-	defer listener.Close()
+	defer listener.Close() // 关闭监听
 
 	fmt.Println("服务器等待客户端建立连接...")
 

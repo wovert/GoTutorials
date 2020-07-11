@@ -8,7 +8,7 @@ import (
 
 func main() {
 	// 服务器IP地址和端口，创建通信套接字
-	conn, err := net.Dial("tcp", "192.168.3.12:8989")
+	conn, err := net.Dial("tcp", "127.0.0.1:8989")
 	if err != nil {
 		fmt.Println("net.Dial err:", err)
 	}
@@ -25,7 +25,6 @@ func main() {
 			}
 			// 写给服务器，读多少，写多少
 			conn.Write(str[:n])
-
 		}
 	}()
 
@@ -44,11 +43,6 @@ func main() {
 			return
 		}
 
-		fmt.Println("客户端读到服务器回发:", string(buf[:n]))
+		fmt.Printf("客户端读到服务器回发: %s", string(buf[:n]))
 	}
-
-
-
-
-
 }
