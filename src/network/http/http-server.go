@@ -4,7 +4,6 @@ import (
 	"net/http"
 )
 
-
 func handler(w http.ResponseWriter, r *http.Request) {
 	// w：写回给客户端
 	// r: 从客户端浏览器读到的数据

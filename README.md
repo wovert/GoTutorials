@@ -2526,7 +2526,7 @@ RST是还有一种关闭连接的方式，应用程序应该能够推断RST包�
 5. 创建全局 map, channel
 6. 实现HandlerConnect函数，获取客户端IP+PORT —— RemoteAddr()；初始化新用户结构体信息，name==Addr
 7. 创建 Mananger管理子协程—— Accept() 之间
-8. 实现 Manager，初始化在用用户map，循环读取全局channel，如果无数据，阻塞，有数据，遍历在线用户map，将数据写到用户通道C中
+8. 实现 Manager，初始化在用用户map，循环读取全局channel，如果无数据阻塞，有数据遍历在线用户map，将数据写到用户通道C中
 9. 新用户添加到在线用户map中，key==IP+PORT value=新用户结构体
 10. 创建 WriteMsgToClient 子协程里，专门给当前用户写数据 —— 来源于用户自带的 C 中
 11. 创建 WriteMsgToClient(client, conn)，遍历自带的C，读数据，conn.Write 到客户端

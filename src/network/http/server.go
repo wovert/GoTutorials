@@ -10,9 +10,9 @@ import (
 func errFunc(err error, info string) {
 	if err != nil {
 		fmt.Println(info, err)
-		//return
-		//runtime.Goexit() // 结束当前协程
-		os.Exit(1) // 将当前进程结束
+		//return // 返回函数
+		//runtime.Goexit() // 结束当前go程
+		os.Exit(1) // 结束当前进程
 	}
 }
 

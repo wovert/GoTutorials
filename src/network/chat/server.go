@@ -77,7 +77,7 @@ func HandlerConnect(conn net.Conn) {
 
 	onlineMap[netAddr] = client // 新连接用户添加到在线用户 map 中，key=IP+PORT, value:client
 
-	go WriteMsgToClient(client, conn) // 创建专门用户给当前用户发送消息的协程
+	go WriteMsgToClient(client, conn) // 创建专门用户给当前用户发送消息的协程，不会随着HandlerConnect go程结束了结束WriteMsgToClient go程
 
 	message <- MakeMsg(client, "login")  	// 发送用户上线消息到全局 channel 中
 
@@ -127,7 +127,7 @@ func HandlerConnect(conn net.Conn) {
 	for {
 		select { // 监听channel上的流动
 			case <-isQuit: // 读取isQuit值
-				close(client.C) // 关闭客户端 监听用户自带的channel上是否有消息
+				close(client.C) // 关闭客户端 监听用户自带的channel上是否有消息， WriteMsgToClient go程的循环结束，即Go程退出
 				delete(onlineMap, client.Addr) // 将用户从online移除
 				message <- MakeMsg(client, "logout") // 写入用户退出消息到全局channel
 				return
@@ -142,7 +142,7 @@ func HandlerConnect(conn net.Conn) {
 
 func main() {
 	// 定义服务器地址和端口
-	serverAddr := "192.168.3.12"
+	serverAddr := "127.0.0.1"
 	serverPort := "9898"
 	netType := "tcp"
 
