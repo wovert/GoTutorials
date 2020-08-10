@@ -6,8 +6,8 @@ import (
 )
 
 func main() {
-	//singAndDance()
-	demo02()
+	singAndDance()
+	// demo02()
 }
 
 func singAndDance() {

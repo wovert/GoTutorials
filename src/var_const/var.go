@@ -77,4 +77,29 @@ func main() {
 	fmt.Println("b2=", b2) // 1
 	fmt.Println("b3=", b3) // 1
 	fmt.Println("b1=", c1) // 2
+
+	var no int = 20
+	var noPointer *int = &no
+
+	fmt.Printf("no=%v\n", no)
+	fmt.Printf("noPointer=%v\n", noPointer)
+
+	// *noPointer // 指针变量值
+	*noPointer = 30 // 设置指针变量的值
+	fmt.Printf("no=%v\n", no)
+	fmt.Printf("noPointer=%v\n", *noPointer) // 读取指针变量值
+
+	//////////
+	var x1 int = 10
+	var xP *int = &x1
+	var xPP **int = &xP
+
+	fmt.Printf("x1=%v\n", x1)
+	fmt.Printf("xP=%v\n", *xP)
+	fmt.Printf("xPP=%v\n", **xPP)
+
+	fmt.Printf("xP=%v\n", xP)
+	fmt.Printf("xPP=%v\n", xPP)
+	fmt.Printf("*xPP=%v\n", *xPP)
+
 }

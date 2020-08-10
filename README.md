@@ -2621,35 +2621,6 @@ select {
 
 > RE2规范
 
-
-
-
-## beego
-
-```sh
-$ go get -u github.com/astaxie/beego
-
-bee工具
-$ go get -u github.com/beego/bee
-```
-
-安装之后，bee 可执行文件默认存放在$GOPATH/bin里面，所以需要把`$GOPATH/bin`添加到环境变量中
-```sh
-$ echo 'export PATH="$PATH/bin:$PATH"' >> ~/.bashrc
-$ source .bashrc
-```
-
-- `bee new 项目名` 创建一个项目；通过 bee 创建的项目代码都是在`$GOPATH/src`目录下面
-- `bee api`
-
-
-dyld: malformed mach-o image: segment __DWARF has vmsize < filesize
-
-升级到1.13.4后问题被修复
-
-brew升级golang: `brew upgrade go`
-
-
 ## 函数式编程
 
 - 不可变性：不能有状态，只有常量和函数

@@ -27,6 +27,9 @@ func main() {
 	go Person1()
 	go Person2()
 
+	// Person1()
+	// Person2()
+
 	// 死循环，不让主协程结束
 	for {
 		;

@@ -11,7 +11,7 @@ type student struct {
 }
 
 func main01() {
-	// 将结构体作为map中的value
+	// 将结构体作为map中的values
 	m := make(map[int]student)
 
 	// map中的数据不建议排序操作
@@ -37,5 +37,6 @@ func main() {
 
 	m[102] = []student{student{"水兵月", "女", 18, 100, "月亮"}}
 	m[102] = append(m[102], student{"月野兔", "女", 20, 99, "地球"})
-	fmt.Println(m[102])
+	fmt.Println(m)
+	// fmt.Println(m[102])
 }
