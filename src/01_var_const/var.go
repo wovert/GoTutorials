@@ -12,10 +12,13 @@ func main() {
 	var a int
 	var b string = "hello"
 	c := true
+	var d *int
+	d = &a
 	name, age := "wovert", 20
 	fmt.Println("a=", a)
 	fmt.Println("b=", b)
 	fmt.Println("c=", c)
+	fmt.Println("d=", &d)
 	fmt.Println("name=", name)
 	fmt.Println("age=", age)
 	fmt.Println("flag=", flag)

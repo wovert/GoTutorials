@@ -22,7 +22,7 @@ func main()  {
 	fmt.Println("Header = ", resp.Header)           // 响应头部
 	fmt.Println("Body = ", resp.Body)               // 响应包体
 
-	buf := make([]byte, 4096)         // 定义切片缓冲区，存读到的内容
+	buf := make(  定义切片缓冲区，存读到的内容
 	var result string
 	// 获取服务器发送的数据包内容
 	for {

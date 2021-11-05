@@ -3,3 +3,4 @@
 bin
 pkg
 */**/*.exe
+*/**/.DS_Store
