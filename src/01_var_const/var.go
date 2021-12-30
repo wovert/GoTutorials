@@ -4,11 +4,15 @@ import (
 	"fmt"
 )
 
+// 包级别
+var packageVar string = "package Var"
 var (
-	flag = "global"
+	flag   = "global"
 	status = true
 )
+
 func main() {
+	// 函数级别
 	var a int
 	var b string = "hello"
 	c := true
@@ -24,17 +28,28 @@ func main() {
 	fmt.Println("flag=", flag)
 	fmt.Println("status=", status)
 
-	// iota 常量自动生成器，每个一行，自动累加1 
+	{
+		// 块级别
+		var inlineBlockVar string = "inline block var"
+		fmt.Println(inlineBlockVar)
+		{
+			// 子块级别
+			var innerInlineBlockVar string = "inner Inline Block var"
+			fmt.Println(innerInlineBlockVar)
+		}
+	}
+
+	// iota 常量自动生成器，每个一行，自动累加1
 	const (
-		x = iota
-		y = 100
-		z = iota
-		_ = iota
+		x    = iota
+		y    = 100
+		z    = iota
+		_    = iota
 		last = iota
 	)
-	fmt.Println("x=", x) // 0
-	fmt.Println("y=", y) // 100
-	fmt.Println("z=", z) // 2
+	fmt.Println("x=", x)       // 0
+	fmt.Println("y=", y)       // 100
+	fmt.Println("z=", z)       // 2
 	fmt.Println("last=", last) // 4
 
 	// 每新增一行常量声明将 iota 计数一次
@@ -49,7 +64,7 @@ func main() {
 
 	// 定义数量级
 	const (
-		_ = iota
+		_  = iota
 		KB = 1 << (10 * iota) // 1 << 10
 		MB = 1 << (10 * iota) // 1 << 20
 		GB = 1 << (10 * iota) // 1 << 30
@@ -73,7 +88,7 @@ func main() {
 		a1 = iota
 		// 同一行，值都一样
 		b1, b2, b3 = iota, iota, iota
-		c1 = iota
+		c1         = iota
 	)
 	fmt.Println("a1=", a1) // 0
 	fmt.Println("b1=", b1) // 1

@@ -17,4 +17,7 @@ func main() {
 	fmt.Printf("Sprintf: %T\n", fmt.Sprintf("%5.2f\n", f2))
 	fmt.Println(math.MaxFloat64) // float64最大值
 	fmt.Println(math.MaxFloat32) // float32最大值
+
+	var val1 = 1.00
+	fmt.Println(val1 == 1.00)
 }
