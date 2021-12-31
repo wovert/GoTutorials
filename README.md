@@ -257,7 +257,9 @@ d:\> go version
 
 ```sh
 # vim /etc/proile.d/go.sh
-  export GOPATH=/opt/go
+  export GO111MODULE=on
+  export GOPROXY=https://goproxy.cn,direct
+  export GOROOT=/usr/local/go
   export PATH=$PATH:$GOPATH/bin
   export GOPATH=$HOME/goProjects/
 # source /etc/profile.d/go.sh
@@ -540,7 +542,7 @@ const (
 
 1. 全局声明方式：批量声明方式
 
-```cgo
+```go
 var (
   name = "wovert"
   age = 30
@@ -549,20 +551,20 @@ var (
 
 2. 声明变量同时赋值
 
-```cgo
+```go
 var name string = "wovert"
 ```
 
 3. 类型推导（根据值判断该变量是什么类型）
 
-```cgo
+```go
 var name = "wovert"
 ```
 
 4. 简短变量声明
 
 := 不能使用在函数外
-```cgo
+```go
 name := "wovert"
 ```
 
@@ -581,7 +583,7 @@ x, _ := foo()
 - const 中每新增一行常量声明将 iota 计数一次(iota可以理解为const语句块中的行索引)
 
 
-```cgo
+```go
 const (
   n1 = iota // 0
   n2 // 1
@@ -653,7 +655,7 @@ const (
 
 ### 类型别名
 
-```cgo
+```go
 // int64 类型改名为bigint
 type bigint int64
 var x bigint = 100
@@ -703,7 +705,7 @@ type (
 - 必须显示转换，不能自动转换
 T(v)
 
-```cgo
+```go
 var i int32 = 257
 var n1 float32 = float32(i)
 var n2 int8 = int8(i)

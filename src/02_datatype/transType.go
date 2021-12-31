@@ -6,6 +6,13 @@ import (
 )
 
 func main() {
+	var n1 int32 = 12
+	var n3 int8
+	var n4 int8
+	n4 = int8(n1) + 127 // 编译通过，但是溢出
+	// n3 = int8(n1) + 128 // 编译不通过（int8:127~-128）
+	fmt.Println(n3, n4)
+
 	// int32 => float32
 	var i32Val = 257
 	var f32Val = float32(i32Val)
@@ -41,6 +48,20 @@ func main() {
 	// 	int => string
 	i_2_string := strconv.Itoa(s_2_int)
 	fmt.Printf("int(%#v) 转换 string(%#v)\n", s_2_int, i_2_string)
+
+	// string <-> byte
+	s := "abc"
+	b := []byte(s)
+	s2 := string(b)
+	fmt.Printf("string(%#v) 转换 []byte(%#v)\n", s, b)
+	fmt.Printf("[]byte(%#v) 转换 string(%#v)\n", b, s2)
+
+	// string <->rune
+	str := "プログラム"
+	r := []rune(str)
+	str2 := string(r)
+	fmt.Printf("string(%#v) 转换 []rune(%#v)\n", str, r)
+	fmt.Printf("[]rune(%#v) 转换 string(%#v)\n", r, str2)
 }
 
 func demo() {
@@ -51,13 +72,4 @@ func demo() {
 	n2 = int64(n1) + 20
 	n3 = int8(n1) + 20
 	fmt.Println("n2=", n2, "n3=", n3)
-}
-
-func demo2() {
-	var n1 int32 = 12
-	var n3 int8
-	var n4 int8
-	n4 = int8(n1) + 127 // 编译通过，但是溢出
-	// n3 = int8(n1) + 128 // 编译不通过（int8:127~-128）
-	fmt.Println(n3, n4)
 }

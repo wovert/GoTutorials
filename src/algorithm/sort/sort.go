@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
 //func BubbleSort(arr *[]int) {
 //	fmt.Println("排序前arr=", (*arr))
@@ -24,8 +27,8 @@ import "fmt"
 func isort(a []int) {
 	fmt.Println("排序前arr=", a)
 	fmt.Println("len(arr)=", len(a))
-	for i:=1; i<len(a);i++ {
-		for j:=1; j<len(a)-i; j++ {
+	for i := 1; i < len(a); i++ {
+		for j := 1; j < len(a)-i; j++ {
 			if a[j-1] > a[j] {
 				a[j], a[j-1] = a[j-1], a[j]
 			}
@@ -37,7 +40,21 @@ func main() {
 	//arr := []int{74, 68, 50, 57, 12}
 	//BubbleSort(&arr)
 
-	data := [...]int{8,3,4,2,1,9}
+	data := [...]int{8, 3, 4, 2, 1, 9}
 	isort(data[:])
 	fmt.Println(data)
+
+	nums := []int{8, 3, 4, 2, 1, 9}
+	fmt.Printf("排序前 nums=%#v\n", nums)
+	sort.Ints(nums)
+	fmt.Printf("排序后 nums=%#v\n", nums)
+
+	names := []string{"abc", "xyz", "mn", "k", "z"}
+	fmt.Printf("排序前 names=%#v\n", names)
+	sort.Strings(names)
+	fmt.Printf("排序后 names=%#v\n", names)
+
+	// 倒序
+	sort.Sort(sort.Reverse(sort.IntSlice(nums)))
+	fmt.Printf("排序后 nums=%#v\n", nums)
 }

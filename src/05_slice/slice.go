@@ -2,10 +2,11 @@ package main
 
 import "fmt"
 
-func slice(){
-	arr := [...]int{0,1,2,3,4,5,6,7}
-	s := arr[2:6] // [2,3,4,5]
-	fmt.Println(s)
+func slice() {
+	arr := [...]int{0, 1, 2, 3, 4, 5, 6, 7} // 数组
+	s := arr[2:6]                           // [2,3,4,5] 切片
+	fmt.Printf("%#v\n", arr)
+	fmt.Printf("%#v\n", s)
 	fmt.Println(arr[:6])
 	fmt.Println(arr[2:])
 	fmt.Println(arr[:])

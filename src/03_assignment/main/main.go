@@ -7,10 +7,10 @@ import (
 
 // 水仙花数：一个三位数，其各位数字立方和等于该数本身
 func isNumber(n int) bool {
-	var i,j,k int
+	var i, j, k int
 	i = n % 10
-	j = (n/10) % 10
-	k = (n/100) % 10
+	j = (n / 10) % 10
+	k = (n / 100) % 10
 	sum := i*i*i + j*j*j + k*k*k
 
 	return sum == n
@@ -18,7 +18,7 @@ func isNumber(n int) bool {
 
 func isPrime(n int) bool {
 	// fmt.Printf("sqrt:%d\n", int(math.Sqrt(float64(n))))
-	for i:=2; i<=int(math.Sqrt(float64(n))); i++ {
+	for i := 2; i <= int(math.Sqrt(float64(n))); i++ {
 		if n%i == 0 {
 			return false
 		}
@@ -31,7 +31,7 @@ func sum(n int) uint64 {
 
 	var s uint64 = 1
 	var sum uint64 = 0
-	for i:=1; i<=n; i++ {
+	for i := 1; i <= n; i++ {
 		s := s * uint64(i)
 		fmt.Printf("%d!=%v\n", i, s)
 		sum += s
@@ -45,14 +45,14 @@ func main() {
 
 	fmt.Scanf("%d,%d", &n, &m)
 
-	for i:=n; i<m; i++ {
+	for i := n; i < m; i++ {
 		if isPrime(i) == true {
 			fmt.Printf("%d\n", i)
 			continue
 		}
 	}
 
-	for i:=n; i<m; i++ {
+	for i := n; i < m; i++ {
 		if isNumber(i) == true {
 			fmt.Println("水仙花数：", i)
 		}
@@ -60,5 +60,10 @@ func main() {
 
 	s := sum(n)
 	fmt.Println(s)
+
+	letters := "爱上基地决赛"
+	for _, v := range letters {
+		fmt.Printf("%q\n", v)
+	}
 
 }
