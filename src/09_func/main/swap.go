@@ -16,6 +16,4 @@ func main() {
 	add(&a)
 	a, b = swap(a, b)
 	fmt.Printf("a=%d b=%d", a, b)
-
-
-	}
+}

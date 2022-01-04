@@ -287,7 +287,7 @@ func main() {
 	slice7 := nums[:len(nums)-1]
 	fmt.Printf("slice7=%#v\n", slice7)
 
-	// 移除中间的元素
+	// 移除中间的元素``
 	// []int{0, 1, 2, 100, 4, 5}
 	// []int{0, 1, 4, 5}
 	target := nums[2:] // 目标

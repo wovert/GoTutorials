@@ -45,6 +45,29 @@ func main() {
 
 	fmt.Scanf("%d,%d", &n, &m)
 
+	switch(n) {
+	case 10:
+		fmt.Println("n=", 10)
+		break
+	case 20,30:
+		fmt.Println("n=", n)
+		fallthrough
+	case 40:
+		fmt.Println("n=", n)
+		fallthrough
+	default:
+		fmt.Println("default")
+	}
+
+	switch {
+	case n > 10:
+		fmt.Println("n>10")
+	case n > 20:
+		fmt.Println("n>20")
+	default:
+		fmt.Println("default")
+	}
+
 	for i := n; i < m; i++ {
 		if isPrime(i) == true {
 			fmt.Printf("%d\n", i)

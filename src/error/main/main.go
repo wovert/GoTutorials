@@ -45,8 +45,9 @@ func testc() {
 }
 
 func main() {
-	err := fmt.Errorf("%s\n", "this is normal error")
+	err := fmt.Errorf("%s\n", "这是自定义错误")
 	fmt.Println("err =",err)
+	return
 
 	// 接口的使用
 	err2 := errors.New("this is normal err2")

@@ -5,9 +5,11 @@ import "fmt"
 func f() {
 	fmt.Println("start func")
 
-	// 先进后出
+	// 先进后出执行 defer
 	defer fmt.Println("延迟执行语句1") // 函数返回之前执行
-	defer fmt.Println("延迟执行语句2") // 函数返回之前执行
+	defer func() {
+		fmt.Println("延迟执行语句2") // 函数返回之前执行
+	}()
 	defer fmt.Println("延迟执行语句3") // 函数返回之前执行
 	fmt.Println("end func")
 }
@@ -17,6 +19,7 @@ func f1() int {
 	// 2. x=6
 	// 3. 
 	x := 5
+	// 函数体不管是否发生错误，都会执行 defer 语句（文件关闭等）
 	defer func() {
 		x++ // 修改的是 x 不是返回值
 	}()
@@ -69,9 +72,9 @@ func f6()(x int) {
 func main() {
 	f()
 	fmt.Println(f1())
-	fmt.Println(f2())
-	fmt.Println(f3())
-	fmt.Println(f4())
-	fmt.Println(f5())
-	fmt.Println(f6())
+	// fmt.Println(f2())
+	// fmt.Println(f3())
+	// fmt.Println(f4())
+	// fmt.Println(f5())
+	// fmt.Println(f6())
 }

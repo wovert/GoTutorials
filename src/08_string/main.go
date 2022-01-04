@@ -23,6 +23,11 @@ func pathProcess(path string) string {
 }
 
 func main() {
+	ascii := "abc中国人名"
+	fmt.Println([]byte(ascii))
+	fmt.Println([]rune(ascii))
+	return
+
 	var str = "hello world\n"
 	var str2 = `hello \n` // 原样输出
 
