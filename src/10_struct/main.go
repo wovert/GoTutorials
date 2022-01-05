@@ -23,31 +23,30 @@ type Person struct {
 	age int
 }
 
-// 方法
+// 结构体做函数参数：值传递
 func test(man Person) {
 	man.age = 100
 	fmt.Println("test man size:=", unsafe.Sizeof(man))
 }
 
+// 结构体做函数参数：地址传递
 func ptest(man *Person) {
 	man.age = 100
 	fmt.Println("ptest man size:=", unsafe.Sizeof(man))
 }
 
-
 func main() {
-	// 顺序初始化
+	// 结构体顺序初始化，每个成员必须初始化
 	var man = Person{"wovert", 'm', 18}
 	fmt.Println("man=", man)
 
-	// 部分初始化
+	// 结构部分初始化，没有初始化的成员，自动赋值为0
 	man2 := Person{name:"wovert", age:18 }
 	fmt.Println("man2=", man2)
 	man2.sex = 'm'
 
 	// 索引成员变量
 	fmt.Println("man2.name=", man2.name)
-
 
 	// 普通变量的赋值和使用
 	var man3 Person
@@ -57,7 +56,6 @@ func main() {
 	fmt.Println("man3=", man3)
 	fmt.Println("main man3 size:=", unsafe.Sizeof(man3))
 
-
 	// 结构体变量的比较和赋值
 	// 1. compare: 只能使用 == or !=
 	fmt.Println("man == man2 ?", man == man2) // true
@@ -66,7 +64,6 @@ func main() {
 	// 相同类型的结构体赋值
 	var tmp Person
 	fmt.Println("tmp=", tmp)
-
 
 	tmp = man3
 
@@ -81,7 +78,9 @@ func main() {
 	fmt.Printf("&man = %p\n", &man3)
 	fmt.Printf("&man.name = %p\n", &(man3.name))
 
-	// 结构体指针
+	fmt.Println("--------------------------------")
+
+	// 结构体指针变化初始化
 	var person1 *Person = &Person{"wovert", 'f', 19}
 	fmt.Println("person1=", person1)
 
@@ -101,10 +100,6 @@ func main() {
 	s.y = 100
 	fmt.Printf("type: T%, value:%v\n", s, s)
 
-
-	return
-
-
 	person := Human{name: "张三", age: 25}
 	fmt.Printf("%v", person)
 
@@ -115,8 +110,8 @@ func main() {
 	var h Human
 	var p1 *Human
 	p1 = &h
-	p1.name = "王武"
-	(*p1).age = 30
+	p1.name = "王武" // 指针操作
+	(*p1).age = 30 // 指针操作
 	fmt.Printf("%T\n", p1)
 	fmt.Printf("%v\n", p1)
 
@@ -126,7 +121,6 @@ func main() {
 	p2.age = 29
 	fmt.Printf("%T\n", p2)
 	fmt.Printf("%v\n", p2)
-
 
 	jane := Student{Human{"Jane",35,100},"blology"}
 	fmt.Printf("%v", jane)
