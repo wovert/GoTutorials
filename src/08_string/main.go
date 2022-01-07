@@ -92,9 +92,4 @@ func main() {
 		fmt.Println("can not conver to int", err )
 	}
 	fmt.Printf("i=%d\n", i) // -42
-
-
-
 }
-
-

@@ -76,6 +76,3 @@ func main() {
 	splStr := strings.Split("hello,World,hi", ",")
 	fmt.Printf("Hello,world,hi: %v\n", splStr)
 }
-
-
-

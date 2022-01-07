@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"../errors"
+	"errors"
 )
 
 func MyDiv(a, b int) (result int, err error) {

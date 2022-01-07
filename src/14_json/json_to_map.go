@@ -31,7 +31,7 @@ func main() {
 		return
 	}
 
-  fmt.Printf("m=%+v\n", m)
+  fmt.Printf("json解码生成map m=%+v\n", m)
 
 
   // error
@@ -53,7 +53,7 @@ func main() {
 			case []string: // 不会执行
 				fmt.Printf("map[%s]的值类型为[]string, value=%v\n", key, data)
 			case []interface{}:
-				fmt.Printf("map[%s]的值类型为[]string, value=%v\n", key, data)
+				fmt.Printf("map[%s]的值类型为[]interface, value=%v\n", key, data)
 		}
 	}
 }

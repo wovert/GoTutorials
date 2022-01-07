@@ -6,8 +6,8 @@ import (
 )
 
 type IT struct {
-	Company string `json:"company"`
-	Subjects []string `json:"subjects"`
+	Company string `json:"-"` // 不会输出到屏幕
+	Subjects []string `json:"subjects"` // 二次编码
 	IsOk bool `json:"string"`
 	Price float64 `json:"string"`
 }
@@ -35,7 +35,7 @@ func main() {
 	}
 
   //fmt.Println("tmp=",tmp)
-  fmt.Printf("tmp=%+v\n", tmp)
+  fmt.Printf("json解码生成结构体tmp=%+v\n", tmp)
 
 
 	type Subject struct {

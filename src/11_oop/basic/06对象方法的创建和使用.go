@@ -1,4 +1,4 @@
-package basic
+package main
 
 import "fmt"
 
@@ -31,14 +31,14 @@ func main() {
 	//类型别名会在编译时进行转换
 	var a Int = 10
 
-	var b Int =20
+	var b Int = 20
 	//var b Int = 20
 	//包.函数 结构体.成员 对象.方法
 	//sum:=a.add(b)
 
 	//对象.方法
 	//想要使用方法 必须是相同类型的对象才可以
-	sum:=b.add(a)
+	sum := b.add(a)
 	fmt.Println(sum)
 	//var b int = 20
 

@@ -60,6 +60,4 @@ func main() {
   // 字符串转换整型
   a, _ := strconv.Atoi("456")
   fmt.Println(" a =", a)
-
-
 }

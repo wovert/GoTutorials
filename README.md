@@ -14,6 +14,8 @@
 - **软件复杂度越来越高，维护成本越来越高**，目前缺乏一个足够简洁高效的编程语言
 - 企业运行维护很多 C/C++ 项目，C/C++ 程序运行速度虽然很快，但是**编译速度很慢**，同时还存在**内存泄露**的一系列困扰需要解决
 
+[Go 语言与C语言对比](https://hyperpolyglot.org/c)
+
 ### Go 语言发展史
 
 - 2007，三大牛人开始**设计**
@@ -739,7 +741,6 @@ fmt.Printf("i=%T \n", i)
   - 切片
   - 接口
   - map
-
 
 ## file
 
@@ -1617,12 +1618,27 @@ interface{} // 空接口，没有必要起名字
 
 ### GOPAHT 环境变量信息，定义多个目录
 
-- src: 源文件
-- pkg: 程序编译的包文件
-- bin: 程序编译的可执行文件
+- src: 源代码文件
+- pkg: 程序编译的包文件（缓存包）
+- bin: 程序编译的可执行文件（使用go install 之后存放位置）
 
 - go build file 在当前目录下编译生成可执行文件
 - go install file 在bin目录下生成可执行文件
+
+- GOOS: 设定运行的平台
+  - mac: GOOS=darwin
+  - linux: GOOS=linux
+  - windows: GOOS=windows
+- GOARCH: 目标平台体系架构
+  - 386: GOARCH=386
+  - amd64: GOARCH=amd64
+  - arm: GOARCH=arm
+
+```
+$ GOOS=linux
+$ go build -o hello-linux hello.go
+$ ./hello-linux
+```
 
 ### 同级目录多文件编程
 
