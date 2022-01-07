@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	// "time"
+	"time"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 
 
 
-	// time.Sleep(time.Second)
+	time.Sleep(time.Second)
 
 	// 监听channel上数据流动, ch,timeout 谁先来，随机选择执行
 	select {

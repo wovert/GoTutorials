@@ -12,10 +12,10 @@ func main() {
 	go func() {
 		for {
 			select {
-			case v := <- c:
-				fmt.Println(v)
+			case num := <- c:
+				fmt.Println("num = ", num)
 			case <-time.After(5 * time.Second):
-				fmt.Println("timeout")
+				fmt.Println("超时")
 				o <- true
 				//break
 				goto label

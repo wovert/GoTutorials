@@ -14,9 +14,10 @@ func fibonacci(ch <-chan int, quit <-chan bool) {
 }
 
 func main() {
-	ch := make(chan int)
-	quit := make(chan bool)
+	ch := make(chan int) // 数字通信
+	quit := make(chan bool) // 程序是否结束
 
+	// 消费者，从channel 对内容
 	go fibonacci(ch, quit) // 打印操作
 
 	x, y := 1, 1

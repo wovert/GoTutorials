@@ -11,6 +11,7 @@ func main() {
 		sendCh <- 120 // 阻塞
 	}()
 
+	// 阻塞
 	var recvCh <-chan int = ch // 单向读channel
 	num := <- recvCh
 

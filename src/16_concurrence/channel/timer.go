@@ -6,22 +6,22 @@ import (
 )
 
 func main() {
-	fmt.Println("当前时间：", time.Now())
-
 	// 1. 定时方法
 	time.Sleep(time.Second)
 
+	fmt.Println("当前时间：", time.Now())
+
 	// 2. 定时方法
-	// 创建定时器 2s之后，操作系统向time结构体写入系统当前时间
+	// 创建一个定时器，设置时间为2s, 2s后，往 myTimer 通道写当前系统时间
 	myTimer := time.NewTimer(time.Second * 2) // 2s
 
-	// 定时满，系统自动写入系统时间。读操作 chan类型，不去读会一直阻塞
+	// 2s后，往myTimer.C写输入，有数据后就可以读取，没有数据不去读会一直阻塞
 	nowTime := <-myTimer.C
 	fmt.Println("现在时间：", nowTime)
 
 	// 3. 定时方法，直接放回定时之后
 	nowTime2 := <-time.After(time.Second * 2)
-	fmt.Println("现在时间：", nowTime2)
+	fmt.Println("After现在时间：", nowTime2)
 
 	// 4. 定时器停止和重置
 	myTimer3 := time.NewTimer(time.Second * 3)
