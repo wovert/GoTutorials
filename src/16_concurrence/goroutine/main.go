@@ -6,8 +6,9 @@ import (
 )
 
 func main() {
+	demo02()
 	singAndDance()
-	// demo02()
+	// demo02() // 这里不会执行，因为singAndDance有主协程 死循环逻辑
 }
 
 func singAndDance() {
@@ -42,24 +43,22 @@ func dance() {
 	}
 }
 
-
-
-
-
 func demo02() {
 	// 创建一个 子 go协程
 	go func () {
-		for i:=0; i<5; i++ {
+		for i:=0; i<30; i++ {
 			fmt.Println("----go routine----:", i)
-			time.Sleep(time.Second)
+			// time.Sleep(time.Second)
+			time.Sleep(100 * time.Microsecond)
 		}
 	}()
 
-	for i:=0; i<5; i++ {
+	for i:=0; i<30; i++ {
 		fmt.Println("----I'm main routine----:", i)
-		time.Sleep(time.Second)
-		if i == 2 {
-			break;
-		}
+		// time.Sleep(time.Second)
+		time.Sleep(100 * time.Microsecond)
+		// if i == 2 {
+		// 	break;
+		// }
 	}
 }

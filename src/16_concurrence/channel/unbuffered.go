@@ -22,6 +22,7 @@ func main() {
 		}
 	}()
 
+	// 延时 2s
 	time.Sleep(time.Second * 2)
 
 	for i:=0; i<10; i++ {
