@@ -25,6 +25,4 @@ func main() {
 	}
 
 	fmt.Println("服务器响应:", string(buf[:n]))
-
-
 }

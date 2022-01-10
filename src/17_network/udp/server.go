@@ -41,5 +41,4 @@ func main() {
 		fmt.Println("WriteToUDP err:", err)
 		return
 	}
-
 }

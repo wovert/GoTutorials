@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../proto"
+	"wovert/proto"
 	"bufio"
 	"fmt"
 	"io"
@@ -9,7 +9,10 @@ import (
 )
 
 func process(conn net.Conn) {
+	// 关闭连接
 	defer conn.Close()
+
+
 	reader := bufio.NewReader(conn)
 	for {
 		msg, err := proto.Decode(reader)
@@ -26,16 +29,20 @@ func process(conn net.Conn) {
 
 func main() {
 
+	// 监听
 	listen, err := net.Listen("tcp", "127.0.0.1:30000")
 	if err != nil {
 		fmt.Println("listen failed, err:", err)
 		return
 	}
+
+	// 关闭监听
 	defer listen.Close()
 
 	fmt.Println("服务器等待客户端建立连接")
 	for {
-		conn, err := listen.Accept() // 阻塞监听客户端连接请求
+		// 阻塞等待客户端连接请求
+		conn, err := listen.Accept()
 		if err != nil {
 			fmt.Println("accept failed, err:", err)
 			continue

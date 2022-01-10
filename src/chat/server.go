@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../proto"
+	"wovert/proto"
 	"bufio"
 	"encoding/json"
 	"fmt"
@@ -157,7 +157,7 @@ var roomList map[int64][]string
 var onlineMap map[string]Client
 
 // 用户发送消息管道
-var message = make(chan string)
+var message = make(chan string, 20)
 
 // 创建信息
 func makeMsg(cli Client, msg string) (buf string) {
@@ -168,7 +168,10 @@ func makeMsg(cli Client, msg string) (buf string) {
 /**
  * 初始化在线用户，聊天室列表和给每个用户发送消息
  */
-func maneger() {
+func boardcast() {
+
+	defer fmt.Println("broadcast程序退出")
+
 	// 给 聊天室列表 分配空间
 	roomList = make(map[int64][]string)
 
@@ -185,7 +188,7 @@ func maneger() {
 }
 
 // 发送信息给客户端
-func writeMsgToClient(cli Client, conn net.Conn) {
+func writeMsgToClient(cli *Client, conn net.Conn) {
 	for msg := range cli.C {
 		// 给当前客户端发送信息
 		data, err := proto.Encode(msg)
@@ -283,7 +286,7 @@ func handleConn(conn net.Conn) {
 	onlineMap[cliAddr] = cli
 
 	// 新开一个协程，专门给当前客户端发送信息
-	go writeMsgToClient(cli, conn)
+	go writeMsgToClient(&cli, conn)
 
 	// 广播某个人在线
 	//message <- makeMsg(cli, "login")
@@ -543,7 +546,7 @@ func handleConn(conn net.Conn) {
 }
 
 // 聊天入口
-func main () {
+func main() {
 	listener, err := net.Listen("tcp", "192.168.3.12:8989")
 	if err != nil {
 		fmt.Println("net.Listen err = ", err)
@@ -553,7 +556,7 @@ func main () {
 	defer listener.Close()
 
 	// 新开一个协程，转发消息，只要有消息来了，遍历onlineMap, 给map每个成员发送消息
-	go maneger()
+	go boardcast()
 
 	// 主协程, 循环阻塞等待用户连接
 	for {
