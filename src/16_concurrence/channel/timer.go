@@ -19,7 +19,7 @@ func main() {
 	nowTime := <-myTimer.C
 	fmt.Println("现在时间：", nowTime)
 
-	// 3. 定时方法，直接放回定时之后
+	// 3. 定时方法，直接返回定时之后 类似 <-myTimer.C
 	nowTime2 := <-time.After(time.Second * 2)
 	fmt.Println("After现在时间：", nowTime2)
 
@@ -33,7 +33,7 @@ func main() {
 		fmt.Println("子协程，定时完毕:", nowTime)
 	}()
 
-	myTimer3.Stop() // 定时器停止，即取消 time.Second * 3
+	myTimer3.Stop() // 定时器停止，即取消 time.Second * 3, <-mytimer3.C 阻塞
 
 	for {
 		;

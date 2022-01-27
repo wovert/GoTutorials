@@ -241,6 +241,10 @@ d:\> go version
 
 测试环境变量
 ``` cmd
+
+go env -w GOPROXY=https://goproxy.io,direct
+go env -w GO111MODULE=on
+
 > echo %GOPATH%
 > go get github.com/astaxie/beego
 ```
