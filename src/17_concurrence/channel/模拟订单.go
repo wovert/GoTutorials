@@ -7,17 +7,18 @@ type OrderInfo struct {
 }
 
 // 生成订单 —— 生产者
-func producer2(out chan <- OrderInfo) {
+func producer(out chan<- OrderInfo) {
 	// 模拟生成10分订单
-	for i:=0; i<10; i++ {
-		order := OrderInfo{id: i+1}
+	for i := 0; i < 10; i++ {
+		order := OrderInfo{id: i + 1}
 		out <- order
+		fmt.Println("生成订单id为：", i+1)
 	}
 	close(out)
 }
 
 // 处理订单 —— 消费者
-func consumer2(in <- chan OrderInfo) {
+func consumer(in <-chan OrderInfo) {
 	for order := range in {
 		// 模拟处理订单
 		fmt.Println("订单 id为：", order.id)
@@ -26,6 +27,6 @@ func consumer2(in <- chan OrderInfo) {
 
 func main() {
 	ch := make(chan OrderInfo)
-	go producer2(ch) // 只写
-	consumer2(ch) // 只读
+	go producer(ch) // 只写
+	consumer(ch)    // 只读
 }

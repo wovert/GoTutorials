@@ -803,15 +803,13 @@ fmt.Printf("i=%T \n", i)
 - 删除文件
   - `Remove(name string) Error`
 
-
-
 1. `os.Create` 文件不存在创建，文件存在，将文件内容清空
 2. `open` 打开文件，以**只读**方式打开文件
 3. `OpenFile` 以**只读、只写、读写**方式打开文件
 
-资源关闭
+### 资源关闭
 
-``` go
+```go
 file.Open("file")
 defer file.close()
 ```
@@ -1153,6 +1151,37 @@ func sum(n1 int, n2 int) int {
 指针就是地址，指针变量就是存储地址的变量
 
 *p: 解引用，间接引用
+
+
+```go
+package ain
+
+import (
+  "fmt"
+)
+
+func test(m int) {
+  var b int = 1000
+  b += m
+}
+func main() {
+  var a int = 10
+  var p *int = &a
+
+  a = 100
+  fmt.Println("a=", a)
+
+  test(10)
+
+  *p = 250 // 借助a变量的地址，操作a对应空间
+  fmt.Println("a=", a)
+  fmt.Println("*p=", *p)
+
+  a = 1000
+  fmt.Println("*p=", *p)
+}
+```
+![栈帧内存存储](./images/stack_heap_memory.png)
 
 ## xorm 操作数据库
 
