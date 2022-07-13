@@ -181,9 +181,10 @@
 2. `Go` 标准包安装
 3. 第三方工具安装，比如 `GVM`
 
-### gopath 环境变量
 
-> GOPATH：为我们开发常用的目录，建议不要和 Go 的安装目录一致
+### `gopath` 环境变量
+
+> GOPATH：开发常用的目录，建议不要和 Go 的安装目录一致
 
 - `GOROOT`: SDK 安装目录
 - `Path`: 添加 SDK 的 `/bin` 目录
@@ -246,24 +247,26 @@ d:\> go version
 ```
 
 - `go get` 的本质就 `git` + `go install`
-- `go get github.com/beego/bee`
-  - `go get github.com/beego/bee` 映射至 `$GOPATH/src/github.com/beego/bee`
+- `go get github.com/beego/bee` 映射至 `$GOPATH/src/github.com/beego/bee`
 
 ### Linux 安装及配置
 
 1. 查看 Linux 位数版本 `uname -a`
-2. 下载 SDK go1.9.2.linux-adm64.tar.gz
+2. 下载 SDK https://golang.google.cn/dl/go1.18.3.linux-amd64.tar.gz
 3. 复制到 `/opt` 目录下
-4. 解压文件 `tar -zxvf go1.9.2.linux-adm64.tar.gz`
+4. 解压文件 `tar -zxvf go1.18.3.linux-amd64.tar.gz`
 5. 配置环境变量
 
 ```sh
 # vim /etc/proile.d/go.sh
-  export GO111MODULE=on
-  export GOPROXY=https://goproxy.cn,direct
-  export GOROOT=/usr/local/go
-  export PATH=$PATH:$GOPATH/bin
-  export GOPATH=$HOME/goProjects/
+export GO111MODULE=on
+export GOPROXY=https://goproxy.cn,direct
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go/
+export GOBIN=$GOPATH/bin
+export PATH=$GOBIN:$PATH:$GOROOT/bin
+
+
 # source /etc/profile.d/go.sh
 # go version
 ```
@@ -288,6 +291,35 @@ $ vim ~/.bash_profile
   export GOBIN=$GOPATH/bin
   export PATH=$PATH:${GOPATH//://bin:}/bin
 $ source ~/.bash_profile
+```
+
+### 交叉编译
+
+```
+# Mac上编译Linux可执行二进制文件
+$ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build main.go
+
+# Linux上编译Mac可执行二进制文件
+$ CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build main.go
+
+# Linux上编译Windows可执行二进制文件
+$ CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build main.go
+
+# Windows上编译Mac可执行二进制文件
+$ SET CGO_ENABLED=0 SET GOOS=darwin SET GOARCH=amd64 go build main.go
+
+# Windows上编译Linux可执行二进制文件
+$ SET CGO_ENABLED=0 SET GOOS=linux SET GOARCH=amd64 go build main.go
+
+CGO_ENABLED 是否使用cgo编译，0为不使用，1为使用
+GOOS 指定编译的操作系统
+GOARCH 指定操作系统的位数
+```
+
+- Go 语言程序显示为汇编语言
+```
+$ go build -gcflags "-N -l"
+$ go tool objdump -s 'main.Demo' -S ./main.exe
 ```
 
 ### Go 语言的开发工具
@@ -353,13 +385,18 @@ $ go run hello.go
 
 ### go 命令行
 
-- go get : 获取远程包（需提前安装 git 或 hg）
-- go run : 直接运行程序
-- go build : 测试编译、检查是否有编译错误
-- go fmt : 格式化源码
-- go install : 编译包文件并编译整个程序
-- go test : 运行测试文件
-- go doc : 查看文档 
+- go get: 获取远程包（需提前安装 git 或 hg）
+- go run: 直接运行程序
+- go build: 测试编译、检查是否有编译错误
+- go fmt: 格式化源码
+- go install: 编译包文件并编译整个程序
+- go test: 运行测试文件
+- go doc: 查看文档 
+
+```
+$ go doc strconv
+$ go doc strconv.Itoa
+```
 
 ## 快速入门
 
@@ -441,8 +478,7 @@ func main() {
 ### 规范代码风格
 
 - Shift + Tab
-- `gofmt` 进行格式化
-  - `gofmt -w hello.go`
+- `gofmt` 进行格式化 `gofmt -w hello.go`
 
 ## 基础语法
 
