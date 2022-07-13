@@ -9,7 +9,7 @@ import (
 
 // 创建用户结构体类型
 type Client struct {
-	C chan string // 通知连接用户消息
+	C    chan string // 通知连接用户消息
 	Name string
 	Addr string
 }
@@ -38,8 +38,8 @@ func boardCast() {
 
 	// 广播消息
 	onlineMap = make(map[string]Client) // 初始化 onlineMap
-	for { // 监听全局channel是否有数据
-		msg := <- message // 有数据存储到 msg，无数据阻塞
+	for {                               // 监听全局channel是否有数据
+		msg := <-message                   // 有数据存储到 msg，无数据阻塞
 		for _, client := range onlineMap { // 循环发送消息给所有在线用户
 			client.C <- msg
 		}
@@ -60,11 +60,10 @@ func WriteMsgToClient(client *Client, conn net.Conn) {
 /**
  * 生成发送消息内容
  */
-func MakeMsg(client Client, msg string)(buf string) {
+func MakeMsg(client Client, msg string) (buf string) {
 	buf = "[" + client.Addr + "]" + client.Name + ": " + msg
 	return
 }
-
 
 /**
  * 接受客户端请求连接
@@ -80,7 +79,7 @@ func HandlerConnect(conn net.Conn) {
 	netAddr := conn.RemoteAddr().String()
 
 	// 创建新连接用户的结构体，默认用户名是 IP+PORT
-	client := Client {
+	client := Client{
 		make(chan string),
 		netAddr,
 		netAddr,
@@ -125,7 +124,7 @@ func HandlerConnect(conn net.Conn) {
 					userInfo := user.Addr + ":" + user.Name + "\n"
 					conn.Write([]byte(userInfo))
 				}
-			// rename|
+				// rename|
 			} else if len(msg) >= 8 && msg[:6] == "rename" {
 				newName := strings.Split(msg, "|")[1]
 				fmt.Println("New Name:", newName)
@@ -154,22 +153,22 @@ func HandlerConnect(conn net.Conn) {
 	for {
 		// 监听channel上的流动
 		select {
-			case <-isQuit:
-				// 关闭客户端 监听用户自带的channel上是否有消息， WriteMsgToClient go程的循环结束，即Go程退出
-				close(client.C)
-				delete(onlineMap, client.Addr)
+		case <-isQuit:
+			// 关闭客户端 监听用户自带的channel上是否有消息， WriteMsgToClient go程的循环结束，即Go程退出
+			close(client.C)
+			delete(onlineMap, client.Addr)
 
-				// 写入用户退出消息到全局channel
-				message <- MakeMsg(client, "logout")
-				return
-			case <-isOnline: // 是否有消息通信，有发送内容就重置下面的计时器
-			case <-time.After(time.Second * 30): // 超出30s剔除
-				// 将用户从online移除
-				delete(onlineMap, client.Addr)
+			// 写入用户退出消息到全局channel
+			message <- MakeMsg(client, "logout")
+			return
+		case <-isOnline: // 是否有消息通信，有发送内容就重置下面的计时器
+		case <-time.After(time.Second * 30): // 超出30s剔除
+			// 将用户从online移除
+			delete(onlineMap, client.Addr)
 
-				// 写入用户退出消息到全局channel
-				message <- MakeMsg(client, "logout")
-				return
+			// 写入用户退出消息到全局channel
+			message <- MakeMsg(client, "logout")
+			return
 		}
 	}
 }

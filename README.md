@@ -242,6 +242,10 @@ d:\> go version
 
 测试环境变量
 ``` cmd
+
+go env -w GOPROXY=https://goproxy.io,direct
+go env -w GO111MODULE=on
+
 > echo %GOPATH%
 > go get github.com/astaxie/beego
 ```
@@ -2510,9 +2514,9 @@ Handler(conn net.Conn){
 mms 标志最大段尺寸，如果一个段太大，封装成针后超过了链路层的最大长度，就必须在IP层分片，为了避免这种情况，客户端声明自己的最大段尺寸，建议服务器端发来的段不要超过这个长度
 
 
-![TCP状态转换图](./images/tcp.gif)
+![TCP状态转换图](./images/tcp.png)
 
-![TCP状态转换图](./images/tcp-status.gif)
+![TCP状态转换图](./images/tcp-status.png)
 
 | TCP connection state | Abbreviation in MVS™ console |	Abbreviation in TSO or UNIX shell |	Description |
 | --------   | -----:   | :---- | :----: |

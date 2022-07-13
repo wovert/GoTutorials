@@ -29,7 +29,7 @@ func main() {
 			fmt.Println("come to read ch!")
 		case <-timeout:
 			fmt.Println("come to timeout!")
-		// default:
+		// default: // 如果上面都没有成功，则进入 default 处理流程
 		// 	fmt.Println("default执行语句")
 	}
 }
