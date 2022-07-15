@@ -1,11 +1,10 @@
 package main
 
-
 import (
 	"fmt"
 )
 
-func test() (err error) {
+func testPanic() (err error) {
 	defer func() {
 		fmt.Println("defer")
 		// 获取panic错误信息
@@ -19,10 +18,33 @@ func test() (err error) {
 	fmt.Println("after")
 	return
 }
-func main() {
+
+func demo(i int) {
+	// recover 错误兰姐 出现在 panic 错误之前
+	defer func() {
+		err := recover()
+		if err != nil {
+			fmt.Println(err)
+		}
+	}()
+	var arr [10]int
+	arr[i] = 123 // err
+	fmt.Println(arr)
+}
+func main01() {
 	fmt.Println("before main")
-	err := test()
+	err := testPanic()
 
 	fmt.Println("err=", err)
 	fmt.Println("after main")
+}
+func main02() {
+	fmt.Println("before main")
+	demo(10)
+	fmt.Println("after main")
+}
+
+func main() {
+	//main01()
+	main02()
 }
