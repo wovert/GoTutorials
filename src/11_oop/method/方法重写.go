@@ -18,24 +18,31 @@ type student8 struct {
 }
 
 func (p *person8) SayHello() {
+	p.age = 10
 	fmt.Printf("大家好我是：%s，我今年%d岁，我是%s生\n", p.name, p.age, p.sex)
 }
 
-//子类对象和父类对象的方法名重名
+// 子类对象和父类对象的方法名重名
 func (s *student8) SayHello() {
+	s.age = 18
 	fmt.Printf("大家好我是：%s，我今年%d岁，我是%s生，我的班级是%d，我的成绩是%d\n",
 		s.name, s.age, s.sex, s.class, s.score)
 
 }
 func main() {
 
-	stu := student8{person8{1001, "甘夫人", 32, "女"}, 112, 80, "巴蜀"}
+	stu := &student8{person8{1001, "甘夫人", 32, "女"}, 112, 80, "巴蜀"}
 
 	//子类对象方法  采用就进原则 使用子类对象方法
 	//如果子类和父类有相同的方法名 叫方法重写
+
+	//子类对象方法（采用就进原则）
 	stu.SayHello()
-	//父类对象方法
+	//父类对象方法（采用就进原则）
 	stu.person8.SayHello()
 	fmt.Println(stu.SayHello)
 	fmt.Println(stu.person8.SayHello)
+
+	fmt.Println(stu.age)
+	fmt.Println(stu.person8.age)
 }

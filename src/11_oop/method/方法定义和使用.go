@@ -28,6 +28,6 @@ func main() {
 	fmt.Println("我是", stu.Name)
 
 	stuRef := &Student{"李四", 20}
-	stuRef.SayHiByValue()
+	stuRef.SayHiByRef()
 	fmt.Println("我是", stuRef.Name)
 }
