@@ -1088,6 +1088,8 @@ func read2() {
 
 ### defer 执行时机
 
+> LIFO(后进先出)
+
 - return 不是原子操作，在底层分为两步来执行
 
 - return x
@@ -1104,6 +1106,8 @@ func read2() {
 - `append`: 追加元素到数组，`slice`中
 - `panic`和`recover`, 用来做错误处理
   - `recover()`必须搭配`defer`使用
+    - 运行时 panic 异常一旦被引发就会导致程序崩溃
+    - 只有在 defer 调用的函数中有效
   - `defer` 一定要在可能引发`panic`的语句之前定义
 
 ### 函数是数据类型
@@ -1516,6 +1520,11 @@ s[:high] 从0开始，到high结束，容量跟随原先容量 [常用]
 ## map
 
 `make` 用于内建类型(`map, slice, channel`)的内存分配
+
+- `var m map[string]int // nil 类型` 添加和修改会导致 panic
+- nil: `len/map[key]/delete(m,key)  // 正常工作` 
+- map 默认并发不安全，多个 goroutine 写同一个map, 引发静态错误，go run -race 或者 go build - race
+- map 对象即使删除了全部的key，但不会缩容空间
 
 ### 创建字典方式
 
