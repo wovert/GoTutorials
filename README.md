@@ -402,6 +402,20 @@ $ go doc strconv
 $ go doc strconv.Itoa
 ```
 
+### 工程管理
+
+> Go项目需要有特定的目录结构管理
+
+1. `go env` 查看环境变量
+2. 配置环境变量 GOROOT：Go SDK 存放目录
+3. 配置环境变量 GOPATH: 指定项目目录 /project
+4. 配置环境变量 GOBIN: 指定项目目录 /project/bin
+  - go install 命令会把编译的的可执行安装到 /project/bin 目录下，在其他终端路径可以执行此命令
+5. /project
+  - src 源代码
+  - bin 编译之后的程序名，使用标准命令 go install 之后存放位置
+  - pkg 缓存包
+
 ## 快速入门
 
 ### 开发步骤
